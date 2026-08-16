@@ -240,6 +240,7 @@ const PLAN_FEATURES = [
   "Разбор по всем 27 заданиям спецификации ФИПИ",
   "Сочинение по критериям К1–К10 в каждой работе",
   "Прогноз итогового балла с диапазоном",
+  "Разделение учеников на классы с отдельной статистикой",
   "Экран класса, план занятия и провальные темы",
   "Личная ссылка с результатами для каждого ученика",
   "Импорт результатов из таблицы и отчёты по ученику и классу"
@@ -277,7 +278,7 @@ const LEGAL_OFFER = {
     {h:"3. Предмет",p:[
       "Исполнитель предоставляет Пользователю право использования Сервиса в объёме выбранного тарифа, а Пользователь принимает это право и оплачивает его в случаях, предусмотренных тарифом.",
       "Сервис предоставляется по модели удалённого доступа через сеть Интернет. Экземпляр программы Пользователю не передаётся.",
-      "Функциональные возможности Сервиса: ведение перечня кодов обучающихся, внесение и импорт результатов пробных экзаменов, расчёт первичного и тестового балла, аналитика по заданиям и критериям сочинения, прогноз результата, формирование отчётов и персональных ссылок с результатами."
+      "Функциональные возможности Сервиса: ведение перечня кодов обучающихся с распределением по классам и группам, внесение и импорт результатов пробных экзаменов, расчёт первичного и тестового балла, аналитика по заданиям и критериям сочинения, прогноз результата, формирование отчётов и персональных ссылок с результатами."
     ]},
     {h:"4. Тарифы и оплата",p:[
       "Тарифы различаются количеством одновременно доступных кодов обучающихся и сроком доступа. Действующие тарифы размещены в разделе «Тарифы» Сервиса.",
@@ -591,6 +592,38 @@ const consentStore = {
   }
 };
 
+/* --- Классы и группы ---------------------------------------------------
+   Класс хранится строкой в поле group_name. Пустое значение означает,
+   что ученик пока не распределён.
+------------------------------------------------------------------------- */
+const GROUP_NONE = "Без класса";
+const GROUP_MAX = 20;
+const groupTitle = g => (g && String(g).trim()) ? String(g).trim() : GROUP_NONE;
+
+function validateGroup(raw){
+  const s=String(raw||"").trim();
+  if(!s) return null;
+  if(s.length>GROUP_MAX) return `название класса длиннее ${GROUP_MAX} символов`;
+  if(/[<>"]/.test(s)) return "недопустимые символы в названии класса";
+  return null;
+}
+function allGroups(){
+  const set=new Set(state.students.map(s=>groupTitle(s.group)));
+  return [...set].sort((a,b)=>
+    a===GROUP_NONE?1 : b===GROUP_NONE?-1 : a.localeCompare(b,"ru"));
+}
+function groupSizes(){
+  const map={};
+  state.students.forEach(s=>{ const g=groupTitle(s.group); map[g]=(map[g]||0)+1; });
+  return map;
+}
+function studentsOfGroup(name){
+  if(!name || name==="all") return state.students;
+  return state.students.filter(s=>groupTitle(s.group)===name);
+}
+function currentGroupStudents(){ return studentsOfGroup(state.currentGroup); }
+function groupLabel(name){ return name==="all" ? "все классы" : name; }
+
 /* =========================================================================
    6. МОДЕЛЬ ДАННЫХ
    ========================================================================= */
@@ -637,7 +670,7 @@ const api = {
   },
   async load(){
     const [{data:students,error:e1},{data:exams,error:e2}] = await Promise.all([
-      db.from("students").select("id,name,share_token").order("name"),
+      db.from("students").select("id,name,share_token,group_name").order("name"),
       db.from("exams").select("student_id,exam_date,results,essay").order("exam_date")
     ]);
     if(e1) throw new Error("Ученики не загрузились: "+e1.message);
@@ -649,14 +682,22 @@ const api = {
       (byStudent[row.student_id]=byStudent[row.student_id]||[]).push(ex);
     });
     return (students||[]).map(s=>({
-      id:s.id, code:s.name, shareToken:s.share_token,
+      id:s.id, code:s.name, shareToken:s.share_token, group:(s.group_name||"").trim(),
       exams:(byStudent[s.id]||[]).sort((a,b)=>(a.date&&b.date)?a.date-b.date:0)
     }));
   },
-  async addStudents(codes){
+  // items — массив строк или объектов вида {code, group}
+  async addStudents(items){
     const {data:{user},error:userErr}=await db.auth.getUser();
     if(userErr||!user) throw new Error("Сессия истекла, войдите заново.");
-    const {error}=await db.from("students").insert(codes.map(name=>({name,teacher_id:user.id})));
+    const rows=items.map(it=>typeof it==="string"
+      ? {name:it,teacher_id:user.id,group_name:null}
+      : {name:it.code,teacher_id:user.id,group_name:(it.group||"").trim()||null});
+    const {error}=await db.from("students").insert(rows);
+    if(error) throw new Error(error.message);
+  },
+  async setGroup(id,group){
+    const {error}=await db.from("students").update({group_name:(group||"").trim()||null}).eq("id",id);
     if(error) throw new Error(error.message);
   },
   async removeStudent(id){
@@ -673,7 +714,7 @@ const api = {
     if(error) throw new Error(error.message);
     if(!data) throw new Error("Ссылка недействительна или ученик удалён.");
     return {
-      id:"shared", code:data.name, shareToken:token,
+      id:"shared", code:data.name, group:"", shareToken:token,
       exams:(data.exams||[]).map(buildExam).filter(Boolean).sort((a,b)=>(a.date&&b.date)?a.date-b.date:0)
     };
   }
@@ -716,9 +757,10 @@ function weaknessReport(student,taskNumbers){
 const topWeakTasks=(report,count)=>report.filter(r=>r.lost>0)
   .sort((a,b)=>(b.lost-a.lost)||(a.rate-b.rate)||(a.task-b.task)).slice(0,count);
 
-function classRateForTask(task){
+function classRateForTask(task,group){
   let possible=0,scored=0,students=0;
-  state.students.forEach(st=>{
+  const list = group===undefined ? state.students : studentsOfGroup(group);
+  list.forEach(st=>{
     let seen=false;
     st.exams.forEach(ex=>{
       const v=ex.scores[task];
@@ -876,7 +918,7 @@ function groupReport(students,taskNumbers,examKey){
 const state={
   students:[], taskNumbers:[], charts:{}, filter:"",
   mode:"boot", screen:"screen-loading", view:"screen-list",
-  currentStudent:null, groupExam:"last", groupSort:"rate", email:"",
+  currentStudent:null, groupExam:"last", groupSort:"rate", email:"", currentGroup:"all",
   plan:{...PLANS[DEFAULT_PLAN]}, legalTab:"offer"
 };
 
@@ -921,10 +963,26 @@ function renderCountdown(){
 
   side.className=`hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 z-20 items-center gap-2 px-2.5 py-4 rounded-l-xl border border-r-0 text-xs font-semibold shadow-soft transition ${st.cls}`;
   side.innerHTML=`<span>${escHtml(st.text)}</span>${EXAM.preliminary?`<span class="opacity-70 font-normal">дата предварительная</span>`:""}`;
-  side.setAttribute("title",tip);
   side.onclick=()=>{ if(state.mode==="guest"||state.mode==="auth") route("screen-landing"); };
 
-  mob.innerHTML=`<span class="inline-flex items-center px-2.5 py-1.5 rounded-lg border text-[11px] font-semibold ${st.cls}" title="${escAttr(tip)}">${escHtml(st.text)}</span>`;
+  mob.innerHTML=`<span class="inline-flex items-center px-2.5 py-1.5 rounded-lg border text-[11px] font-semibold ${st.cls}">${escHtml(st.text)}</span>`;
+
+  // Подсказка через глобальный тултип: системная всплывашка на повёрнутом
+  // элементе показывалась ненадёжно
+  const tipTitle = `Экзамен ${dateLabel}${EXAM.preliminary?" · дата предварительная":""}`;
+  const tipRule = EXAM.preliminary ? EXAM.note : "Дата взята из официального расписания.";
+  [side, mob.firstElementChild].forEach(el=>{
+    if(!el) return;
+    el.dataset.label="До экзамена";
+    el.dataset.title=tipTitle;
+    el.dataset.rule=tipRule;
+    if(el.dataset.tipBound) return;
+    el.dataset.tipBound="1";
+    el.addEventListener("mouseenter",showTooltip);
+    el.addEventListener("mouseleave",hideTooltip);
+    el.addEventListener("focus",showTooltip);
+    el.addEventListener("blur",hideTooltip);
+  });
 }
 
 function renderChrome(){
@@ -989,7 +1047,7 @@ async function boot(){
   try{
     if(!hasBackend() || !db){
       setMode("demo");
-      state.students=DEMO_STUDENTS.map((s,i)=>({id:"demo"+i,code:s.code,shareToken:null,
+      state.students=DEMO_STUDENTS.map((s,i)=>({id:"demo"+i,code:s.code,group:s.group||"",shareToken:null,
         exams:s.exams.map(buildExam).filter(Boolean)}));
       state.taskNumbers=collectTaskNumbers(state.students);
       renderStudentList(); showScreen("screen-list");
@@ -1263,6 +1321,7 @@ function renderLanding(){
             <div><div class="font-semibold mb-1">Находит слабые темы</div><p class="text-ink-500 leading-relaxed">Считает потерянные баллы за всё время и показывает три задания, где ученик теряет больше всего.</p></div>
             <div><div class="font-semibold mb-1">Строит прогноз</div><p class="text-ink-500 leading-relaxed">Диапазон к дате экзамена с поправкой на нестабильность результатов и отдельный сценарий проработки тем.</p></div>
             <div><div class="font-semibold mb-1">Готовит документы</div><p class="text-ink-500 leading-relaxed">Отчёт по ученику для родителей и сводный отчёт по классу за выбранный пробник, оба скачиваются файлом.</p></div>
+            <div><div class="font-semibold mb-1">Делит на классы</div><p class="text-ink-500 leading-relaxed">Ученики раскладываются по классам и группам, статистика и планы занятий считаются для каждого класса отдельно.</p></div>
           </div>
         </div>
         ${previewReport()}
@@ -1341,6 +1400,10 @@ const FAQ=[
    a:"Нет. По ссылке доступны только его собственные баллы и рекомендации. Сравнение с классом видит лишь преподаватель."},
   {q:"Что делать, если ссылка ученика попала не тому человеку?",
    a:"Напишите мне, и я перевыпущу токен. Старая ссылка перестанет работать сразу."},
+  {q:"Можно ли разделить учеников на классы?",
+   a:"Да. У каждого кода есть поле класса, его можно задать при добавлении, изменить в разделе «Распределение по классам» или указать столбцом в импортируемой таблице. Статистика, план занятия и отчёт считаются по выбранному классу отдельно."},
+  {q:"Лимит тарифа считается по каждому классу или по всем сразу?",
+   a:"По всем сразу. На базовом тарифе доступно три ученика во всех классах вместе, а не три в каждом."},
   {q:"Можно ли загрузить результаты таблицей?",
    a:"Да. На экране ввода есть импорт из таблицы, там же скачивается шаблон с готовыми столбцами. Перед сохранением показывается разбор построчно с ошибками, если они есть."},
   {q:"В какой кодировке сохранять файл для импорта?",
@@ -1634,18 +1697,34 @@ const safeName=s=>String(s).replace(/[\\/:*?"<>|]+/g,"_").replace(/\s+/g,"_");
 function renderStudentList(){
   const canEdit=modeConfig().canEdit;
   const q=state.filter.trim().toLowerCase();
-  const withData=state.students.filter(s=>s.exams.length);
-  const empty=state.students.filter(s=>!s.exams.length);
+  const groups=allGroups();
+  const sizes=groupSizes();
+  if(state.currentGroup!=="all" && !groups.includes(state.currentGroup)) state.currentGroup="all";
+
+  const scope=currentGroupStudents();
+  const withData=scope.filter(s=>s.exams.length);
+  const empty=scope.filter(s=>!s.exams.length);
   const visible=withData.filter(s=>s.code.toLowerCase().includes(q));
   const used=state.students.length, limit=state.plan.limit, atLimit=used>=limit;
   const book=codebook.read();
 
+  const tabs = groups.length>1 || state.currentGroup!=="all" ? `
+    <div class="flex flex-wrap gap-1 mb-5 text-sm">
+      <button data-group="all" class="group-tab px-3 py-1.5 rounded-lg font-medium transition ${state.currentGroup==="all"?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
+        Все классы <span class="font-mono text-xs tnum text-ink-300">${state.students.length}</span>
+      </button>
+      ${groups.map(g=>`
+        <button data-group="${escAttr(g)}" class="group-tab px-3 py-1.5 rounded-lg font-medium transition ${state.currentGroup===g?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
+          ${escHtml(g)} <span class="font-mono text-xs tnum text-ink-300">${sizes[g]||0}</span>
+        </button>`).join("")}
+    </div>` : "";
+
   $("#screen-list").innerHTML=`
-    <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+    <div class="flex flex-wrap items-end justify-between gap-4 mb-5">
       <div>
         <h1 class="font-display font-extrabold text-2xl tracking-tight">Ученики</h1>
         <p class="text-sm text-ink-500 mt-1">
-          ${used} из ${limit} ${plural(limit,"места","мест","мест")} занято · тариф «${escHtml(state.plan.name)}»
+          ${used} из ${limit} ${plural(limit,"места","мест","мест")} занято во всех классах · тариф «${escHtml(state.plan.name)}»
         </p>
       </div>
       <div class="flex gap-2">
@@ -1655,10 +1734,12 @@ function renderStudentList(){
       </div>
     </div>
 
+    ${tabs}
+
     ${atLimit&&canEdit?`
       <div class="bg-amber-50 rounded-2xl p-4 mb-6 flex flex-wrap items-center gap-3">
         <div class="flex-1 min-w-[240px] text-sm text-amber-800">
-          Все ${limit} ${plural(limit,"место","места","мест")} тарифа «${escHtml(state.plan.name)}» заняты. Освободите место, удалив выпустившегося ученика, или перейдите на тариф выше.
+          Все ${limit} ${plural(limit,"место","места","мест")} тарифа «${escHtml(state.plan.name)}» заняты. Лимит считается по всем классам сразу: освободите место, удалив выпустившегося ученика, или перейдите на тариф выше.
         </div>
         <button id="to-pricing" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition">Тарифы</button>
       </div>`:""}
@@ -1670,13 +1751,17 @@ function renderStudentList(){
       ${visible.map(st=>{
         const s=summarize(st), c=st.exams.length;
         const note=book[st.code];
+        const g=groupTitle(st.group);
         return `
         <div class="bg-white rounded-2xl shadow-soft hover:shadow-lift border border-transparent hover:border-brand-100 p-5 transition-all duration-200">
           <button data-student="${escAttr(st.id)}" class="student-card text-left w-full">
             <div class="flex items-start justify-between gap-3 mb-5">
-              <div>
-                <div class="font-mono font-bold text-[15px] leading-snug">${escHtml(st.code)}</div>
-                <div class="text-xs text-ink-500 mt-0.5">${note?escHtml(note)+" · ":""}${c} ${plural(c,"пробник","пробника","пробников")}</div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="font-mono font-bold text-[15px] leading-snug">${escHtml(st.code)}</span>
+                  <span class="px-1.5 py-0.5 rounded-md bg-paper text-[10px] text-ink-500 whitespace-nowrap">${escHtml(g)}</span>
+                </div>
+                <div class="text-xs text-ink-500 mt-0.5 truncate">${note?escHtml(note)+" · ":""}${c} ${plural(c,"пробник","пробника","пробников")}</div>
               </div>
               ${trendMarkup(s.deltaSecondary)}
             </div>
@@ -1701,14 +1786,36 @@ function renderStudentList(){
         ${empty.map(st=>`
           <span class="inline-flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-xl bg-paper text-sm font-mono">
             ${escHtml(st.code)}
+            <span class="text-[10px] text-ink-300 font-sans">${escHtml(groupTitle(st.group))}</span>
             ${canEdit?`<button data-remove="${escAttr(st.id)}" class="remove-btn text-ink-300 hover:text-rose-600 text-base leading-none font-sans" title="Удалить">×</button>`:""}
           </span>`).join("")}
       </div>
     </div>`:""}
 
-    ${(!withData.length&&!empty.length)?`<div class="bg-white rounded-2xl shadow-soft p-8 text-center text-sm text-ink-500">Учеников пока нет. Нажмите «Добавить учеников» и заведите коды.</div>`:""}
+    ${(!withData.length&&!empty.length)?`<div class="bg-white rounded-2xl shadow-soft p-8 text-center text-sm text-ink-500">${state.currentGroup==="all"?"Учеников пока нет. Нажмите «Добавить учеников» и заведите коды.":"В этом классе пока нет учеников."}</div>`:""}
 
     ${canEdit&&state.students.length?`
+    <details class="bg-white rounded-2xl shadow-soft p-5 sm:p-6 mb-4">
+      <summary class="cursor-pointer font-display font-bold text-lg">Распределение по классам</summary>
+      <p class="text-xs text-ink-500 mt-2 mb-4 leading-relaxed">
+        Класс хранится в базе вместе с кодом. Оставьте поле пустым, чтобы ученик попал в «${escHtml(GROUP_NONE)}».
+        Название можно вписать любое: 11А, группа Пн-Ср, поток 2027.
+      </p>
+      <div class="grid gap-2 sm:grid-cols-2 mb-4">
+        ${state.students.map(st=>`
+          <label class="flex items-center gap-3">
+            <span class="font-mono text-sm w-24 shrink-0">${escHtml(st.code)}</span>
+            <input type="text" data-group-for="${escAttr(st.id)}" value="${escAttr(st.group||"")}" placeholder="${escAttr(GROUP_NONE)}" maxlength="${GROUP_MAX}" list="known-groups"
+              class="group-input flex-1 px-3 py-2 rounded-lg bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
+          </label>`).join("")}
+      </div>
+      <datalist id="known-groups">${groups.filter(g=>g!==GROUP_NONE).map(g=>`<option value="${escAttr(g)}"></option>`).join("")}</datalist>
+      <div class="flex items-center gap-3">
+        <button id="save-groups" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">Сохранить классы</button>
+        <span id="groups-msg" class="text-xs"></span>
+      </div>
+    </details>
+
     <details class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
       <summary class="cursor-pointer font-display font-bold text-lg">Расшифровка кодов</summary>
       <p class="text-xs text-ink-500 mt-2 mb-4 leading-relaxed">
@@ -1731,6 +1838,9 @@ function renderStudentList(){
     <p id="list-msg" class="text-xs mt-3"></p>`;
 
   $("#screen-list").querySelectorAll(".student-card").forEach(c=>c.onclick=()=>openStudent(c.dataset.student));
+  $("#screen-list").querySelectorAll(".group-tab").forEach(b=>b.onclick=()=>{
+    state.currentGroup=b.dataset.group; renderStudentList(); window.scrollTo({top:0});
+  });
   $("#search").oninput=e=>{state.filter=e.target.value;renderStudentList();$("#search").focus();};
 
   const toPricing=$("#to-pricing");
@@ -1754,6 +1864,31 @@ function renderStudentList(){
     catch(err){ const m=$("#list-msg"); m.className="text-xs mt-3 text-rose-600"; m.textContent=err.message; }
   });
 
+  const saveGroups=$("#save-groups");
+  if(saveGroups) saveGroups.onclick=async e=>{
+    const btn=e.currentTarget, msg=$("#groups-msg");
+    const inputs=[...$("#screen-list").querySelectorAll(".group-input")];
+    for(const inp of inputs){
+      const err=validateGroup(inp.value);
+      if(err){ msg.className="text-xs text-rose-600"; msg.textContent=err; inp.focus(); return; }
+    }
+    const changes=inputs.map(inp=>{
+      const st=state.students.find(s=>s.id===inp.dataset.groupFor);
+      const value=inp.value.trim();
+      return (st && (st.group||"")!==value) ? {id:inp.dataset.groupFor,group:value} : null;
+    }).filter(Boolean);
+    if(!changes.length){ msg.className="text-xs text-ink-500"; msg.textContent="Изменений нет"; setTimeout(()=>{msg.textContent="";},2000); return; }
+
+    btn.textContent="Сохраняем…";
+    try{
+      for(const ch of changes) await api.setGroup(ch.id,ch.group);
+      await reloadData();
+      renderStudentList();
+      const m=$("#groups-msg");
+      if(m){ m.className="text-xs text-emerald-600"; m.textContent=`Обновлено записей: ${changes.length}`; setTimeout(()=>{m.textContent="";},2500); }
+    }catch(err){ msg.className="text-xs text-rose-600"; msg.textContent=err.message; btn.textContent="Сохранить классы"; }
+  };
+
   const saveNotes=$("#save-notes");
   if(saveNotes) saveNotes.onclick=()=>{
     const obj={};
@@ -1773,6 +1908,8 @@ function renderStudentList(){
 
 function openAddStudents(){
   const free=state.plan.limit-state.students.length;
+  const groups=allGroups().filter(g=>g!==GROUP_NONE);
+  const preset=state.currentGroup==="all"?"":(state.currentGroup===GROUP_NONE?"":state.currentGroup);
   const modal=document.createElement("div");
   modal.className="fixed inset-0 z-[9998] bg-ink-900/40 backdrop-blur-sm flex items-center justify-center p-5";
   modal.innerHTML=`
@@ -1780,8 +1917,14 @@ function openAddStudents(){
       <h2 class="font-display font-extrabold text-xl mb-2">Добавить учеников</h2>
       <p class="text-sm text-ink-500 mb-3 leading-relaxed">
         Только обезличенные коды, по одному в строке. Например <span class="font-mono">11А-07</span> или <span class="font-mono">У-03</span>.
-        Свободно ${free} ${plural(free,"место","места","мест")}.
+        Свободно ${free} ${plural(free,"место","места","мест")} на тарифе, лимит общий для всех классов.
       </p>
+      <label class="block mb-3">
+        <span class="text-xs uppercase tracking-wide text-ink-500">Класс</span>
+        <input id="add-group" value="${escAttr(preset)}" placeholder="${escAttr(GROUP_NONE)}" maxlength="${GROUP_MAX}" list="add-known-groups"
+          class="mt-1.5 w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
+        <datalist id="add-known-groups">${groups.map(g=>`<option value="${escAttr(g)}"></option>`).join("")}</datalist>
+      </label>
       <div class="bg-paper rounded-xl p-3 mb-4 text-[11px] text-ink-500 leading-relaxed">
         Ограничения кода — не длиннее ${CODE_MAX} символов, без пробелов, обязательна хотя бы одна цифра,
         подряд не больше трёх букв. Имена и фамилии ввести нельзя.
@@ -1789,7 +1932,7 @@ function openAddStudents(){
       <div class="flex items-center gap-2 mb-3">
         <input id="gen-prefix" value="У-" placeholder="префикс" maxlength="6"
           class="w-24 px-3 py-2 rounded-lg bg-paper border border-gray-200 text-sm font-mono focus:border-brand-500 outline-none transition">
-        <input id="gen-count" type="number" min="1" max="${free}" value="${Math.min(free,10)}"
+        <input id="gen-count" type="number" min="1" max="${Math.max(1,free)}" value="${Math.min(Math.max(free,1),10)}"
           class="w-20 px-3 py-2 rounded-lg bg-paper border border-gray-200 text-sm font-mono focus:border-brand-500 outline-none transition">
         <button id="gen-btn" class="px-3 py-2 rounded-lg bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Сгенерировать</button>
       </div>
@@ -1820,6 +1963,10 @@ function openAddStudents(){
 
   modal.querySelector("#codes-save").onclick=async e=>{
     const btn=e.currentTarget, msg=modal.querySelector("#codes-msg");
+    const group=modal.querySelector("#add-group").value.trim();
+    const groupErr=validateGroup(group);
+    if(groupErr){ msg.className="text-xs mt-3 text-rose-600"; msg.textContent=groupErr; return; }
+
     const existing=new Set(state.students.map(s=>s.code.toLowerCase()));
     const raw=[...new Set(modal.querySelector("#codes-input").value.split("\n").map(s=>s.trim()).filter(Boolean))];
 
@@ -1833,10 +1980,12 @@ function openAddStudents(){
 
     btn.textContent="Сохраняем…";
     try{
-      await api.addStudents(codes);
-      await reloadData(); renderStudentList();
+      await api.addStudents(codes.map(code=>({code,group})));
+      await reloadData();
+      if(group) state.currentGroup=group;
+      renderStudentList();
       msg.className="text-xs mt-3 text-emerald-600";
-      msg.textContent=`Добавлено: ${codes.length}`;
+      msg.textContent=`Добавлено: ${codes.length}${group?` в класс «${group}»`:""}`;
       modal.querySelector("#codes-input").value="";
     }catch(err){
       msg.className="text-xs mt-3 text-rose-600";
@@ -1850,9 +1999,32 @@ function openAddStudents(){
    15. ЭКРАН: КЛАСС
    ========================================================================= */
 function renderGroup(){
-  const students=state.students.filter(s=>s.exams.length);
+  const groups=allGroups();
+  const sizes=groupSizes();
+  if(state.currentGroup!=="all" && !groups.includes(state.currentGroup)) state.currentGroup="all";
+  const students=currentGroupStudents().filter(s=>s.exams.length);
+
+  const groupTabs = (groups.length>1 || state.currentGroup!=="all") ? `
+    <div class="flex flex-wrap gap-1 mb-5 text-sm">
+      <button data-group="all" class="group-tab px-3 py-1.5 rounded-lg font-medium transition ${state.currentGroup==="all"?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
+        Все классы <span class="font-mono text-xs tnum text-ink-300">${state.students.length}</span>
+      </button>
+      ${groups.map(g=>`
+        <button data-group="${escAttr(g)}" class="group-tab px-3 py-1.5 rounded-lg font-medium transition ${state.currentGroup===g?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
+          ${escHtml(g)} <span class="font-mono text-xs tnum text-ink-300">${sizes[g]||0}</span>
+        </button>`).join("")}
+    </div>` : "";
+
+  const bindGroupTabs=()=>{
+    $("#screen-group").querySelectorAll(".group-tab").forEach(b=>b.onclick=()=>{
+      state.currentGroup=b.dataset.group; destroyCharts(); renderGroup(); window.scrollTo({top:0});
+    });
+  };
+
   if(!students.length){
-    $("#screen-group").innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-8 text-center text-sm text-ink-500">Пока нет ни одного внесённого пробника.</div>`;
+    $("#screen-group").innerHTML=groupTabs+
+      `<div class="bg-white rounded-2xl shadow-soft p-8 text-center text-sm text-ink-500">${state.currentGroup==="all"?"Пока нет ни одного внесённого пробника.":"В классе «"+escHtml(state.currentGroup)+"» пока нет внесённых пробников."}</div>`;
+    bindGroupTabs();
     return;
   }
   const keys=allExamKeys(students);
@@ -1864,9 +2036,10 @@ function renderGroup(){
     : (keys.find(k=>k.key===state.groupExam)||{}).fullLabel || state.groupExam;
 
   $("#screen-group").innerHTML=`
+    ${groupTabs}
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
-        <h1 class="font-display font-extrabold text-2xl tracking-tight">Класс</h1>
+        <h1 class="font-display font-extrabold text-2xl tracking-tight">${state.currentGroup==="all"?"Все классы":escHtml(state.currentGroup)}</h1>
         <p class="text-sm text-ink-500 mt-1">${g.entries.length} ${plural(g.entries.length,"работа","работы","работ")} в выборке · что разбирать на ближайшем занятии</p>
       </div>
       <div class="flex flex-wrap items-end gap-2">
@@ -2014,9 +2187,10 @@ function renderGroup(){
       </div>
     </div>`;
 
+  bindGroupTabs();
   $("#group-exam").onchange=e=>{state.groupExam=e.target.value;destroyCharts();renderGroup();};
   $("#screen-group").querySelectorAll("[data-sort]").forEach(b=>b.onclick=()=>{state.groupSort=b.dataset.sort;destroyCharts();renderGroup();});
-  $("#group-report-btn").onclick=()=>openGroupReport(g,examLabel);
+  $("#group-report-btn").onclick=()=>openGroupReport(g,examLabel,groupLabel(state.currentGroup));
 
   $("#screen-group").querySelectorAll("tr.row-open").forEach(tr=>{
     tr.onclick=e=>{
@@ -2077,9 +2251,9 @@ function renderGroup(){
   bindTooltips($("#screen-group"));
 }
 
-function groupReportText(g,examLabel){
+function groupReportText(g,examLabel,groupName){
   const lines=[
-    `Отчёт по классу — ЕГЭ по русскому языку`,
+    `Отчёт по классу «${groupName}» — ЕГЭ по русскому языку`,
     `Выборка: ${examLabel}. Работ в выборке: ${g.entries.length}.`,``,
     `Средний тестовый балл ${g.avgSecondary}, медиана ${g.median}, разброс от ${g.min} до ${g.max}.`,
     `Ниже порога 36 баллов — ${g.belowPass} ${plural(g.belowPass,"ученик","ученика","учеников")}.`,``,
@@ -2097,7 +2271,7 @@ function groupReportText(g,examLabel){
   return lines.join("\n");
 }
 
-function groupReportDocument(g,examLabel,images){
+function groupReportDocument(g,examLabel,images,groupName){
   const sorted=[...g.entries].sort((a,b)=>b.exam.secondary-a.exam.secondary);
   const rowsByTask=[...g.rows].sort((a,b)=>a.task-b.task);
   return `<!DOCTYPE html>
@@ -2130,7 +2304,7 @@ function groupReportDocument(g,examLabel,images){
   <div class="mark">ЕМ</div>
   <div><div class="brandname">${escHtml(AUTHOR.brand)}</div><div class="brandsub">${escHtml(AUTHOR.tagline)}</div></div>
 </div>
-<h1>Отчёт по классу</h1>
+<h1>Отчёт по классу «${escHtml(groupName)}»</h1>
 <p class="meta">Выборка — ${escHtml(examLabel)} · ${g.entries.length} ${plural(g.entries.length,"работа","работы","работ")} · сформирован ${escHtml(formatDate(new Date(),true))}</p>
 
 <div class="kpi">
@@ -2203,12 +2377,12 @@ ${g.essayRows.length?`
 </body></html>`;
 }
 
-function openGroupReport(g,examLabel){
+function openGroupReport(g,examLabel,groupName){
   const images={
     dynamics: state.charts["group-dynamics"]?state.charts["group-dynamics"].toBase64Image():null,
     distribution: state.charts["group-distribution"]?state.charts["group-distribution"].toBase64Image():null
   };
-  const text=groupReportText(g,examLabel);
+  const text=groupReportText(g,examLabel,groupName);
   const stamp=isoDate(new Date());
 
   const modal=document.createElement("div");
@@ -2219,7 +2393,7 @@ function openGroupReport(g,examLabel){
         ${avatarMarkup("w-9 h-9","text-[13px]")}
         <div>
           <h2 class="font-display font-extrabold text-lg leading-tight">Отчёт по классу готов</h2>
-          <p class="text-xs text-ink-500">Выборка — ${escHtml(examLabel)}</p>
+          <p class="text-xs text-ink-500">Класс «${escHtml(groupName)}» · выборка — ${escHtml(examLabel)}</p>
         </div>
       </div>
       <textarea id="gr-text" readonly class="w-full h-52 text-[13px] leading-relaxed bg-paper rounded-xl p-4 border border-gray-200 resize-none">${escHtml(text)}</textarea>
@@ -2235,11 +2409,11 @@ function openGroupReport(g,examLabel){
   modal.querySelector("#gr-close").onclick=()=>modal.remove();
   modal.onclick=e=>{if(e.target===modal)modal.remove();};
   modal.querySelector("#gr-html").onclick=e=>{
-    downloadFile(`${safeName(AUTHOR.brand)}_класс_${stamp}.html`,groupReportDocument(g,examLabel,images),"text/html");
+    downloadFile(`${safeName(AUTHOR.brand)}_${safeName(groupName)}_${stamp}.html`,groupReportDocument(g,examLabel,images,groupName),"text/html");
     e.currentTarget.textContent="Файл скачан";
     setTimeout(()=>{e.currentTarget.textContent="Скачать отчёт";},1600);
   };
-  modal.querySelector("#gr-txt").onclick=()=>downloadFile(`${safeName(AUTHOR.brand)}_класс_${stamp}.txt`,text,"text/plain");
+  modal.querySelector("#gr-txt").onclick=()=>downloadFile(`${safeName(AUTHOR.brand)}_${safeName(groupName)}_${stamp}.txt`,text,"text/plain");
   modal.querySelector("#gr-copy").onclick=async e=>{
     const ok=await copyText(text);
     e.currentTarget.textContent=ok?"Скопировано":"Не вышло";
@@ -2268,6 +2442,7 @@ function renderDashboard(student,readOnly){
   const fc=forecast(student,report);
   const canEdit=modeConfig().canEdit;
   const note=readOnly?null:codebook.read()[student.code];
+  const group=groupTitle(student.group);
 
   $("#screen-student").innerHTML=`
     ${readOnly?"":`<button id="back-btn" class="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-brand-600 mb-5 transition"><span class="text-base leading-none">←</span> Все ученики</button>`}
@@ -2275,7 +2450,7 @@ function renderDashboard(student,readOnly){
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
         <h1 class="font-display font-extrabold text-2xl tracking-tight font-mono">${escHtml(student.code)}</h1>
-        <p class="text-sm text-ink-500 mt-1">${readOnly?"Твоя страница результатов · "+escHtml(AUTHOR.brand):(note?escHtml(note)+" · ":"")+"Разбор по заданиям спецификации ФИПИ"}</p>
+        <p class="text-sm text-ink-500 mt-1">${readOnly?"Твоя страница результатов · "+escHtml(AUTHOR.brand):(note?escHtml(note)+" · ":"")+escHtml(group)+" · разбор по заданиям спецификации ФИПИ"}</p>
       </div>
       <div class="flex gap-2">
         <button id="report-btn" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">${readOnly?"Скачать отчёт":"Отчёт для родителей"}</button>
@@ -2292,11 +2467,11 @@ function renderDashboard(student,readOnly){
         <h2 class="font-display font-bold text-lg">Зоны развития</h2>
         <span class="text-xs text-ink-500">три задания, где потеряно больше всего баллов</span>
       </div>
-      <div class="grid gap-4 sm:grid-cols-3">${weakCardsMarkup(weakest,readOnly)}</div>
+      <div class="grid gap-4 sm:grid-cols-3">${weakCardsMarkup(weakest,readOnly,group)}</div>
     </div>
 
     ${essayMarkup(essay)}
-    ${historyMarkup(student,report,readOnly)}
+    ${historyMarkup(student,report,readOnly,group)}
     ${readOnly?authorCardMarkup():""}`;
 
   if(!readOnly){
@@ -2384,12 +2559,12 @@ function scoreChartMarkup(fc){
   </div>`;
 }
 
-function weakCardsMarkup(weakest,readOnly){
+function weakCardsMarkup(weakest,readOnly,group){
   if(!weakest.length) return `<div class="bg-white rounded-2xl shadow-soft p-6 text-sm text-ink-500 sm:col-span-3">Потерянных баллов нет, все задания выполнены на максимум.</div>`;
   return weakest.map(row=>{
     const topic=EGE_TOPICS[row.task]||{title:"Задание "+row.task,review:"Тема не описана."};
     const pc=Math.round(row.rate*100);
-    const cls=readOnly?null:classRateForTask(row.task);
+    const cls=readOnly?null:classRateForTask(row.task,group);
     const classPc=cls?Math.round(cls.rate*100):null;
     return `
     <div class="bg-white rounded-2xl shadow-soft p-5 flex flex-col">
@@ -2488,7 +2663,7 @@ function essayMarkup(essay){
   </div>`;
 }
 
-function historyMarkup(student,report,readOnly){
+function historyMarkup(student,report,readOnly,group){
   const exams=student.exams;
   return `
   <div class="bg-white rounded-2xl shadow-soft overflow-hidden">
@@ -2517,11 +2692,11 @@ function historyMarkup(student,report,readOnly){
           ${report.map(row=>{
             const topic=EGE_TOPICS[row.task]||{title:"Задание "+row.task,review:"Тема не описана."};
             const pc=Math.round(row.rate*100);
-            const cls=readOnly?null:classRateForTask(row.task);
+            const cls=readOnly?null:classRateForTask(row.task,group);
             const classPc=cls?Math.round(cls.rate*100):null;
             const diff=classPc===null?null:pc-classPc;
             const compare=classPc===null?"":
-              `Средний процент выполнения по классу — ${classPc}% (учтено ${cls.students} ${plural(cls.students,"ученик","ученика","учеников")}). `+
+              `Средний процент по классу «${group}» — ${classPc}% (учтено ${cls.students} ${plural(cls.students,"ученик","ученика","учеников")}). `+
               (diff>0?`Ученик выше класса на ${diff} ${plural(diff,"пункт","пункта","пунктов")}.`
                :diff<0?`Ученик ниже класса на ${Math.abs(diff)} ${plural(Math.abs(diff),"пункт","пункта","пунктов")}.`
                :`Ученик держится на уровне класса.`);
@@ -2805,7 +2980,10 @@ function renderEntry(preselectId){
             <span class="text-xs uppercase tracking-wide text-ink-500">Код ученика</span>
             <select id="entry-student" class="mt-1.5 w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm font-mono focus:border-brand-500 outline-none transition">
               <option value="">— выберите —</option>
-              ${state.students.map(s=>`<option value="${escAttr(s.id)}" ${s.id===preselectId?"selected":""}>${escHtml(s.code)}${book[s.code]?" — "+escHtml(book[s.code]):""}</option>`).join("")}
+              ${allGroups().map(gr=>`
+                <optgroup label="${escAttr(gr)}">
+                  ${studentsOfGroup(gr).map(s=>`<option value="${escAttr(s.id)}" ${s.id===preselectId?"selected":""}>${escHtml(s.code)}${book[s.code]?" — "+escHtml(book[s.code]):""}</option>`).join("")}
+                </optgroup>`).join("")}
             </select>
           </label>
           <label class="block">
@@ -2919,8 +3097,8 @@ function renderEntry(preselectId){
 const IMPORT_TASKS = KNOWN_TASKS.filter(t=>t!==27);
 
 function csvTemplate(){
-  const header=["код","дата",...IMPORT_TASKS.map(String),...CRITERIA_KEYS];
-  const maxRow=["#максимум по столбцу","",
+  const header=["код","класс","дата",...IMPORT_TASKS.map(String),...CRITERIA_KEYS];
+  const maxRow=["#максимум по столбцу","","",
     ...IMPORT_TASKS.map(t=>String(maxScoreFor(t))),
     ...CRITERIA_KEYS.map(k=>String(ESSAY_CRITERIA[k].max))];
   const lines=[
@@ -2928,7 +3106,8 @@ function csvTemplate(){
     "#Строки со знаком решётки в начале при загрузке пропускаются",
     maxRow.join(";"),
     "#Ниже вносите свои данные: одна строка — один пробник одного ученика",
-    "#Пустая ячейка означает, что задание не проверялось, ноль — что получен ноль баллов"
+    "#Столбец «класс» необязателен: если оставить пустым, ученик попадёт в «Без класса»",
+    "#Пустая ячейка задания означает, что оно не проверялось, ноль — что получен ноль баллов"
   ];
   return "\uFEFF"+lines.join("\r\n")+"\r\n";
 }
@@ -2974,11 +3153,12 @@ function parseImportText(text){
   const header=splitCsvLine(lines[0],delim).map(h=>h.replace(/^"|"$/g,"").trim());
   const shown=header.slice(0,8).join(" | ");
 
-  const map={code:-1,date:-1,tasks:{},criteria:{}};
+  const map={code:-1,date:-1,group:-1,tasks:{},criteria:{}};
   header.forEach((h,i)=>{
     const low=h.toLowerCase();
     if(map.code<0 && /^(код|code|ученик|id)/.test(low)){ map.code=i; return; }
     if(map.date<0 && /^(дата|date)/.test(low)){ map.date=i; return; }
+    if(map.group<0 && /^(класс|группа|group|class)/.test(low)){ map.group=i; return; }
     const crit=h.match(/^[КKкk]\s*(\d{1,2})$/);
     if(crit){
       const key="К"+parseInt(crit[1],10);
@@ -3006,10 +3186,16 @@ function parseImportText(text){
     const code=(cells[map.code]||"").trim();
     if(!code || code.startsWith("#")) return;
 
-    const row={line:idx+2,code,issues:[],results:{},essay:{},isNew:false};
+    const row={line:idx+2,code,issues:[],results:{},essay:{},isNew:false,group:""};
 
     const codeErr=validateCode(code);
     if(codeErr) row.issues.push(`код — ${codeErr}`);
+
+    if(map.group>=0){
+      const gr=(cells[map.group]||"").trim();
+      const grErr=validateGroup(gr);
+      if(grErr) row.issues.push(grErr); else row.group=gr;
+    }
 
     const d=parseDate(cells[map.date]);
     if(!d) row.issues.push("дата не распознана");
@@ -3040,6 +3226,7 @@ function parseImportText(text){
     const student=existing.get(code.toLowerCase());
     row.isNew=!student;
     row.studentId=student?student.id:null;
+    row.groupLabel=student?groupTitle(student.group):groupTitle(row.group);
     row.overwrite=Boolean(student && row.date && student.exams.some(e=>e.key===row.date));
 
     const essayTotal=Object.values(row.essay).reduce((a,b)=>a+b,0);
@@ -3049,7 +3236,7 @@ function parseImportText(text){
   });
 
   if(!rows.length) return {error:"В файле нет заполненных строк. Похоже, загружен пустой шаблон — внесите баллы под строками с решёткой.",headers:shown};
-  return {rows,columns:{tasks:Object.keys(map.tasks).length,criteria:Object.keys(map.criteria).length}};
+  return {rows,hasGroup:map.group>=0,columns:{tasks:Object.keys(map.tasks).length,criteria:Object.keys(map.criteria).length}};
 }
 
 function renderImport(){
@@ -3131,7 +3318,15 @@ function renderImportPreview(parsed,fileName){
   const rows=parsed.rows;
   const bad=rows.filter(r=>r.issues.length);
   const good=rows.filter(r=>!r.issues.length);
-  const newCodes=[...new Set(good.filter(r=>r.isNew).map(r=>r.code))];
+  const newEntries=[];
+  const seenNew=new Set();
+  good.filter(r=>r.isNew).forEach(r=>{
+    const key=r.code.toLowerCase();
+    if(seenNew.has(key)) return;
+    seenNew.add(key);
+    newEntries.push({code:r.code,group:r.group||""});
+  });
+  const newCodes=newEntries.map(e=>e.code);
   const overwrites=good.filter(r=>r.overwrite).length;
   const free=state.plan.limit-state.students.length;
   const overLimit=newCodes.length>free;
@@ -3143,7 +3338,7 @@ function renderImportPreview(parsed,fileName){
           <h2 class="font-display font-bold text-lg">Разбор файла</h2>
           <span class="text-xs text-ink-500 font-mono">${escHtml(fileName)}</span>
         </div>
-        <p class="text-xs text-ink-500">Распознано ${parsed.columns.tasks} ${plural(parsed.columns.tasks,"столбец","столбца","столбцов")} с заданиями и ${parsed.columns.criteria} с критериями</p>
+        <p class="text-xs text-ink-500">Распознано ${parsed.columns.tasks} ${plural(parsed.columns.tasks,"столбец","столбца","столбцов")} с заданиями и ${parsed.columns.criteria} с критериями${parsed.hasGroup?", столбец с классом найден":", столбца с классом нет — новые коды попадут в «"+escHtml(GROUP_NONE)+"»"}</p>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-100 border-y border-gray-100">
@@ -3159,6 +3354,7 @@ function renderImportPreview(parsed,fileName){
             <tr>
               <th class="px-4 py-2 text-left text-[11px] font-semibold text-ink-500">Строка</th>
               <th class="px-3 py-2 text-left text-[11px] font-semibold text-ink-500">Код</th>
+              <th class="px-3 py-2 text-left text-[11px] font-semibold text-ink-500">Класс</th>
               <th class="px-3 py-2 text-left text-[11px] font-semibold text-ink-500">Дата</th>
               <th class="px-3 py-2 text-right text-[11px] font-semibold text-ink-500">Первичный</th>
               <th class="px-3 py-2 text-right text-[11px] font-semibold text-ink-500">Тестовый</th>
@@ -3176,6 +3372,7 @@ function renderImportPreview(parsed,fileName){
               <tr class="${err?"bg-rose-50/40":""}">
                 <td class="px-4 py-1.5 font-mono text-xs tnum text-ink-500">${r.line}</td>
                 <td class="px-3 py-1.5 font-mono text-xs">${escHtml(r.code)}</td>
+                <td class="px-3 py-1.5 text-xs text-ink-500">${escHtml(r.groupLabel||GROUP_NONE)}</td>
                 <td class="px-3 py-1.5 font-mono text-xs tnum">${r.date?escHtml(formatDate(parseDate(r.date),true)):"—"}</td>
                 <td class="px-3 py-1.5 text-right font-mono text-xs tnum">${err?"—":r.primary}</td>
                 <td class="px-3 py-1.5 text-right font-mono text-xs tnum">${err?"—":r.secondary}</td>
@@ -3206,9 +3403,9 @@ function renderImportPreview(parsed,fileName){
     let saved=0, failed=0;
 
     try{
-      if(newCodes.length){
+      if(newEntries.length){
         msg.textContent="Создаём коды…";
-        await api.addStudents(newCodes);
+        await api.addStudents(newEntries);
         await reloadData();
       }
       const byCode=new Map(state.students.map(s=>[s.code.toLowerCase(),s.id]));
@@ -3289,7 +3486,7 @@ const DEMO_STUDENTS=(function(){
   const rnd=()=>{seed=(seed*1103515245+12345)%2147483648;return seed/2147483648;};
   const weak=[4,8,12,15,21], weakCriteria=["К2","К8"];
   return [{
-    code:"11А-07",
+    code:"11А-07", group:"11А",
     exams:dates.map((date,ei)=>{
       const level=Math.max(.2,Math.min(.96,.62+.018*ei+(rnd()-.5)*.09));
       const results={};
