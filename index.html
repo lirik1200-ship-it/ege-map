@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ЕГЭ_Мар · Русский язык. Результаты. Аналитика</title>
 
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235B57D6'/%3E%3Crect x='6' y='18' width='4' height='8' rx='2' fill='white' opacity='.55'/%3E%3Crect x='13' y='13' width='4' height='13' rx='2' fill='white' opacity='.8'/%3E%3Crect x='20' y='8' width='4' height='18' rx='2' fill='white'/%3E%3Ccircle cx='22' cy='5' r='2.2' fill='white'/%3E%3C/svg%3E">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -48,10 +50,8 @@
   .entry-input::-webkit-outer-spin-button,.entry-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   .entry-input[type=number]{-moz-appearance:textfield}
 
-  /* счётчик до экзамена, боковая вкладка */
   #countdown-side{writing-mode:vertical-rl;transform:rotate(180deg)}
 
-  /* превью интерфейса на приветственной странице */
   .pv{position:relative;background:#fff;border-radius:16px;padding:18px;box-shadow:0 1px 2px rgba(17,24,39,.04),0 8px 24px -12px rgba(17,24,39,.12);
       transition:transform .28s cubic-bezier(.2,.8,.3,1),box-shadow .28s ease;overflow:hidden}
   .pv:hover{transform:translateY(-6px);box-shadow:0 4px 8px rgba(17,24,39,.05),0 24px 48px -20px rgba(17,24,39,.3)}
@@ -82,7 +82,6 @@
 
   .legal h3{font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;margin:22px 0 8px}
   .legal p{font-size:13px;line-height:1.7;color:#374151;margin-bottom:8px}
-  .legal p.sub{color:#6B7280}
 
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
@@ -96,14 +95,20 @@
 
 <div id="global-tooltip" role="tooltip" aria-hidden="true"></div>
 
-<!-- Счётчик до экзамена, боковая вкладка на широких экранах -->
 <button id="countdown-side" class="hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 z-20 items-center gap-2 px-2.5 py-4 rounded-l-xl border border-r-0 text-xs font-semibold shadow-soft transition"></button>
 
 <div class="min-h-screen flex flex-col">
   <header class="sticky top-0 z-30 bg-white/85 backdrop-blur border-b border-gray-100">
     <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
       <button id="logo-btn" class="flex items-center gap-3 text-left">
-        <div class="w-9 h-9 rounded-xl bg-brand-500 text-white grid place-items-center font-display font-extrabold text-[13px] tracking-tight">ЕМ</div>
+        <div class="w-9 h-9 rounded-xl bg-brand-500 grid place-items-center shrink-0">
+          <svg viewBox="0 0 32 32" class="w-[62%] h-[62%]" fill="none" aria-hidden="true">
+            <rect x="4" y="18" width="5" height="9" rx="2.5" fill="#fff" opacity=".55"/>
+            <rect x="12" y="13" width="5" height="14" rx="2.5" fill="#fff" opacity=".8"/>
+            <rect x="20" y="7" width="5" height="20" rx="2.5" fill="#fff"/>
+            <circle cx="22.5" cy="4" r="2.4" fill="#fff"/>
+          </svg>
+        </div>
         <div>
           <div class="font-display font-extrabold leading-tight tracking-tight">ЕГЭ_Мар</div>
           <div class="text-xs text-ink-500 leading-tight">Русский язык. Результаты. Аналитика.</div>
@@ -190,9 +195,8 @@ const EXAM_DATE = EXAM.date;
 
 // ▼ ВИДЕО-ПРИВЕТСТВИЕ. Заполните ОДНО из полей, остальные оставьте пустыми.
 //   youtube — идентификатор ролика из ссылки youtube.com/watch?v=ИДЕНТИФИКАТОР
-//   vk      — готовый адрес плеера из кода вставки ВКонтакте, начинается с https://vk.com/video_ext.php?...
-//   file    — путь к файлу mp4, который лежит рядом с этим html, например "welcome.mp4"
-//   poster  — необязательная картинка-заставка для варианта с файлом
+//   vk      — адрес плеера из кода вставки ВКонтакте, начинается с https://vk.com/video_ext.php?...
+//   file    — путь к файлу mp4 рядом с этим html, например "welcome.mp4"
 const LANDING_VIDEO = { youtube:"", vk:"", file:"", poster:"" };
 
 const AUTHOR = {
@@ -201,7 +205,9 @@ const AUTHOR = {
   tagline: "Русский язык. Результаты. Аналитика.",
   telegram: "https://t.me/ege_minkin",
   vk: "https://vk.ru/egeminkin",
-  email: "[укажите почту для обращений]"
+  email: "[укажите почту для обращений]",
+  photo: "author.jpg",   // положите квадратное фото рядом с этим файлом; пусто — останутся буквы
+  initials: "ЕМ"
 };
 
 // Реквизиты для документов. Заполните перед публикацией.
@@ -480,6 +486,26 @@ function escAttr(v){
     .replace(/'/g,"&#39;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 const escHtml = escAttr;
+
+// Фотография автора. Буквы лежат под фото и остаются видны, если файл не загрузится.
+function avatarMarkup(size,text){
+  const img = AUTHOR.photo
+    ? `<img src="${escAttr(AUTHOR.photo)}" alt="${escAttr(AUTHOR.name)}" class="absolute inset-0 w-full h-full object-cover" onerror="this.remove()">`
+    : "";
+  return `<div class="relative ${size} rounded-full overflow-hidden bg-brand-500 text-white grid place-items-center font-display font-extrabold ${text} shrink-0">${escHtml(AUTHOR.initials)}${img}</div>`;
+}
+// Знак продукта: растущие столбцы и точка прогноза
+function logoMarkup(size){
+  return `<div class="${size} rounded-xl bg-brand-500 grid place-items-center shrink-0">
+    <svg viewBox="0 0 32 32" class="w-[62%] h-[62%]" fill="none" aria-hidden="true">
+      <rect x="4" y="18" width="5" height="9" rx="2.5" fill="#fff" opacity=".55"/>
+      <rect x="12" y="13" width="5" height="14" rx="2.5" fill="#fff" opacity=".8"/>
+      <rect x="20" y="7" width="5" height="20" rx="2.5" fill="#fff"/>
+      <circle cx="22.5" cy="4" r="2.4" fill="#fff"/>
+    </svg>
+  </div>`;
+}
+
 function parseDate(raw){
   if(raw instanceof Date) return raw;
   const s=String(raw||"").trim();
@@ -562,8 +588,7 @@ const consentStore = {
     const rec={version:CONSENT_VERSION,at:new Date().toISOString(),email:email||""};
     try{ localStorage.setItem(CONSENT_KEY,JSON.stringify(rec)); }catch(e){}
     return rec;
-  },
-  isActual(){ const r=consentStore.read(); return Boolean(r && r.version===CONSENT_VERSION); }
+  }
 };
 
 /* =========================================================================
@@ -895,7 +920,7 @@ function renderCountdown(){
   const tip=`${EXAM.preliminary?"Предварительная дата":"Дата"} экзамена — ${dateLabel}. ${EXAM.preliminary?EXAM.note:""}`;
 
   side.className=`hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 z-20 items-center gap-2 px-2.5 py-4 rounded-l-xl border border-r-0 text-xs font-semibold shadow-soft transition ${st.cls}`;
-  side.innerHTML=`<span>${escHtml(st.text)}${EXAM.preliminary?" ·":""}</span>${EXAM.preliminary?`<span class="opacity-70 font-normal">дата предварительная</span>`:""}`;
+  side.innerHTML=`<span>${escHtml(st.text)}</span>${EXAM.preliminary?`<span class="opacity-70 font-normal">дата предварительная</span>`:""}`;
   side.setAttribute("title",tip);
   side.onclick=()=>{ if(state.mode==="guest"||state.mode==="auth") route("screen-landing"); };
 
@@ -1028,12 +1053,13 @@ function videoBlockMarkup(){
         </div>`}
       </div>
       <div class="p-6 sm:p-7 flex flex-col justify-center">
-        <h2 class="font-display font-bold text-lg mb-3">Привет, на связи разработчики ЕГЭ_Map!</h2>
+        <h2 class="font-display font-bold text-lg mb-3">Знакомство за три минуты</h2>
         <p class="text-sm text-ink-500 leading-relaxed mb-4">
-          В этом видео расскажем о возможностях и функциях нашего приложения, покажем кабинет учителя и ученика и объясним, почему вам нужно воспользоваться нашим сервисом!
+          Автор проекта показывает, как вносятся баллы за пробник, где смотреть слабые темы ученика
+          и как за один клик получить отчёт для родителей.
         </p>
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-brand-500 text-white grid place-items-center font-display font-extrabold text-xs shrink-0">ЕМ</div>
+          ${avatarMarkup("w-10 h-10","text-xs")}
           <div class="text-sm">
             <div class="font-semibold">${escHtml(AUTHOR.name)}</div>
             <div class="text-xs text-ink-500">преподаватель русского языка, автор ${escHtml(AUTHOR.brand)}</div>
@@ -1158,7 +1184,13 @@ function previewReport(){
   <div class="pv">
     <span class="pv-tag">отчёт родителям</span>
     <div class="flex items-center gap-2 pb-2.5 mb-3 border-b-2 border-brand-500">
-      <div class="w-7 h-7 rounded-lg bg-brand-500 text-white grid place-items-center font-display font-extrabold text-[10px]">ЕМ</div>
+      <div class="w-7 h-7 rounded-lg bg-brand-500 grid place-items-center shrink-0">
+        <svg viewBox="0 0 32 32" class="w-[62%] h-[62%]" fill="none" aria-hidden="true">
+          <rect x="4" y="18" width="5" height="9" rx="2.5" fill="#fff" opacity=".55"/>
+          <rect x="12" y="13" width="5" height="14" rx="2.5" fill="#fff" opacity=".8"/>
+          <rect x="20" y="7" width="5" height="20" rx="2.5" fill="#fff"/>
+        </svg>
+      </div>
       <div><div class="font-display font-extrabold text-[11px] leading-tight">ЕГЭ_Мар</div><div class="text-[9px] text-ink-500">отчёт от 21.02.2026</div></div>
     </div>
     <div class="flex gap-4 mb-3">
@@ -1275,7 +1307,7 @@ function renderLanding(){
       </div>
 
       <div class="bg-white rounded-2xl shadow-soft p-6 sm:p-7 flex flex-wrap items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-brand-500 text-white grid place-items-center font-display font-extrabold shrink-0">ЕМ</div>
+        ${avatarMarkup("w-12 h-12","text-base")}
         <div class="flex-1 min-w-[220px]">
           <div class="font-display font-bold">${escHtml(AUTHOR.name)}</div>
           <div class="text-xs text-ink-500">Автор проекта ${escHtml(AUTHOR.brand)}. Вопросы, доступ и подписка — в личных сообщениях.</div>
@@ -1311,6 +1343,8 @@ const FAQ=[
    a:"Напишите мне, и я перевыпущу токен. Старая ссылка перестанет работать сразу."},
   {q:"Можно ли загрузить результаты таблицей?",
    a:"Да. На экране ввода есть импорт из таблицы, там же скачивается шаблон с готовыми столбцами. Перед сохранением показывается разбор построчно с ошибками, если они есть."},
+  {q:"В какой кодировке сохранять файл для импорта?",
+   a:"Подойдёт и UTF-8, и Windows-1251, приложение определяет кодировку само. Разделитель тоже определяется автоматически: точка с запятой, табуляция или запятая."},
   {q:"Приложение работает с телефона?",
    a:"Да, интерфейс адаптирован. Но вводить баллы за пробник удобнее с компьютера, там работает переход между полями с клавиатуры."},
   {q:"Сколько времени занимает ввод одного пробника?",
@@ -1470,7 +1504,7 @@ function renderAuth(){
   $("#screen-auth").innerHTML=`
     <div class="max-w-sm mx-auto bg-white rounded-2xl shadow-soft p-7 mt-6">
       <div class="flex items-center gap-3 mb-5">
-        <div class="w-10 h-10 rounded-xl bg-brand-500 text-white grid place-items-center font-display font-extrabold text-sm">ЕМ</div>
+        ${logoMarkup("w-10 h-10")}
         <div>
           <div class="font-display font-extrabold leading-tight">${escHtml(AUTHOR.brand)}</div>
           <div class="text-xs text-ink-500">${escHtml(AUTHOR.tagline)}</div>
@@ -1570,7 +1604,7 @@ const shareLink=token=>`${location.origin}${location.pathname}?s=${token}`;
 function authorCardMarkup(){
   return `
   <div class="mt-6 bg-white rounded-2xl shadow-soft p-5 sm:p-6 flex flex-wrap items-center gap-4">
-    <div class="w-11 h-11 rounded-xl bg-brand-500 text-white grid place-items-center font-display font-extrabold text-sm shrink-0">ЕМ</div>
+    ${avatarMarkup("w-11 h-11","text-sm")}
     <div class="flex-1 min-w-[200px]">
       <div class="font-display font-bold">${escHtml(AUTHOR.name)}</div>
       <div class="text-xs text-ink-500">${escHtml(AUTHOR.brand)} · ${escHtml(AUTHOR.tagline)} Разборы, материалы и расписание занятий — в моих каналах.</div>
@@ -2071,7 +2105,7 @@ function groupReportDocument(g,examLabel,images){
 <style>
  body{font-family:-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:#111827;max-width:860px;margin:32px auto;padding:0 20px;line-height:1.6}
  .brandbar{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid #5B57D6;margin-bottom:20px}
- .mark{width:38px;height:38px;border-radius:11px;background:#5B57D6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+ .mark{width:38px;height:38px;border-radius:11px;background:#5B57D6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;overflow:hidden}
  .brandname{font-weight:800;font-size:15px;line-height:1.2}
  .brandsub{font-size:11px;color:#6B7280}
  h1{font-size:22px;margin:0 0 4px} h2{font-size:16px;margin:26px 0 10px}
@@ -2182,7 +2216,7 @@ function openGroupReport(g,examLabel){
   modal.innerHTML=`
     <div class="bg-white rounded-2xl shadow-lift max-w-lg w-full p-6">
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-9 h-9 rounded-xl bg-brand-500 text-white grid place-items-center font-display font-extrabold text-[13px]">ЕМ</div>
+        ${avatarMarkup("w-9 h-9","text-[13px]")}
         <div>
           <h2 class="font-display font-extrabold text-lg leading-tight">Отчёт по классу готов</h2>
           <p class="text-xs text-ink-500">Выборка — ${escHtml(examLabel)}</p>
@@ -2660,7 +2694,7 @@ function reportDocument(student,s,fc,weakest,essay,images){
 <style>
  body{font-family:-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:#111827;max-width:720px;margin:32px auto;padding:0 20px;line-height:1.6}
  .brandbar{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid #5B57D6;margin-bottom:20px}
- .mark{width:38px;height:38px;border-radius:11px;background:#5B57D6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+ .mark{width:38px;height:38px;border-radius:11px;background:#5B57D6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;overflow:hidden}
  .brandname{font-weight:800;font-size:15px;line-height:1.2}
  .brandsub{font-size:11px;color:#6B7280}
  h1{font-size:22px;margin:0 0 4px} h2{font-size:16px;margin:24px 0 8px}
@@ -2714,7 +2748,7 @@ function openReport(student,s,fc,weakest,essay){
   modal.innerHTML=`
     <div class="bg-white rounded-2xl shadow-lift max-w-lg w-full p-6">
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-9 h-9 rounded-xl bg-brand-500 text-white grid place-items-center font-display font-extrabold text-[13px]">ЕМ</div>
+        ${avatarMarkup("w-9 h-9","text-[13px]")}
         <div>
           <h2 class="font-display font-extrabold text-lg leading-tight">Отчёт готов</h2>
           <p class="text-xs text-ink-500">${escHtml(AUTHOR.brand)} · контакты добавлены в файл</p>
@@ -2880,16 +2914,23 @@ function renderEntry(preselectId){
 
 /* =========================================================================
    20. ИМПОРТ ИЗ ТАБЛИЦЫ
+   Файл разбирается в браузере, результат сохраняется в облако.
    ========================================================================= */
 const IMPORT_TASKS = KNOWN_TASKS.filter(t=>t!==27);
 
 function csvTemplate(){
   const header=["код","дата",...IMPORT_TASKS.map(String),...CRITERIA_KEYS];
-  const hint=["11А-07","20.09.2025",...IMPORT_TASKS.map(t=>maxScoreFor(t)===2?"2":"1"),
-              ...CRITERIA_KEYS.map(k=>String(ESSAY_CRITERIA[k].max))];
-  const blank=["У-03","18.10.2025",...IMPORT_TASKS.map(()=>""),...CRITERIA_KEYS.map(()=>"")];
-  const rows=[header,hint,blank].map(r=>r.join(";")).join("\r\n");
-  return "\uFEFF"+rows+"\r\n";
+  const maxRow=["#максимум по столбцу","",
+    ...IMPORT_TASKS.map(t=>String(maxScoreFor(t))),
+    ...CRITERIA_KEYS.map(k=>String(ESSAY_CRITERIA[k].max))];
+  const lines=[
+    header.join(";"),
+    "#Строки со знаком решётки в начале при загрузке пропускаются",
+    maxRow.join(";"),
+    "#Ниже вносите свои данные: одна строка — один пробник одного ученика",
+    "#Пустая ячейка означает, что задание не проверялось, ноль — что получен ноль баллов"
+  ];
+  return "\uFEFF"+lines.join("\r\n")+"\r\n";
 }
 
 function splitCsvLine(line,delim){
@@ -2913,6 +2954,17 @@ function detectDelimiter(firstLine){
   return counts[0][1]>0?counts[0][0]:";";
 }
 
+// Кодировка определяется автоматически: UTF-8 или Windows-1251
+function decodeBytes(buffer){
+  const bytes=new Uint8Array(buffer);
+  if(bytes[0]===0xEF&&bytes[1]===0xBB&&bytes[2]===0xBF) return new TextDecoder("utf-8").decode(bytes);
+  try{ return new TextDecoder("utf-8",{fatal:true}).decode(bytes); }
+  catch(e){
+    try{ return new TextDecoder("windows-1251").decode(bytes); }
+    catch(_){ return new TextDecoder("utf-8").decode(bytes); }
+  }
+}
+
 function parseImportText(text){
   const clean=text.replace(/^\uFEFF/,"").replace(/\r\n?/g,"\n");
   const lines=clean.split("\n").filter(l=>l.trim()!=="");
@@ -2920,6 +2972,7 @@ function parseImportText(text){
 
   const delim=detectDelimiter(lines[0]);
   const header=splitCsvLine(lines[0],delim).map(h=>h.replace(/^"|"$/g,"").trim());
+  const shown=header.slice(0,8).join(" | ");
 
   const map={code:-1,date:-1,tasks:{},criteria:{}};
   header.forEach((h,i)=>{
@@ -2939,10 +2992,10 @@ function parseImportText(text){
     }
   });
 
-  if(map.code<0) return {error:"Не найден столбец с кодом ученика. Первый столбец должен называться «код»."};
-  if(map.date<0) return {error:"Не найден столбец с датой пробника."};
+  if(map.code<0) return {error:"Не найден столбец с кодом ученика. Первый столбец должен называться «код».",headers:shown};
+  if(map.date<0) return {error:"Не найден столбец с датой пробника. Второй столбец должен называться «дата».",headers:shown};
   if(!Object.keys(map.tasks).length && !Object.keys(map.criteria).length)
-    return {error:"Не найдено ни одного столбца с заданиями или критериями."};
+    return {error:"Не найдено ни одного столбца с заданиями или критериями.",headers:shown};
 
   const existing=new Map(state.students.map(s=>[s.code.toLowerCase(),s]));
   const seen=new Set();
@@ -2951,7 +3004,7 @@ function parseImportText(text){
   lines.slice(1).forEach((line,idx)=>{
     const cells=splitCsvLine(line,delim).map(c=>c.replace(/^"|"$/g,"").trim());
     const code=(cells[map.code]||"").trim();
-    if(!code) return;
+    if(!code || code.startsWith("#")) return;
 
     const row={line:idx+2,code,issues:[],results:{},essay:{},isNew:false};
 
@@ -2995,7 +3048,7 @@ function parseImportText(text){
     rows.push(row);
   });
 
-  if(!rows.length) return {error:"В файле нет строк с кодами учеников."};
+  if(!rows.length) return {error:"В файле нет заполненных строк. Похоже, загружен пустой шаблон — внесите баллы под строками с решёткой.",headers:shown};
   return {rows,columns:{tasks:Object.keys(map.tasks).length,criteria:Object.keys(map.criteria).length}};
 }
 
@@ -3019,7 +3072,7 @@ function renderImport(){
         <div id="drop-zone" class="bg-white rounded-2xl shadow-soft border-2 border-dashed border-gray-200 hover:border-brand-500 transition p-8 text-center cursor-pointer mb-4">
           <div class="text-3xl text-ink-300 mb-2 leading-none">+</div>
           <div class="font-display font-bold text-[15px] mb-1">Перетащите файл сюда или нажмите</div>
-          <div class="text-xs text-ink-500">Форматы CSV и TSV, разделитель определяется автоматически</div>
+          <div class="text-xs text-ink-500">Форматы CSV и TSV, кодировка и разделитель определяются автоматически</div>
           <input id="file-input" type="file" accept=".csv,.tsv,.txt,text/csv" class="hidden">
         </div>
         <div id="import-result"></div>
@@ -3032,7 +3085,7 @@ function renderImport(){
           <p>Одна строка — один пробник одного ученика. Несколько дат по одному коду вносите отдельными строками.</p>
           <p>Пустая ячейка означает, что задание не проверялось. Ноль означает, что ученик получил ноль баллов.</p>
           <p>Дата принимается в виде 20.09.2025 или 2025-09-20.</p>
-          <p class="text-ink-500">Во второй строке шаблона стоят максимальные баллы для подсказки, её нужно заменить своими данными или удалить.</p>
+          <p class="text-ink-500">Строки, начинающиеся со знака решётки, при загрузке пропускаются — в шаблоне так помечены подсказки.</p>
         </div>
       </div>
     </div>`;
@@ -3059,16 +3112,19 @@ function readImportFile(file){
   const reader=new FileReader();
   reader.onerror=()=>{ box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5 text-sm text-rose-600">Файл не прочитался. Попробуйте пересохранить его как CSV.</div>`; };
   reader.onload=()=>{
-    const parsed=parseImportText(String(reader.result||""));
+    let text="";
+    try{ text=decodeBytes(reader.result); }catch(e){ text=""; }
+    const parsed=parseImportText(text);
     if(parsed.error){
       box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5">
         <div class="text-sm text-rose-600 mb-2">${escHtml(parsed.error)}</div>
-        <div class="text-xs text-ink-500">Скачайте шаблон и перенесите данные в него, так столбцы точно совпадут.</div></div>`;
+        ${parsed.headers?`<div class="text-xs text-ink-500 mb-2">Что приложение увидело в первой строке: <span class="font-mono">${escHtml(parsed.headers)}</span></div>`:""}
+        <div class="text-xs text-ink-500">Скачайте шаблон заново и перенесите данные в него, так столбцы точно совпадут.</div></div>`;
       return;
     }
     renderImportPreview(parsed,file.name);
   };
-  reader.readAsText(file,"UTF-8");
+  reader.readAsArrayBuffer(file);
 }
 
 function renderImportPreview(parsed,fileName){
@@ -3224,7 +3280,7 @@ window.addEventListener("resize",hideTooltip);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")hideTooltip();});
 
 /* =========================================================================
-   22. ДЕМО-ДАННЫЕ
+   22. ДЕМО-ДАННЫЕ ДЛЯ РЕЖИМА БЕЗ БАЗЫ
    ========================================================================= */
 const DEMO_STUDENTS=(function(){
   const dates=["2025-09-20","2025-10-18","2025-11-22","2025-12-20","2026-01-24","2026-02-21"];
