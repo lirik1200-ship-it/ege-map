@@ -592,37 +592,57 @@ const consentStore = {
   }
 };
 
-/* --- Классы и группы ---------------------------------------------------
-   Класс хранится строкой в поле group_name. Пустое значение означает,
-   что ученик пока не распределён.
+/* --- Классы ------------------------------------------------------------
+   Класс — самостоятельная запись в таблице classes. Ученик ссылается на
+   неё полем class_id, поэтому класс может существовать и без учеников.
 ------------------------------------------------------------------------- */
+const NO_CLASS = "__none__";
 const GROUP_NONE = "Без класса";
-const GROUP_MAX = 20;
+const CLASS_MAX = 20;
 const groupTitle = g => (g && String(g).trim()) ? String(g).trim() : GROUP_NONE;
 
-function validateGroup(raw){
+function validateClassName(raw){
   const s=String(raw||"").trim();
-  if(!s) return null;
-  if(s.length>GROUP_MAX) return `название класса длиннее ${GROUP_MAX} символов`;
-  if(/[<>"]/.test(s)) return "недопустимые символы в названии класса";
+  if(!s) return "название класса не может быть пустым";
+  if(s.length>CLASS_MAX) return `название длиннее ${CLASS_MAX} символов`;
+  if(/[<>"]/.test(s)) return "недопустимые символы в названии";
   return null;
 }
-function allGroups(){
-  const set=new Set(state.students.map(s=>groupTitle(s.group)));
-  return [...set].sort((a,b)=>
-    a===GROUP_NONE?1 : b===GROUP_NONE?-1 : a.localeCompare(b,"ru"));
+const classById = id => state.classes.find(c=>c.id===id) || null;
+function classKeyTitle(key){
+  if(key==="all") return "Все классы";
+  if(key===NO_CLASS) return GROUP_NONE;
+  const c=classById(key);
+  return c ? c.name : GROUP_NONE;
 }
-function groupSizes(){
-  const map={};
-  state.students.forEach(s=>{ const g=groupTitle(s.group); map[g]=(map[g]||0)+1; });
-  return map;
+function studentsOfKey(key){
+  if(!key || key==="all") return state.students;
+  if(key===NO_CLASS) return state.students.filter(s=>!s.classId);
+  return state.students.filter(s=>s.classId===key);
 }
-function studentsOfGroup(name){
-  if(!name || name==="all") return state.students;
-  return state.students.filter(s=>groupTitle(s.group)===name);
+function currentClassStudents(){ return studentsOfKey(state.currentClass); }
+function studentClassKey(student){ return student.classId || NO_CLASS; }
+// вкладки: все классы, затем «Без класса», если там кто-то есть
+function classTabs(){
+  const tabs=state.classes.map(c=>({key:c.id,title:c.name,count:studentsOfKey(c.id).length}));
+  const orphans=studentsOfKey(NO_CLASS).length;
+  if(orphans) tabs.push({key:NO_CLASS,title:GROUP_NONE,count:orphans});
+  return tabs;
 }
-function currentGroupStudents(){ return studentsOfGroup(state.currentGroup); }
-function groupLabel(name){ return name==="all" ? "все классы" : name; }
+function tabsMarkup(active){
+  const tabs=classTabs();
+  if(!tabs.length) return "";
+  return `
+    <div class="flex flex-wrap gap-1 mb-5 text-sm">
+      <button data-tab-key="all" class="class-tab px-3 py-1.5 rounded-lg font-medium transition ${active==="all"?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
+        Все классы <span class="font-mono text-xs tnum text-ink-300">${state.students.length}</span>
+      </button>
+      ${tabs.map(t=>`
+        <button data-tab-key="${escAttr(t.key)}" class="class-tab px-3 py-1.5 rounded-lg font-medium transition ${active===t.key?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
+          ${escHtml(t.title)} <span class="font-mono text-xs tnum text-ink-300">${t.count}</span>
+        </button>`).join("")}
+    </div>`;
+}
 
 /* =========================================================================
    6. МОДЕЛЬ ДАННЫХ
@@ -669,36 +689,63 @@ const api = {
     }catch(e){ return {...PLANS[DEFAULT_PLAN]}; }
   },
   async load(){
-    const [{data:students,error:e1},{data:exams,error:e2}] = await Promise.all([
-      db.from("students").select("id,name,share_token,group_name").order("name"),
+    const [{data:classes,error:e0},{data:students,error:e1},{data:exams,error:e2}] = await Promise.all([
+      db.from("classes").select("id,name").order("name"),
+      db.from("students").select("id,name,share_token,class_id").order("name"),
       db.from("exams").select("student_id,exam_date,results,essay").order("exam_date")
     ]);
+    if(e0) throw new Error("Классы не загрузились: "+e0.message+". Выполните SQL из инструкции — нужна таблица classes.");
     if(e1) throw new Error("Ученики не загрузились: "+e1.message);
     if(e2) throw new Error("Пробники не загрузились: "+e2.message);
+    const classNameById=new Map((classes||[]).map(c=>[c.id,c.name]));
     const byStudent={};
     (exams||[]).forEach(row=>{
       const ex=buildExam({date:row.exam_date,results:row.results,essay:row.essay});
       if(!ex) return;
       (byStudent[row.student_id]=byStudent[row.student_id]||[]).push(ex);
     });
-    return (students||[]).map(s=>({
-      id:s.id, code:s.name, shareToken:s.share_token, group:(s.group_name||"").trim(),
-      exams:(byStudent[s.id]||[]).sort((a,b)=>(a.date&&b.date)?a.date-b.date:0)
-    }));
+    return {
+      classes:(classes||[]).map(c=>({id:c.id,name:c.name})),
+      students:(students||[]).map(s=>({
+        id:s.id, code:s.name, shareToken:s.share_token,
+        classId:s.class_id||null,
+        className:s.class_id?(classNameById.get(s.class_id)||""):"",
+        exams:(byStudent[s.id]||[]).sort((a,b)=>(a.date&&b.date)?a.date-b.date:0)
+      }))
+    };
   },
-  // items — массив строк или объектов вида {code, group}
+  async createClass(name){
+    const {data:{user},error:userErr}=await db.auth.getUser();
+    if(userErr||!user) throw new Error("Сессия истекла, войдите заново.");
+    const {data,error}=await db.from("classes").insert({name,teacher_id:user.id}).select("id,name").single();
+    if(error) throw new Error(error.code==="23505"?"Класс с таким названием уже есть":error.message);
+    return data;
+  },
+  async renameClass(id,name){
+    const {error}=await db.from("classes").update({name}).eq("id",id);
+    if(error) throw new Error(error.code==="23505"?"Класс с таким названием уже есть":error.message);
+  },
+  async deleteClass(id){
+    const {error}=await db.from("classes").delete().eq("id",id);
+    if(error) throw new Error(error.message);
+  },
+  async setStudentClass(id,classId){
+    const {error}=await db.from("students").update({class_id:classId||null}).eq("id",id);
+    if(error) throw new Error(error.message);
+  },
+  async renameStudent(id,code){
+    const {error}=await db.from("students").update({name:code}).eq("id",id);
+    if(error) throw new Error(error.code==="23505"?"Такой код уже используется":error.message);
+  },
+  // items — массив объектов вида {code, classId}
   async addStudents(items){
     const {data:{user},error:userErr}=await db.auth.getUser();
     if(userErr||!user) throw new Error("Сессия истекла, войдите заново.");
     const rows=items.map(it=>typeof it==="string"
-      ? {name:it,teacher_id:user.id,group_name:null}
-      : {name:it.code,teacher_id:user.id,group_name:(it.group||"").trim()||null});
+      ? {name:it,teacher_id:user.id,class_id:null}
+      : {name:it.code,teacher_id:user.id,class_id:it.classId||null});
     const {error}=await db.from("students").insert(rows);
-    if(error) throw new Error(error.message);
-  },
-  async setGroup(id,group){
-    const {error}=await db.from("students").update({group_name:(group||"").trim()||null}).eq("id",id);
-    if(error) throw new Error(error.message);
+    if(error) throw new Error(error.code==="23505"?"Один из кодов уже используется":error.message);
   },
   async removeStudent(id){
     const {error}=await db.from("students").delete().eq("id",id);
@@ -714,7 +761,7 @@ const api = {
     if(error) throw new Error(error.message);
     if(!data) throw new Error("Ссылка недействительна или ученик удалён.");
     return {
-      id:"shared", code:data.name, group:"", shareToken:token,
+      id:"shared", code:data.name, classId:null, className:"", shareToken:token,
       exams:(data.exams||[]).map(buildExam).filter(Boolean).sort((a,b)=>(a.date&&b.date)?a.date-b.date:0)
     };
   }
@@ -757,9 +804,9 @@ function weaknessReport(student,taskNumbers){
 const topWeakTasks=(report,count)=>report.filter(r=>r.lost>0)
   .sort((a,b)=>(b.lost-a.lost)||(a.rate-b.rate)||(a.task-b.task)).slice(0,count);
 
-function classRateForTask(task,group){
+function classRateForTask(task,classKey){
   let possible=0,scored=0,students=0;
-  const list = group===undefined ? state.students : studentsOfGroup(group);
+  const list = classKey===undefined ? state.students : studentsOfKey(classKey);
   list.forEach(st=>{
     let seen=false;
     st.exams.forEach(ex=>{
@@ -918,8 +965,9 @@ function groupReport(students,taskNumbers,examKey){
 const state={
   students:[], taskNumbers:[], charts:{}, filter:"",
   mode:"boot", screen:"screen-loading", view:"screen-list",
-  currentStudent:null, groupExam:"last", groupSort:"rate", email:"", currentGroup:"all",
-  plan:{...PLANS[DEFAULT_PLAN]}, legalTab:"offer"
+  currentStudent:null, groupExam:"last", groupSort:"rate", email:"",
+  plan:{...PLANS[DEFAULT_PLAN]}, legalTab:"offer",
+  classes:[], currentClass:"all"
 };
 
 function makeChart(id,config){
@@ -1029,8 +1077,12 @@ document.querySelectorAll(".legal-link").forEach(b=>b.onclick=()=>openLegal(b.da
 function fail(message){ setMode("error"); $("#error-detail").textContent=message; showScreen("screen-error"); }
 async function reloadData(){
   if(state.mode!=="teacher") return;
-  state.students=await api.load();
+  const data=await api.load();
+  state.classes=data.classes;
+  state.students=data.students;
   state.taskNumbers=collectTaskNumbers(state.students);
+  if(state.currentClass!=="all" && state.currentClass!==NO_CLASS
+     && !state.classes.some(c=>c.id===state.currentClass)) state.currentClass="all";
 }
 
 $("#logo-btn").onclick=()=>{
@@ -1047,7 +1099,8 @@ async function boot(){
   try{
     if(!hasBackend() || !db){
       setMode("demo");
-      state.students=DEMO_STUDENTS.map((s,i)=>({id:"demo"+i,code:s.code,group:s.group||"",shareToken:null,
+      state.classes=[{id:"demo-class",name:"11А"}];
+      state.students=DEMO_STUDENTS.map((s,i)=>({id:"demo"+i,code:s.code,classId:"demo-class",className:"11А",shareToken:null,
         exams:s.exams.map(buildExam).filter(Boolean)}));
       state.taskNumbers=collectTaskNumbers(state.students);
       renderStudentList(); showScreen("screen-list");
@@ -1400,8 +1453,12 @@ const FAQ=[
    a:"Нет. По ссылке доступны только его собственные баллы и рекомендации. Сравнение с классом видит лишь преподаватель."},
   {q:"Что делать, если ссылка ученика попала не тому человеку?",
    a:"Напишите мне, и я перевыпущу токен. Старая ссылка перестанет работать сразу."},
-  {q:"Можно ли разделить учеников на классы?",
-   a:"Да. У каждого кода есть поле класса, его можно задать при добавлении, изменить в разделе «Распределение по классам» или указать столбцом в импортируемой таблице. Статистика, план занятия и отчёт считаются по выбранному классу отдельно."},
+  {q:"Как устроены классы?",
+   a:"Сначала создаёте класс, затем добавляете в него учеников. Класс существует и без учеников, поэтому его можно завести заранее. Статистика, план занятия и отчёт считаются по выбранному классу отдельно."},
+  {q:"Можно перенести ученика в другой класс или изменить его код?",
+   a:"Да. Нажмите на многоточие в карточке ученика: там меняется и код, и класс. Все внесённые пробники сохраняются, ссылка для ученика продолжает работать."},
+  {q:"Что будет с учениками, если удалить класс?",
+   a:"Ученики и их результаты сохранятся и перейдут в «Без класса», откуда их можно распределить заново."},
   {q:"Лимит тарифа считается по каждому классу или по всем сразу?",
    a:"По всем сразу. На базовом тарифе доступно три ученика во всех классах вместе, а не три в каждом."},
   {q:"Можно ли загрузить результаты таблицей?",
@@ -1697,49 +1754,56 @@ const safeName=s=>String(s).replace(/[\\/:*?"<>|]+/g,"_").replace(/\s+/g,"_");
 function renderStudentList(){
   const canEdit=modeConfig().canEdit;
   const q=state.filter.trim().toLowerCase();
-  const groups=allGroups();
-  const sizes=groupSizes();
-  if(state.currentGroup!=="all" && !groups.includes(state.currentGroup)) state.currentGroup="all";
-
-  const scope=currentGroupStudents();
+  const hasClasses=state.classes.length>0;
+  const scope=currentClassStudents();
   const withData=scope.filter(s=>s.exams.length);
   const empty=scope.filter(s=>!s.exams.length);
   const visible=withData.filter(s=>s.code.toLowerCase().includes(q));
   const used=state.students.length, limit=state.plan.limit, atLimit=used>=limit;
   const book=codebook.read();
+  const activeClass = (state.currentClass!=="all" && state.currentClass!==NO_CLASS) ? classById(state.currentClass) : null;
 
-  const tabs = groups.length>1 || state.currentGroup!=="all" ? `
-    <div class="flex flex-wrap gap-1 mb-5 text-sm">
-      <button data-group="all" class="group-tab px-3 py-1.5 rounded-lg font-medium transition ${state.currentGroup==="all"?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
-        Все классы <span class="font-mono text-xs tnum text-ink-300">${state.students.length}</span>
-      </button>
-      ${groups.map(g=>`
-        <button data-group="${escAttr(g)}" class="group-tab px-3 py-1.5 rounded-lg font-medium transition ${state.currentGroup===g?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
-          ${escHtml(g)} <span class="font-mono text-xs tnum text-ink-300">${sizes[g]||0}</span>
-        </button>`).join("")}
-    </div>` : "";
+  // Онбординг: пока нет ни одного класса, показываем только создание класса
+  if(canEdit && !hasClasses && !state.students.length){
+    $("#screen-list").innerHTML=`
+      <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-soft p-8 text-center mt-6">
+        <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 grid place-items-center mx-auto mb-4 text-xl font-display font-extrabold">1</div>
+        <h1 class="font-display font-extrabold text-xl mb-2">Создайте первый класс</h1>
+        <p class="text-sm text-ink-500 leading-relaxed mb-6">
+          Работа начинается с класса или группы: 11А, поток 2027, группа Пн-Ср. Внутри класса вы заводите
+          учеников обезличенными кодами, а статистика считается по каждому классу отдельно.
+        </p>
+        <button id="first-class" class="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">Создать класс</button>
+      </div>`;
+    $("#first-class").onclick=()=>openClassEditor(null);
+    return;
+  }
 
   $("#screen-list").innerHTML=`
     <div class="flex flex-wrap items-end justify-between gap-4 mb-5">
       <div>
-        <h1 class="font-display font-extrabold text-2xl tracking-tight">Ученики</h1>
+        <h1 class="font-display font-extrabold text-2xl tracking-tight">${escHtml(classKeyTitle(state.currentClass))}</h1>
         <p class="text-sm text-ink-500 mt-1">
           ${used} из ${limit} ${plural(limit,"места","мест","мест")} занято во всех классах · тариф «${escHtml(state.plan.name)}»
         </p>
       </div>
-      <div class="flex gap-2">
+      <div class="flex flex-wrap gap-2">
         <input id="search" type="search" value="${escAttr(state.filter)}" placeholder="Найти по коду"
-          class="w-48 max-w-full px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-sm placeholder:text-ink-300 focus:border-brand-500 outline-none transition">
-        ${canEdit?`<button id="add-students" class="px-4 py-2.5 rounded-xl ${atLimit?"bg-white border border-gray-200 text-ink-300 cursor-not-allowed":"bg-white border border-gray-200 hover:border-brand-500"} text-sm font-semibold transition whitespace-nowrap" ${atLimit?"disabled":""}>Добавить учеников</button>`:""}
+          class="w-44 max-w-full px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-sm placeholder:text-ink-300 focus:border-brand-500 outline-none transition">
+        ${canEdit?`
+          <button id="new-class" class="px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition whitespace-nowrap">Новый класс</button>
+          <button id="add-students" class="px-4 py-2.5 rounded-xl ${atLimit?"bg-white border border-gray-200 text-ink-300 cursor-not-allowed":"bg-brand-500 hover:bg-brand-600 text-white"} text-sm font-semibold transition whitespace-nowrap" ${atLimit?"disabled":""}>
+            ${activeClass?`Добавить в «${escHtml(activeClass.name)}»`:"Добавить учеников"}
+          </button>`:""}
       </div>
     </div>
 
-    ${tabs}
+    ${tabsMarkup(state.currentClass)}
 
     ${atLimit&&canEdit?`
       <div class="bg-amber-50 rounded-2xl p-4 mb-6 flex flex-wrap items-center gap-3">
         <div class="flex-1 min-w-[240px] text-sm text-amber-800">
-          Все ${limit} ${plural(limit,"место","места","мест")} тарифа «${escHtml(state.plan.name)}» заняты. Лимит считается по всем классам сразу: освободите место, удалив выпустившегося ученика, или перейдите на тариф выше.
+          Все ${limit} ${plural(limit,"место","места","мест")} тарифа «${escHtml(state.plan.name)}» заняты. Лимит общий для всех классов: освободите место, удалив выпустившегося ученика, или перейдите на тариф выше.
         </div>
         <button id="to-pricing" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition">Тарифы</button>
       </div>`:""}
@@ -1751,20 +1815,23 @@ function renderStudentList(){
       ${visible.map(st=>{
         const s=summarize(st), c=st.exams.length;
         const note=book[st.code];
-        const g=groupTitle(st.group);
+        const g=classKeyTitle(studentClassKey(st));
         return `
         <div class="bg-white rounded-2xl shadow-soft hover:shadow-lift border border-transparent hover:border-brand-100 p-5 transition-all duration-200">
-          <button data-student="${escAttr(st.id)}" class="student-card text-left w-full">
-            <div class="flex items-start justify-between gap-3 mb-5">
-              <div class="min-w-0">
-                <div class="flex items-center gap-2">
-                  <span class="font-mono font-bold text-[15px] leading-snug">${escHtml(st.code)}</span>
-                  <span class="px-1.5 py-0.5 rounded-md bg-paper text-[10px] text-ink-500 whitespace-nowrap">${escHtml(g)}</span>
-                </div>
-                <div class="text-xs text-ink-500 mt-0.5 truncate">${note?escHtml(note)+" · ":""}${c} ${plural(c,"пробник","пробника","пробников")}</div>
+          <div class="flex items-start justify-between gap-3 mb-4">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-[15px] leading-snug">${escHtml(st.code)}</span>
+                ${state.currentClass==="all"?`<span class="px-1.5 py-0.5 rounded-md bg-paper text-[10px] text-ink-500 whitespace-nowrap">${escHtml(g)}</span>`:""}
               </div>
-              ${trendMarkup(s.deltaSecondary)}
+              <div class="text-xs text-ink-500 mt-0.5 truncate">${note?escHtml(note)+" · ":""}${c} ${plural(c,"пробник","пробника","пробников")}</div>
             </div>
+            <div class="flex items-center gap-2 shrink-0">
+              ${trendMarkup(s.deltaSecondary)}
+              ${canEdit?`<button data-settings="${escAttr(st.id)}" class="student-settings w-7 h-7 rounded-lg text-ink-300 hover:text-brand-600 hover:bg-brand-50 transition grid place-items-center text-base leading-none" title="Код и класс">⋯</button>`:""}
+            </div>
+          </div>
+          <button data-student="${escAttr(st.id)}" class="student-card text-left w-full">
             <div class="flex items-end gap-6">
               <div><div class="font-mono font-bold text-3xl tnum leading-none">${s.last.secondary}</div><div class="text-[11px] uppercase tracking-wide text-ink-500 mt-1.5">последний</div></div>
               <div><div class="font-mono font-bold text-xl tnum leading-none text-ink-700">${s.avgSecondary}</div><div class="text-[11px] uppercase tracking-wide text-ink-500 mt-1.5">средний</div></div>
@@ -1786,36 +1853,37 @@ function renderStudentList(){
         ${empty.map(st=>`
           <span class="inline-flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-xl bg-paper text-sm font-mono">
             ${escHtml(st.code)}
-            <span class="text-[10px] text-ink-300 font-sans">${escHtml(groupTitle(st.group))}</span>
-            ${canEdit?`<button data-remove="${escAttr(st.id)}" class="remove-btn text-ink-300 hover:text-rose-600 text-base leading-none font-sans" title="Удалить">×</button>`:""}
+            ${state.currentClass==="all"?`<span class="text-[10px] text-ink-300 font-sans">${escHtml(classKeyTitle(studentClassKey(st)))}</span>`:""}
+            ${canEdit?`<button data-settings="${escAttr(st.id)}" class="student-settings text-ink-300 hover:text-brand-600 text-sm leading-none font-sans" title="Код и класс">⋯</button>`:""}
           </span>`).join("")}
       </div>
     </div>`:""}
 
-    ${(!withData.length&&!empty.length)?`<div class="bg-white rounded-2xl shadow-soft p-8 text-center text-sm text-ink-500">${state.currentGroup==="all"?"Учеников пока нет. Нажмите «Добавить учеников» и заведите коды.":"В этом классе пока нет учеников."}</div>`:""}
+    ${(!withData.length&&!empty.length)?`
+    <div class="bg-white rounded-2xl shadow-soft p-8 text-center">
+      <p class="text-sm text-ink-500 mb-4">${state.currentClass==="all"?"Учеников пока нет.":`В классе «${escHtml(classKeyTitle(state.currentClass))}» пока нет учеников.`}</p>
+      ${canEdit&&!atLimit?`<button id="empty-add" class="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">Добавить учеников</button>`:""}
+    </div>`:""}
+
+    ${canEdit&&hasClasses?`
+    <details class="bg-white rounded-2xl shadow-soft p-5 sm:p-6 mb-4">
+      <summary class="cursor-pointer font-display font-bold text-lg">Управление классами</summary>
+      <div class="mt-4 space-y-2">
+        ${state.classes.map(c=>{
+          const n=studentsOfKey(c.id).length;
+          return `
+          <div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
+            <span class="font-medium text-sm flex-1 min-w-0 truncate">${escHtml(c.name)}</span>
+            <span class="text-xs text-ink-500 tnum shrink-0">${n} ${plural(n,"ученик","ученика","учеников")}</span>
+            <button data-rename-class="${escAttr(c.id)}" class="rename-class text-xs font-semibold text-brand-600 hover:text-brand-700 shrink-0">Переименовать</button>
+            <button data-delete-class="${escAttr(c.id)}" class="delete-class text-xs font-semibold text-ink-300 hover:text-rose-600 shrink-0">Удалить</button>
+          </div>`;}).join("")}
+      </div>
+      <p class="text-[11px] text-ink-500 mt-3 leading-relaxed">При удалении класса ученики не пропадают, а переходят в «${escHtml(GROUP_NONE)}» вместе со всеми результатами.</p>
+      <p id="classes-msg" class="text-xs mt-2"></p>
+    </details>`:""}
 
     ${canEdit&&state.students.length?`
-    <details class="bg-white rounded-2xl shadow-soft p-5 sm:p-6 mb-4">
-      <summary class="cursor-pointer font-display font-bold text-lg">Распределение по классам</summary>
-      <p class="text-xs text-ink-500 mt-2 mb-4 leading-relaxed">
-        Класс хранится в базе вместе с кодом. Оставьте поле пустым, чтобы ученик попал в «${escHtml(GROUP_NONE)}».
-        Название можно вписать любое: 11А, группа Пн-Ср, поток 2027.
-      </p>
-      <div class="grid gap-2 sm:grid-cols-2 mb-4">
-        ${state.students.map(st=>`
-          <label class="flex items-center gap-3">
-            <span class="font-mono text-sm w-24 shrink-0">${escHtml(st.code)}</span>
-            <input type="text" data-group-for="${escAttr(st.id)}" value="${escAttr(st.group||"")}" placeholder="${escAttr(GROUP_NONE)}" maxlength="${GROUP_MAX}" list="known-groups"
-              class="group-input flex-1 px-3 py-2 rounded-lg bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
-          </label>`).join("")}
-      </div>
-      <datalist id="known-groups">${groups.filter(g=>g!==GROUP_NONE).map(g=>`<option value="${escAttr(g)}"></option>`).join("")}</datalist>
-      <div class="flex items-center gap-3">
-        <button id="save-groups" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">Сохранить классы</button>
-        <span id="groups-msg" class="text-xs"></span>
-      </div>
-    </details>
-
     <details class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
       <summary class="cursor-pointer font-display font-bold text-lg">Расшифровка кодов</summary>
       <p class="text-xs text-ink-500 mt-2 mb-4 leading-relaxed">
@@ -1838,8 +1906,9 @@ function renderStudentList(){
     <p id="list-msg" class="text-xs mt-3"></p>`;
 
   $("#screen-list").querySelectorAll(".student-card").forEach(c=>c.onclick=()=>openStudent(c.dataset.student));
-  $("#screen-list").querySelectorAll(".group-tab").forEach(b=>b.onclick=()=>{
-    state.currentGroup=b.dataset.group; renderStudentList(); window.scrollTo({top:0});
+  $("#screen-list").querySelectorAll(".student-settings").forEach(b=>b.onclick=()=>openStudentEditor(b.dataset.settings));
+  $("#screen-list").querySelectorAll(".class-tab").forEach(b=>b.onclick=()=>{
+    state.currentClass=b.dataset.tabKey; renderStudentList(); window.scrollTo({top:0});
   });
   $("#search").oninput=e=>{state.filter=e.target.value;renderStudentList();$("#search").focus();};
 
@@ -1854,40 +1923,25 @@ function renderStudentList(){
     setTimeout(()=>{msg.textContent="";},2500);
   });
 
-  $("#screen-list").querySelectorAll(".remove-btn").forEach(b=>b.onclick=async()=>{
+  $("#screen-list").querySelectorAll(".rename-class").forEach(b=>b.onclick=()=>openClassEditor(b.dataset.renameClass));
+  $("#screen-list").querySelectorAll(".delete-class").forEach(b=>b.onclick=async()=>{
+    const msg=$("#classes-msg");
     if(b.dataset.confirm!=="1"){
-      b.dataset.confirm="1"; b.textContent="удалить?"; b.classList.add("text-rose-600","text-xs");
-      setTimeout(()=>{b.dataset.confirm="";b.textContent="×";b.classList.remove("text-rose-600","text-xs");},4000);
+      b.dataset.confirm="1"; b.textContent="точно удалить?"; b.classList.add("text-rose-600");
+      setTimeout(()=>{b.dataset.confirm="";b.textContent="Удалить";b.classList.remove("text-rose-600");},4000);
       return;
     }
-    try{ await api.removeStudent(b.dataset.remove); await reloadData(); renderStudentList(); }
-    catch(err){ const m=$("#list-msg"); m.className="text-xs mt-3 text-rose-600"; m.textContent=err.message; }
+    try{
+      await api.deleteClass(b.dataset.deleteClass);
+      if(state.currentClass===b.dataset.deleteClass) state.currentClass="all";
+      await reloadData(); renderStudentList();
+    }catch(err){ if(msg){ msg.className="text-xs mt-2 text-rose-600"; msg.textContent=err.message; } }
   });
 
-  const saveGroups=$("#save-groups");
-  if(saveGroups) saveGroups.onclick=async e=>{
-    const btn=e.currentTarget, msg=$("#groups-msg");
-    const inputs=[...$("#screen-list").querySelectorAll(".group-input")];
-    for(const inp of inputs){
-      const err=validateGroup(inp.value);
-      if(err){ msg.className="text-xs text-rose-600"; msg.textContent=err; inp.focus(); return; }
-    }
-    const changes=inputs.map(inp=>{
-      const st=state.students.find(s=>s.id===inp.dataset.groupFor);
-      const value=inp.value.trim();
-      return (st && (st.group||"")!==value) ? {id:inp.dataset.groupFor,group:value} : null;
-    }).filter(Boolean);
-    if(!changes.length){ msg.className="text-xs text-ink-500"; msg.textContent="Изменений нет"; setTimeout(()=>{msg.textContent="";},2000); return; }
-
-    btn.textContent="Сохраняем…";
-    try{
-      for(const ch of changes) await api.setGroup(ch.id,ch.group);
-      await reloadData();
-      renderStudentList();
-      const m=$("#groups-msg");
-      if(m){ m.className="text-xs text-emerald-600"; m.textContent=`Обновлено записей: ${changes.length}`; setTimeout(()=>{m.textContent="";},2500); }
-    }catch(err){ msg.className="text-xs text-rose-600"; msg.textContent=err.message; btn.textContent="Сохранить классы"; }
-  };
+  const emptyAdd=$("#empty-add");
+  if(emptyAdd) emptyAdd.onclick=openAddStudents;
+  const newClass=$("#new-class");
+  if(newClass) newClass.onclick=()=>openClassEditor(null);
 
   const saveNotes=$("#save-notes");
   if(saveNotes) saveNotes.onclick=()=>{
@@ -1906,25 +1960,150 @@ function renderStudentList(){
   if(canEdit && !atLimit) $("#add-students").onclick=openAddStudents;
 }
 
+/* --- Создание и переименование класса --- */
+function openClassEditor(classId){
+  const cls=classId?classById(classId):null;
+  const modal=document.createElement("div");
+  modal.className="fixed inset-0 z-[9998] bg-ink-900/40 backdrop-blur-sm flex items-center justify-center p-5";
+  modal.innerHTML=`
+    <div class="bg-white rounded-2xl shadow-lift max-w-sm w-full p-6">
+      <h2 class="font-display font-extrabold text-xl mb-2">${cls?"Переименовать класс":"Новый класс"}</h2>
+      <p class="text-sm text-ink-500 mb-4 leading-relaxed">Название видите только вы. Подойдёт 11А, группа Пн-Ср или поток 2027.</p>
+      <input id="class-name" value="${escAttr(cls?cls.name:"")}" maxlength="${CLASS_MAX}" placeholder="11А"
+        class="w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
+      <div class="flex gap-2 mt-4">
+        <button id="class-save" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">${cls?"Сохранить":"Создать"}</button>
+        <button id="class-close" class="ml-auto px-4 py-2 rounded-xl text-ink-500 hover:text-ink-900 text-sm font-semibold transition">Отмена</button>
+      </div>
+      <p id="class-msg" class="text-xs text-rose-600 mt-3"></p>
+    </div>`;
+  document.body.appendChild(modal);
+  const input=modal.querySelector("#class-name");
+  input.focus();
+  modal.querySelector("#class-close").onclick=()=>modal.remove();
+  modal.onclick=e=>{if(e.target===modal)modal.remove();};
+
+  const save=async()=>{
+    const btn=modal.querySelector("#class-save"), msg=modal.querySelector("#class-msg");
+    const name=input.value.trim();
+    const err=validateClassName(name);
+    if(err){ msg.textContent=err; return; }
+    btn.textContent="Сохраняем…";
+    try{
+      if(cls){ await api.renameClass(cls.id,name); }
+      else{
+        const created=await api.createClass(name);
+        state.currentClass=created.id;
+      }
+      await reloadData();
+      modal.remove();
+      renderStudentList();
+    }catch(e){ msg.textContent=e.message; btn.textContent=cls?"Сохранить":"Создать"; }
+  };
+  modal.querySelector("#class-save").onclick=save;
+  input.onkeydown=e=>{ if(e.key==="Enter") save(); };
+}
+
+/* --- Код ученика и перенос между классами --- */
+function openStudentEditor(studentId){
+  const st=state.students.find(s=>s.id===studentId);
+  if(!st) return;
+  const modal=document.createElement("div");
+  modal.className="fixed inset-0 z-[9998] bg-ink-900/40 backdrop-blur-sm flex items-center justify-center p-5";
+  modal.innerHTML=`
+    <div class="bg-white rounded-2xl shadow-lift max-w-sm w-full p-6">
+      <h2 class="font-display font-extrabold text-xl mb-1">Ученик <span class="font-mono">${escHtml(st.code)}</span></h2>
+      <p class="text-sm text-ink-500 mb-5">${st.exams.length} ${plural(st.exams.length,"пробник","пробника","пробников")} · результаты сохранятся при любых изменениях</p>
+
+      <label class="block mb-4">
+        <span class="text-xs uppercase tracking-wide text-ink-500">Код обучающегося</span>
+        <input id="edit-code" value="${escAttr(st.code)}" maxlength="${CODE_MAX}"
+          class="mt-1.5 w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm font-mono focus:border-brand-500 outline-none transition">
+        <span class="block text-[11px] text-ink-500 mt-1.5">Без пробелов, хотя бы одна цифра, подряд не больше трёх букв</span>
+      </label>
+
+      <label class="block mb-5">
+        <span class="text-xs uppercase tracking-wide text-ink-500">Класс</span>
+        <select id="edit-class" class="mt-1.5 w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
+          <option value="" ${!st.classId?"selected":""}>${escHtml(GROUP_NONE)}</option>
+          ${state.classes.map(c=>`<option value="${escAttr(c.id)}" ${st.classId===c.id?"selected":""}>${escHtml(c.name)}</option>`).join("")}
+        </select>
+      </label>
+
+      <div class="flex gap-2">
+        <button id="edit-save" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">Сохранить</button>
+        <button id="edit-delete" class="px-4 py-2 rounded-xl text-rose-600 hover:bg-rose-50 text-sm font-semibold transition">Удалить ученика</button>
+        <button id="edit-close" class="ml-auto px-4 py-2 rounded-xl text-ink-500 hover:text-ink-900 text-sm font-semibold transition">Отмена</button>
+      </div>
+      <p id="edit-msg" class="text-xs mt-3"></p>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector("#edit-close").onclick=()=>modal.remove();
+  modal.onclick=e=>{if(e.target===modal)modal.remove();};
+
+  modal.querySelector("#edit-save").onclick=async e=>{
+    const btn=e.currentTarget, msg=modal.querySelector("#edit-msg");
+    const code=modal.querySelector("#edit-code").value.trim();
+    const classId=modal.querySelector("#edit-class").value||null;
+    const err=validateCode(code);
+    if(err){ msg.className="text-xs mt-3 text-rose-600"; msg.textContent=`Код — ${err}`; return; }
+    const clash=state.students.some(s=>s.id!==st.id && s.code.toLowerCase()===code.toLowerCase());
+    if(clash){ msg.className="text-xs mt-3 text-rose-600"; msg.textContent="Такой код уже используется"; return; }
+
+    btn.textContent="Сохраняем…";
+    try{
+      if(code!==st.code) await api.renameStudent(st.id,code);
+      if((classId||null)!==(st.classId||null)) await api.setStudentClass(st.id,classId);
+      // подпись в расшифровке переносим на новый код
+      if(code!==st.code){
+        const book=codebook.read();
+        if(book[st.code]){ book[code]=book[st.code]; delete book[st.code]; codebook.write(book); }
+      }
+      await reloadData();
+      modal.remove();
+      renderStudentList();
+    }catch(err2){ msg.className="text-xs mt-3 text-rose-600"; msg.textContent=err2.message; btn.textContent="Сохранить"; }
+  };
+
+  modal.querySelector("#edit-delete").onclick=async e=>{
+    const btn=e.currentTarget, msg=modal.querySelector("#edit-msg");
+    if(btn.dataset.confirm!=="1"){
+      btn.dataset.confirm="1"; btn.textContent="Нажмите ещё раз";
+      msg.className="text-xs mt-3 text-ink-500";
+      msg.textContent="Ученик и все его пробники будут удалены без возможности восстановить";
+      setTimeout(()=>{btn.dataset.confirm="";btn.textContent="Удалить ученика";msg.textContent="";},5000);
+      return;
+    }
+    try{
+      await api.removeStudent(st.id);
+      await reloadData();
+      modal.remove();
+      renderStudentList();
+    }catch(err){ msg.className="text-xs mt-3 text-rose-600"; msg.textContent=err.message; }
+  };
+}
+
 function openAddStudents(){
   const free=state.plan.limit-state.students.length;
-  const groups=allGroups().filter(g=>g!==GROUP_NONE);
-  const preset=state.currentGroup==="all"?"":(state.currentGroup===GROUP_NONE?"":state.currentGroup);
+  const preselect=(state.currentClass!=="all"&&state.currentClass!==NO_CLASS)?state.currentClass:"";
   const modal=document.createElement("div");
   modal.className="fixed inset-0 z-[9998] bg-ink-900/40 backdrop-blur-sm flex items-center justify-center p-5";
   modal.innerHTML=`
     <div class="bg-white rounded-2xl shadow-lift max-w-md w-full p-6">
       <h2 class="font-display font-extrabold text-xl mb-2">Добавить учеников</h2>
-      <p class="text-sm text-ink-500 mb-3 leading-relaxed">
+      <p class="text-sm text-ink-500 mb-4 leading-relaxed">
         Только обезличенные коды, по одному в строке. Например <span class="font-mono">11А-07</span> или <span class="font-mono">У-03</span>.
-        Свободно ${free} ${plural(free,"место","места","мест")} на тарифе, лимит общий для всех классов.
+        Свободно ${free} ${plural(free,"место","места","мест")}, лимит общий для всех классов.
       </p>
-      <label class="block mb-3">
-        <span class="text-xs uppercase tracking-wide text-ink-500">Класс</span>
-        <input id="add-group" value="${escAttr(preset)}" placeholder="${escAttr(GROUP_NONE)}" maxlength="${GROUP_MAX}" list="add-known-groups"
-          class="mt-1.5 w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
-        <datalist id="add-known-groups">${groups.map(g=>`<option value="${escAttr(g)}"></option>`).join("")}</datalist>
+
+      <label class="block mb-4">
+        <span class="text-xs uppercase tracking-wide text-ink-500">В какой класс</span>
+        <select id="add-class" class="mt-1.5 w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
+          ${state.classes.map(c=>`<option value="${escAttr(c.id)}" ${preselect===c.id?"selected":""}>${escHtml(c.name)}</option>`).join("")}
+          <option value="" ${preselect?"":"selected"}>${escHtml(GROUP_NONE)}</option>
+        </select>
       </label>
+
       <div class="bg-paper rounded-xl p-3 mb-4 text-[11px] text-ink-500 leading-relaxed">
         Ограничения кода — не длиннее ${CODE_MAX} символов, без пробелов, обязательна хотя бы одна цифра,
         подряд не больше трёх букв. Имена и фамилии ввести нельзя.
@@ -1963,10 +2142,7 @@ function openAddStudents(){
 
   modal.querySelector("#codes-save").onclick=async e=>{
     const btn=e.currentTarget, msg=modal.querySelector("#codes-msg");
-    const group=modal.querySelector("#add-group").value.trim();
-    const groupErr=validateGroup(group);
-    if(groupErr){ msg.className="text-xs mt-3 text-rose-600"; msg.textContent=groupErr; return; }
-
+    const classId=modal.querySelector("#add-class").value||null;
     const existing=new Set(state.students.map(s=>s.code.toLowerCase()));
     const raw=[...new Set(modal.querySelector("#codes-input").value.split("\n").map(s=>s.trim()).filter(Boolean))];
 
@@ -1980,12 +2156,12 @@ function openAddStudents(){
 
     btn.textContent="Сохраняем…";
     try{
-      await api.addStudents(codes.map(code=>({code,group})));
+      await api.addStudents(codes.map(code=>({code,classId})));
       await reloadData();
-      if(group) state.currentGroup=group;
+      state.currentClass=classId||NO_CLASS;
       renderStudentList();
       msg.className="text-xs mt-3 text-emerald-600";
-      msg.textContent=`Добавлено: ${codes.length}${group?` в класс «${group}»`:""}`;
+      msg.textContent=`Добавлено: ${codes.length} в «${classKeyTitle(classId||NO_CLASS)}»`;
       modal.querySelector("#codes-input").value="";
     }catch(err){
       msg.className="text-xs mt-3 text-rose-600";
@@ -1999,31 +2175,18 @@ function openAddStudents(){
    15. ЭКРАН: КЛАСС
    ========================================================================= */
 function renderGroup(){
-  const groups=allGroups();
-  const sizes=groupSizes();
-  if(state.currentGroup!=="all" && !groups.includes(state.currentGroup)) state.currentGroup="all";
-  const students=currentGroupStudents().filter(s=>s.exams.length);
-
-  const groupTabs = (groups.length>1 || state.currentGroup!=="all") ? `
-    <div class="flex flex-wrap gap-1 mb-5 text-sm">
-      <button data-group="all" class="group-tab px-3 py-1.5 rounded-lg font-medium transition ${state.currentGroup==="all"?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
-        Все классы <span class="font-mono text-xs tnum text-ink-300">${state.students.length}</span>
-      </button>
-      ${groups.map(g=>`
-        <button data-group="${escAttr(g)}" class="group-tab px-3 py-1.5 rounded-lg font-medium transition ${state.currentGroup===g?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
-          ${escHtml(g)} <span class="font-mono text-xs tnum text-ink-300">${sizes[g]||0}</span>
-        </button>`).join("")}
-    </div>` : "";
+  const students=currentClassStudents().filter(s=>s.exams.length);
+  const groupTabs=tabsMarkup(state.currentClass);
 
   const bindGroupTabs=()=>{
-    $("#screen-group").querySelectorAll(".group-tab").forEach(b=>b.onclick=()=>{
-      state.currentGroup=b.dataset.group; destroyCharts(); renderGroup(); window.scrollTo({top:0});
+    $("#screen-group").querySelectorAll(".class-tab").forEach(b=>b.onclick=()=>{
+      state.currentClass=b.dataset.tabKey; destroyCharts(); renderGroup(); window.scrollTo({top:0});
     });
   };
 
   if(!students.length){
     $("#screen-group").innerHTML=groupTabs+
-      `<div class="bg-white rounded-2xl shadow-soft p-8 text-center text-sm text-ink-500">${state.currentGroup==="all"?"Пока нет ни одного внесённого пробника.":"В классе «"+escHtml(state.currentGroup)+"» пока нет внесённых пробников."}</div>`;
+      `<div class="bg-white rounded-2xl shadow-soft p-8 text-center text-sm text-ink-500">${state.currentClass==="all"?"Пока нет ни одного внесённого пробника.":`В классе «${escHtml(classKeyTitle(state.currentClass))}» пока нет внесённых пробников.`}</div>`;
     bindGroupTabs();
     return;
   }
@@ -2039,7 +2202,7 @@ function renderGroup(){
     ${groupTabs}
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
-        <h1 class="font-display font-extrabold text-2xl tracking-tight">${state.currentGroup==="all"?"Все классы":escHtml(state.currentGroup)}</h1>
+        <h1 class="font-display font-extrabold text-2xl tracking-tight">${escHtml(classKeyTitle(state.currentClass))}</h1>
         <p class="text-sm text-ink-500 mt-1">${g.entries.length} ${plural(g.entries.length,"работа","работы","работ")} в выборке · что разбирать на ближайшем занятии</p>
       </div>
       <div class="flex flex-wrap items-end gap-2">
@@ -2190,7 +2353,7 @@ function renderGroup(){
   bindGroupTabs();
   $("#group-exam").onchange=e=>{state.groupExam=e.target.value;destroyCharts();renderGroup();};
   $("#screen-group").querySelectorAll("[data-sort]").forEach(b=>b.onclick=()=>{state.groupSort=b.dataset.sort;destroyCharts();renderGroup();});
-  $("#group-report-btn").onclick=()=>openGroupReport(g,examLabel,groupLabel(state.currentGroup));
+  $("#group-report-btn").onclick=()=>openGroupReport(g,examLabel,classKeyTitle(state.currentClass));
 
   $("#screen-group").querySelectorAll("tr.row-open").forEach(tr=>{
     tr.onclick=e=>{
@@ -2442,7 +2605,8 @@ function renderDashboard(student,readOnly){
   const fc=forecast(student,report);
   const canEdit=modeConfig().canEdit;
   const note=readOnly?null:codebook.read()[student.code];
-  const group=groupTitle(student.group);
+  const classKey=studentClassKey(student);
+  const group=classKeyTitle(classKey);
 
   $("#screen-student").innerHTML=`
     ${readOnly?"":`<button id="back-btn" class="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-brand-600 mb-5 transition"><span class="text-base leading-none">←</span> Все ученики</button>`}
@@ -2467,11 +2631,11 @@ function renderDashboard(student,readOnly){
         <h2 class="font-display font-bold text-lg">Зоны развития</h2>
         <span class="text-xs text-ink-500">три задания, где потеряно больше всего баллов</span>
       </div>
-      <div class="grid gap-4 sm:grid-cols-3">${weakCardsMarkup(weakest,readOnly,group)}</div>
+      <div class="grid gap-4 sm:grid-cols-3">${weakCardsMarkup(weakest,readOnly,classKey)}</div>
     </div>
 
     ${essayMarkup(essay)}
-    ${historyMarkup(student,report,readOnly,group)}
+    ${historyMarkup(student,report,readOnly,classKey)}
     ${readOnly?authorCardMarkup():""}`;
 
   if(!readOnly){
@@ -2559,12 +2723,12 @@ function scoreChartMarkup(fc){
   </div>`;
 }
 
-function weakCardsMarkup(weakest,readOnly,group){
+function weakCardsMarkup(weakest,readOnly,classKey){
   if(!weakest.length) return `<div class="bg-white rounded-2xl shadow-soft p-6 text-sm text-ink-500 sm:col-span-3">Потерянных баллов нет, все задания выполнены на максимум.</div>`;
   return weakest.map(row=>{
     const topic=EGE_TOPICS[row.task]||{title:"Задание "+row.task,review:"Тема не описана."};
     const pc=Math.round(row.rate*100);
-    const cls=readOnly?null:classRateForTask(row.task,group);
+    const cls=readOnly?null:classRateForTask(row.task,classKey);
     const classPc=cls?Math.round(cls.rate*100):null;
     return `
     <div class="bg-white rounded-2xl shadow-soft p-5 flex flex-col">
@@ -2663,7 +2827,8 @@ function essayMarkup(essay){
   </div>`;
 }
 
-function historyMarkup(student,report,readOnly,group){
+function historyMarkup(student,report,readOnly,classKey){
+  const group=classKeyTitle(classKey);
   const exams=student.exams;
   return `
   <div class="bg-white rounded-2xl shadow-soft overflow-hidden">
@@ -2692,7 +2857,7 @@ function historyMarkup(student,report,readOnly,group){
           ${report.map(row=>{
             const topic=EGE_TOPICS[row.task]||{title:"Задание "+row.task,review:"Тема не описана."};
             const pc=Math.round(row.rate*100);
-            const cls=readOnly?null:classRateForTask(row.task,group);
+            const cls=readOnly?null:classRateForTask(row.task,classKey);
             const classPc=cls?Math.round(cls.rate*100):null;
             const diff=classPc===null?null:pc-classPc;
             const compare=classPc===null?"":
@@ -2980,9 +3145,9 @@ function renderEntry(preselectId){
             <span class="text-xs uppercase tracking-wide text-ink-500">Код ученика</span>
             <select id="entry-student" class="mt-1.5 w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm font-mono focus:border-brand-500 outline-none transition">
               <option value="">— выберите —</option>
-              ${allGroups().map(gr=>`
-                <optgroup label="${escAttr(gr)}">
-                  ${studentsOfGroup(gr).map(s=>`<option value="${escAttr(s.id)}" ${s.id===preselectId?"selected":""}>${escHtml(s.code)}${book[s.code]?" — "+escHtml(book[s.code]):""}</option>`).join("")}
+              ${classTabs().map(t=>`
+                <optgroup label="${escAttr(t.title)}">
+                  ${studentsOfKey(t.key).map(s=>`<option value="${escAttr(s.id)}" ${s.id===preselectId?"selected":""}>${escHtml(s.code)}${book[s.code]?" — "+escHtml(book[s.code]):""}</option>`).join("")}
                 </optgroup>`).join("")}
             </select>
           </label>
@@ -3193,8 +3358,10 @@ function parseImportText(text){
 
     if(map.group>=0){
       const gr=(cells[map.group]||"").trim();
-      const grErr=validateGroup(gr);
-      if(grErr) row.issues.push(grErr); else row.group=gr;
+      if(gr){
+        const grErr=validateClassName(gr);
+        if(grErr) row.issues.push(grErr); else row.group=gr;
+      }
     }
 
     const d=parseDate(cells[map.date]);
@@ -3226,7 +3393,7 @@ function parseImportText(text){
     const student=existing.get(code.toLowerCase());
     row.isNew=!student;
     row.studentId=student?student.id:null;
-    row.groupLabel=student?groupTitle(student.group):groupTitle(row.group);
+    row.groupLabel=student?classKeyTitle(studentClassKey(student)):groupTitle(row.group);
     row.overwrite=Boolean(student && row.date && student.exams.some(e=>e.key===row.date));
 
     const essayTotal=Object.values(row.essay).reduce((a,b)=>a+b,0);
@@ -3338,7 +3505,7 @@ function renderImportPreview(parsed,fileName){
           <h2 class="font-display font-bold text-lg">Разбор файла</h2>
           <span class="text-xs text-ink-500 font-mono">${escHtml(fileName)}</span>
         </div>
-        <p class="text-xs text-ink-500">Распознано ${parsed.columns.tasks} ${plural(parsed.columns.tasks,"столбец","столбца","столбцов")} с заданиями и ${parsed.columns.criteria} с критериями${parsed.hasGroup?", столбец с классом найден":", столбца с классом нет — новые коды попадут в «"+escHtml(GROUP_NONE)+"»"}</p>
+        <p class="text-xs text-ink-500">Распознано ${parsed.columns.tasks} ${plural(parsed.columns.tasks,"столбец","столбца","столбцов")} с заданиями и ${parsed.columns.criteria} с критериями${parsed.hasGroup?". Классы из файла будут созданы автоматически, если их ещё нет":`. Столбца с классом нет — новые коды попадут в «${escHtml(GROUP_NONE)}»`}</p>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-100 border-y border-gray-100">
@@ -3404,8 +3571,17 @@ function renderImportPreview(parsed,fileName){
 
     try{
       if(newEntries.length){
+        // недостающие классы создаём автоматически по названию из файла
+        const wanted=[...new Set(newEntries.map(e=>e.group).filter(Boolean))];
+        const missing=wanted.filter(name=>!state.classes.some(c=>c.name.toLowerCase()===name.toLowerCase()));
+        if(missing.length){
+          msg.textContent="Создаём классы…";
+          for(const name of missing) await api.createClass(name);
+          await reloadData();
+        }
+        const idByName=new Map(state.classes.map(c=>[c.name.toLowerCase(),c.id]));
         msg.textContent="Создаём коды…";
-        await api.addStudents(newEntries);
+        await api.addStudents(newEntries.map(e=>({code:e.code,classId:e.group?(idByName.get(e.group.toLowerCase())||null):null})));
         await reloadData();
       }
       const byCode=new Map(state.students.map(s=>[s.code.toLowerCase(),s.id]));
