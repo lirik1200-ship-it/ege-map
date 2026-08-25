@@ -116,7 +116,7 @@
         </div>
         <div>
           <div class="font-display font-extrabold leading-tight tracking-tight">ЕГЭ_Мар</div>
-          <div class="text-xs text-ink-500 leading-tight">Русский язык. Результаты. Аналитика.</div>
+          <div class="text-xs text-ink-500 leading-tight">Русский язык и литература. Разбор пробников и прогноз.</div>
         </div>
       </button>
       <nav id="main-nav" class="hidden md:flex items-center gap-1 text-sm"></nav>
@@ -204,7 +204,7 @@ const LANDING_VIDEO = { youtube:"", vk:"", file:"", poster:"" };
 const AUTHOR = {
   brand: "ЕГЭ_Мар",
   name: "Кирилл Минкин",
-  tagline: "Русский язык. Результаты. Аналитика.",
+  tagline: "Русский язык и литература. Разбор пробников и прогноз.",
   telegram: "https://t.me/ege_minkin",
   vk: "https://vk.ru/egeminkin",
   email: "[укажите почту для обращений]",
@@ -239,7 +239,7 @@ const PLANS = {
               extra:"Можно приостановить летом и вернуться в сентябре"}
 };
 const PLAN_FEATURES = [
-  "ЕГЭ и ОГЭ в одном кабинете с переключением в шапке",
+  "Русский язык и литература, ЕГЭ и ОГЭ в одном кабинете",
   "Разбор по всем заданиям спецификации ФИПИ",
   "Сочинение по критериям К1–К10 в каждой работе",
   "Прогноз итогового балла с диапазоном",
@@ -513,15 +513,67 @@ function ogeMark(primary,essay){
   return {mark,grammar,lowered};
 }
 
+
+/* --- ЕГЭ по литературе: 11 заданий, 48 первичных, шкала в 100 баллов ---
+   Структура и разбалловка по спецификации ФИПИ 2026:
+   задания 1–3 и 6–8 по 1 баллу, 4 и 9 по 4, 5 и 10 по 7, сочинение 11 — 20. */
+const LIT_TASKS = {
+  1:{max:1,title:"Термин или понятие по фрагменту",review:"Повторить базовые термины: род и жанр, персонаж, ремарка, реплика, конфликт. Обратить внимание на форму ответа — одно-два слова строго в той форме, которую требует задание."},
+  2:{max:1,title:"Соответствие персонажей, реплик, произведений",review:"Повторить сюжеты и систему образов произведений из кодификатора. Обратить внимание на то, что в задании всегда есть лишняя позиция, поэтому проверять нужно все четыре варианта."},
+  3:{max:1,title:"Пропущенные термины в утверждении",review:"Повторить теорию литературы: роды и жанры, авторские определения жанра, элементы композиции. Обратить внимание на порядок слов в ответе — он задан предложением."},
+  4:{max:4,derived:true,title:"Развёрнутый ответ по фрагменту (4.1 или 4.2)",review:"Повторить структуру мини-ответа: утверждение, аргументация, два примера из текста. Обратить внимание на то, что при одном примере балл по К1 снижается, а ошибки в терминах считаются фактическими."},
+  5:{max:7,derived:true,title:"Сопоставление фрагмента с другим произведением",review:"Повторить сопоставительные пары по кодификатору и учиться формулировать основание сравнения. Обратить внимание на требование привести пример из каждого произведения и объяснить, что именно он подтверждает."},
+  6:{max:1,title:"Термин или понятие по стихотворению",review:"Повторить роды литературы, лирические жанры и виды звукописи: аллитерация, ассонанс. Обратить внимание на точность написания термина — ошибка в слове считается неверным ответом."},
+  7:{max:1,title:"Вид рифмовки и строфика",review:"Повторить перекрёстную, парную, кольцевую рифмовку, а также размеры стиха. Обратить внимание на подсчёт по первым четырём строкам и на клаузулу."},
+  8:{max:1,title:"Средства художественной выразительности",review:"Повторить тропы и фигуры: эпитет, сравнение, инверсия, градация, риторический вопрос, гротеск, архаизм. Обратить внимание на то, что выбрать нужно все подходящие пункты, а не один."},
+  9:{max:4,derived:true,title:"Развёрнутый ответ по стихотворению (9.1 или 9.2)",review:"Повторить схему: утверждение, аргументация, два примера из текста стихотворения. Обратить внимание на то, что примеры должны работать на заявленный тезис, а не пересказывать содержание."},
+  10:{max:7,derived:true,title:"Сопоставление стихотворений",review:"Повторить список стихотворений для сопоставления и потренировать выбор по мотиву. Обратить внимание на обязательное указание автора и названия выбранного стихотворения, без них по К2 не больше одного балла."},
+  11:{max:20,derived:true,title:"Сочинение на литературную тему (11.1–11.5)",review:"Повторить структуру сочинения: три доказанных тезиса, примеры из текста с пояснением, два и более термина для анализа. Обратить внимание на объём: меньше двухсот слов — ноль по всем критериям."}
+};
+
+const LIT_CRITERIA = {
+  "4К1":{max:3,block:"Задание 4",task:4,title:"Соответствие ответа заданию",review:"Повторить требования: сформулировать утверждение, аргументировать его и привести два примера из текста. Обратить внимание на то, что при нулевом или одном балле по К1 второй критерий обнуляется."},
+  "4К2":{max:1,block:"Задание 4",task:4,title:"Логичность и нормы речи",review:"Обратить внимание на то, что балл снимается уже при двух любых ошибках — логической, речевой или грамматической."},
+  "5К1":{max:2,block:"Задание 5",task:5,title:"Указание сходства или различия",review:"Повторить, как формулируется основание сопоставления. Обратить внимание на то, что при нуле по этому критерию всё задание оценивается нулём."},
+  "5К2":{max:4,block:"Задание 5",task:5,title:"Привлечение текстов при сопоставлении",review:"Повторить требование: пример из каждого произведения плюс объяснение, как он подтверждает сходство или различие. Обратить внимание на то, что примеры без объяснения дают не больше двух баллов."},
+  "5К3":{max:1,block:"Задание 5",task:5,title:"Логичность и нормы речи",review:"Обратить внимание на то, что критерий оценивается только при двух и более баллах по К2, а две любые ошибки его обнуляют."},
+  "9К1":{max:3,block:"Задание 9",task:9,title:"Соответствие ответа заданию",review:"Повторить схему ответа по лирике: утверждение, аргументация, два примера из стихотворения. Обратить внимание на то, что искажение авторской позиции обнуляет критерий."},
+  "9К2":{max:1,block:"Задание 9",task:9,title:"Логичность и нормы речи",review:"Обратить внимание на то, что балл снимается при двух любых ошибках, а при низком К1 критерий не оценивается."},
+  "10К1":{max:2,block:"Задание 10",task:10,title:"Указание сходства или различия",review:"Повторить подбор стихотворения по мотиву и формулировку основания сравнения. Обратить внимание на обязательное указание автора и названия выбранного стихотворения."},
+  "10К2":{max:4,block:"Задание 10",task:10,title:"Привлечение текстов при сопоставлении",review:"Повторить требование приводить пример из каждого стихотворения и пояснять его. Обратить внимание на то, что без названия и автора выбранного стихотворения по этому критерию не больше одного балла."},
+  "10К3":{max:1,block:"Задание 10",task:10,title:"Логичность и нормы речи",review:"Обратить внимание на то, что критерий оценивается только при двух и более баллах по К2."},
+  "11К1":{max:3,block:"Сочинение 11",task:11,title:"Раскрытие темы",review:"Повторить требование: три доказанных тезиса на высший балл. Обратить внимание на то, что ноль по этому критерию обнуляет всю работу, а искажение авторской позиции снижает балл."},
+  "11К2":{max:3,block:"Сочинение 11",task:11,title:"Привлечение текста произведения",review:"Повторить разницу между анализом и пересказом. Обратить внимание на то, что три балла даются только за неоднократное обращение к тексту с пояснением примеров."},
+  "11К3":{max:2,block:"Сочинение 11",task:11,title:"Фактологическая точность",review:"Повторить имена, даты, названия и сюжетные детали изучаемых произведений. Обратить внимание на то, что критерий оценивается только при двух и более баллах по К2."},
+  "11К4":{max:3,block:"Сочинение 11",task:11,title:"Опора на теоретико-литературные понятия",review:"Повторить термины и потренироваться применять их к анализу, а не просто называть. Обратить внимание на то, что для высшего балла нужно использовать в анализе не менее двух понятий."},
+  "11К5":{max:3,block:"Сочинение 11",task:11,title:"Композиционная цельность и логичность",review:"Повторить схему: вступление, три абзаца аргументации, вывод. Обратить внимание на связь между смысловыми частями и на отсутствие повторов."},
+  "11К6":{max:3,block:"Сочинение 11",task:11,title:"Соблюдение речевых норм",review:"Повторить типичные речевые ошибки: повтор, тавтологию, нарушение сочетаемости. Обратить внимание на то, что четыре ошибки оставляют один балл, а пять обнуляют критерий."},
+  "11К7":{max:1,block:"Сочинение 11",task:11,title:"Орфографические нормы",review:"Обратить внимание на то, что допускается не более четырёх ошибок, и что грамотность в литературе оценивается только в сочинении."},
+  "11К8":{max:1,block:"Сочинение 11",task:11,title:"Пунктуационные нормы",review:"Обратить внимание на то, что допускается не более четырёх ошибок, а лишние знаки считаются наравне с пропущенными."},
+  "11К9":{max:1,block:"Сочинение 11",task:11,title:"Грамматические нормы",review:"Обратить внимание на то, что балл сохраняется при одной-двух ошибках, а три и более его обнуляют."}
+};
+
+// Официальная шкала перевода первичных баллов в тестовые, литература
+const LIT_SCALE = [
+  0,3,5,8,10,13,15,18,20,23,25,28,30,32,34,35,36,37,38,39,40,41,42,43,44,45,46,47,49,50,
+  51,52,53,54,55,56,57,58,59,60,61,63,68,73,78,84,89,94,100
+];
+
+const SUBJECTS = {
+  rus:{id:"rus", label:"Русский язык", exams:["ege","oge"]},
+  lit:{id:"lit", label:"Литература", exams:["lit"]}
+};
+const SUBJECT_KEY = "ege-mar-subject";
+
 const EXAMS = {
   ege:{
-    id:"ege", label:"ЕГЭ", grade:"11 класс", subject:"Русский язык",
+    id:"ege", label:"ЕГЭ", short:"Рус · ЕГЭ", grade:"11 класс", subject:"Русский язык", subjectId:"rus",
     maxPrimary:50, tasks:EGE_TASKS, criteria:EGE_CRITERIA,
     blocks:["Содержание","Речевое оформление","Грамотность"],
     essayTitle:"Сочинение по критериям",
     scoreWord:"тестовый балл", scoreShort:"тестовый", scoreMax:100,
     chartMax:100, chartLabel:"Тестовый балл",
-    passValue:36, passNote:"порог для вузов — 36 тестовых баллов",
+    passValue:36, passNote:"порог для вузов — 36 тестовых баллов", countdownLabel:"ЕГЭ по русскому",
     examDate:"2027-06-05", examPreliminary:true,
     buckets:[{label:"ниже 36",test:v=>v<36},{label:"36–60",test:v=>v>=36&&v<=60},
              {label:"61–80",test:v=>v>60&&v<=80},{label:"81–100",test:v=>v>80}],
@@ -531,14 +583,33 @@ const EXAMS = {
       return {value,text:String(value),percent:value,passed:value>=36,chart:value,note:null};
     }
   },
+  lit:{
+    id:"lit", label:"ЕГЭ · литература", short:"Лит · ЕГЭ", grade:"11 класс",
+    subject:"Литература", subjectId:"lit",
+    maxPrimary:48, tasks:LIT_TASKS, criteria:LIT_CRITERIA,
+    blocks:["Задание 4","Задание 5","Задание 9","Задание 10","Сочинение 11"],
+    testBlock:{title:"Тест", tasks:[1,2,3,6,7,8]},
+    essayTitle:"Развёрнутые ответы и сочинение по критериям",
+    scoreWord:"тестовый балл", scoreShort:"тестовый", scoreMax:100,
+    chartMax:100, chartLabel:"Тестовый балл",
+    passValue:32, passNote:"порог для вузов — 32 тестовых балла", countdownLabel:"ЕГЭ по литературе",
+    examDate:"2027-05-25", examPreliminary:true,
+    buckets:[{label:"ниже 32",test:v=>v<32},{label:"32–60",test:v=>v>=32&&v<=60},
+             {label:"61–80",test:v=>v>60&&v<=80},{label:"81–100",test:v=>v>80}],
+    scale:LIT_SCALE,
+    score(primary,essay){
+      const value=LIT_SCALE[Math.max(0,Math.min(48,Math.round(primary)))];
+      return {value,text:String(value),percent:value,passed:value>=32,chart:value,note:null};
+    }
+  },
   oge:{
-    id:"oge", label:"ОГЭ", grade:"9 класс", subject:"Русский язык",
+    id:"oge", label:"ОГЭ", short:"Рус · ОГЭ", grade:"9 класс", subject:"Русский язык", subjectId:"rus",
     maxPrimary:37, tasks:OGE_TASKS, criteria:OGE_CRITERIA,
     blocks:["Изложение","Сочинение","Грамотность"],
     essayTitle:"Изложение и сочинение по критериям",
     scoreWord:"отметка", scoreShort:"отметка", scoreMax:5,
     chartMax:37, chartLabel:"Первичный балл",
-    passValue:15, passNote:"минимум для отметки «3» — 15 первичных баллов",
+    passValue:15, passNote:"минимум для отметки «3» — 15 первичных баллов", countdownLabel:"ОГЭ по русскому",
     profileValue:28, profileNote:"рекомендуемый минимум для профильного класса — 28 баллов",
     examDate:"2027-05-27", examPreliminary:true,
     buckets:[{label:"отметка 2",test:v=>v<3},{label:"отметка 3",test:v=>v===3},
@@ -559,11 +630,14 @@ const EXAMS = {
    работает одинаково для ЕГЭ и ОГЭ. */
 let MAX_PRIMARY, PASS_SCORE_UNIVERSITY, SECONDARY_SCALE, EGE_TOPICS,
     ESSAY_CRITERIA, CRITERIA_KEYS, ESSAY_MAX, ESSAY_BLOCKS, KNOWN_TASKS,
-    SCORE_WORD, SCORE_MAX, CHART_MAX, EXAM_DATE, EXAM;
+    SCORE_WORD, SCORE_MAX, CHART_MAX, EXAM_DATE, EXAM, TEST_BLOCK;
 
 function applyExam(id){
   const p=EXAMS[id]?EXAMS[id]:EXAMS.ege;
   state.exam=p.id;
+  state.subject=p.subjectId||"rus";
+  try{ localStorage.setItem(SUBJECT_KEY,state.subject); }catch(e){}
+  TEST_BLOCK=p.testBlock||null;
   MAX_PRIMARY=p.maxPrimary;
   PASS_SCORE_UNIVERSITY=p.passValue;
   SECONDARY_SCALE=p.scale;
@@ -766,13 +840,13 @@ function tabsMarkup(active){
   if(!tabs.length) return "";
   return `
     <div class="flex flex-wrap gap-1 mb-5 text-sm">
-      <button data-tab-key="all" class="class-tab px-3 py-1.5 rounded-lg font-medium transition ${active==="all"?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
-        Все классы <span class="font-mono text-xs tnum text-ink-300">${state.students.length}</span>
-      </button>
       ${tabs.map(t=>`
         <button data-tab-key="${escAttr(t.key)}" class="class-tab px-3 py-1.5 rounded-lg font-medium transition ${active===t.key?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
           ${escHtml(t.title)} <span class="font-mono text-xs tnum text-ink-300">${t.count}</span>
         </button>`).join("")}
+      <button data-tab-key="all" class="class-tab px-3 py-1.5 rounded-lg font-medium transition ${active==="all"?"bg-brand-50 text-brand-600":"text-ink-500 hover:text-ink-900"}">
+        Все классы <span class="font-mono text-xs tnum text-ink-300">${state.students.length}</span>
+      </button>
     </div>`;
 }
 
@@ -988,7 +1062,20 @@ function essayReport(student){
   }).filter(r=>r.attempts>0);
   const totals=exams.map(ex=>CRITERIA_KEYS.reduce((s,k)=>s+(ex.essay[k]||0),0));
 
-  // Каждая часть работы считается отдельно: изложение, сочинение, грамотность
+  // Каждая часть работы считается отдельно
+  const partFrom=(title,values,max)=>{
+    const last=values[values.length-1];
+    const scored=values.reduce((a,c)=>a+c,0);
+    return {block:title, keys:[], max, values, last,
+      avg:Math.round(scored/values.length*10)/10,
+      delta: values.length>1 ? last-values[values.length-2] : null,
+      rate: values.length*max ? scored/(values.length*max) : 0,
+      lastRate: max ? last/max : 0, isTest:true};
+  };
+  const testPart = TEST_BLOCK ? partFrom(TEST_BLOCK.title,
+      exams.map(ex=>TEST_BLOCK.tasks.reduce((s,t)=>s+(ex.scores[t]||0),0)),
+      TEST_BLOCK.tasks.reduce((s,t)=>s+maxScoreFor(t),0)) : null;
+
   const blocks=ESSAY_BLOCKS.map(b=>{
     const keys=CRITERIA_KEYS.filter(k=>ESSAY_CRITERIA[k].block===b);
     const max=blockMax(b);
@@ -1002,6 +1089,7 @@ function essayReport(student){
       rate: possible ? scored/possible : 0,
       lastRate: max ? last/max : 0};
   });
+  if(testPart) blocks.unshift(testPart);
   return {exams,rows,totals,blocks,
     last:totals[totals.length-1],
     avg:Math.round(totals.reduce((a,b)=>a+b,0)/totals.length*10)/10,
@@ -1102,7 +1190,25 @@ function groupReport(students,taskNumbers,examKey){
     return {key,meta,possible,scored,rate:possible?scored/possible:null};
   }).filter(r=>r.rate!==null);
 
-  // Части работы по классу: изложение, сочинение, грамотность отдельно
+  // Части работы по классу считаются отдельно
+  const testPartGroup = TEST_BLOCK ? (()=>{
+    const max=TEST_BLOCK.tasks.reduce((s,t)=>s+maxScoreFor(t),0);
+    const values=[];
+    entries.forEach(({student,exam})=>{
+      if(!TEST_BLOCK.tasks.some(t=>exam.scores[t]!==undefined)) return;
+      values.push({code:student.code, value:TEST_BLOCK.tasks.reduce((s,t)=>s+(exam.scores[t]||0),0)});
+    });
+    if(!values.length) return null;
+    const scored=values.reduce((s,v)=>s+v.value,0);
+    const nums=values.map(v=>v.value);
+    const sorted=[...values].sort((a,b)=>a.value-b.value);
+    return {block:TEST_BLOCK.title, keys:[], max, count:values.length, isTest:true,
+      avg:Math.round(scored/values.length*10)/10,
+      rate:scored/(values.length*max),
+      min:Math.min(...nums), max_value:Math.max(...nums),
+      weakest:null, low:sorted.slice(0,3).map(v=>`${v.code} (${v.value})`)};
+  })() : null;
+
   const essayParts=ESSAY_BLOCKS.map(block=>{
     const keys=CRITERIA_KEYS.filter(k=>ESSAY_CRITERIA[k].block===block);
     const max=blockMax(block);
@@ -1127,6 +1233,7 @@ function groupReport(students,taskNumbers,examKey){
       weakest:weakKey,
       low:sorted.slice(0,3).map(v=>`${v.code} (${v.value})`)};
   }).filter(Boolean);
+  if(testPartGroup) essayParts.unshift(testPartGroup);
 
   const dynamics=allExamKeys(students).map(({key,label,fullLabel})=>{
     const vals=students.map(st=>st.exams.find(e=>e.key===key)).filter(Boolean).map(e=>e.secondary);
@@ -1160,7 +1267,7 @@ const state={
   currentStudent:null, groupExam:"last", groupSort:"rate", email:"",
   plan:{...PLANS[DEFAULT_PLAN]}, legalTab:"offer",
   classes:[], currentClass:"all",
-  exam:"ege", allClasses:[], allStudents:[]
+  exam:"ege", subject:"rus", allClasses:[], allStudents:[]
 };
 applyExam("ege");
 
@@ -1182,12 +1289,14 @@ function showScreen(id){
 
 function countdownStyle(days){
   if(days===null) return null;
-  if(days<0) return {text:"Экзамен прошёл", cls:"bg-gray-50 text-ink-500 border-gray-200"};
-  if(days===0) return {text:"Экзамен сегодня", cls:"bg-rose-50 text-rose-700 border-rose-200"};
+  const label=(EXAMS[state.exam]||EXAMS.ege).countdownLabel||"экзамена";
+  if(days<0) return {text:`${label} позади`, cls:"bg-gray-50 text-ink-500 border-gray-200"};
+  if(days===0) return {text:`${label} сегодня`, cls:"bg-rose-50 text-rose-700 border-rose-200"};
   const word=plural(days,"день","дня","дней");
-  if(days<30) return {text:`До экзамена ${days} ${word}`, cls:"bg-rose-50 text-rose-700 border-rose-200"};
-  if(days<100) return {text:`До экзамена ${days} ${word}`, cls:"bg-amber-50 text-amber-700 border-amber-200"};
-  return {text:`До экзамена ${days} ${word}`, cls:"bg-emerald-50 text-emerald-700 border-emerald-200"};
+  const text=`До ${label}: ${days} ${word}`;
+  if(days<30) return {text, cls:"bg-rose-50 text-rose-700 border-rose-200"};
+  if(days<100) return {text, cls:"bg-amber-50 text-amber-700 border-amber-200"};
+  return {text, cls:"bg-emerald-50 text-emerald-700 border-emerald-200"};
 }
 
 function renderCountdown(){
@@ -1211,7 +1320,7 @@ function renderCountdown(){
 
   // Подсказка через глобальный тултип: системная всплывашка на повёрнутом
   // элементе показывалась ненадёжно
-  const tipTitle = `Экзамен ${dateLabel}${EXAM.preliminary?" · дата предварительная":""}`;
+  const tipTitle = `${(EXAMS[state.exam]||EXAMS.ege).countdownLabel||"Экзамен"} — ${dateLabel}${EXAM.preliminary?" (дата предварительная)":""}`;
   const tipRule = EXAM.preliminary ? EXAM.note : "Дата взята из официального расписания.";
   [side, mob.firstElementChild].forEach(el=>{
     if(!el) return;
@@ -1237,8 +1346,9 @@ function renderChrome(){
   // переключатель ЕГЭ и ОГЭ виден только преподавателю в кабинете
   const showExam = cfg.nav && NAV_SCREENS.includes(state.screen) && state.mode!=="share";
   const examHtml = showExam ? Object.values(EXAMS).map(p=>`
-      <button data-exam="${p.id}" class="exam-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition ${state.exam===p.id?"bg-white text-brand-600 shadow-soft":"text-ink-500 hover:text-ink-900"}">
-        ${p.label}<span class="hidden sm:inline text-ink-300 font-normal"> · ${p.grade}</span>
+      <button data-exam="${p.id}" class="exam-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition ${state.exam===p.id?"bg-white text-brand-600 shadow-soft":"text-ink-500 hover:text-ink-900"}"
+        title="${escAttr(p.subject+", "+p.grade)}">
+        ${escHtml(p.short||p.label)}
       </button>`).join("") : "";
   ["#exam-switch","#exam-switch-mobile"].forEach(sel=>{
     const el=$(sel); if(!el) return;
@@ -1357,6 +1467,10 @@ async function boot(){
       return;
     }
     setMode("teacher");
+    try{
+      const saved=localStorage.getItem(SUBJECT_KEY);
+      if(SUBJECTS[saved] && !SUBJECTS[saved].exams.includes(state.exam)) applyExam(SUBJECTS[saved].exams[0]);
+    }catch(e){}
     state.email=session.user.email||"";
     state.plan=await api.loadPlan();
     await reloadData();
@@ -1556,12 +1670,12 @@ function renderLanding(){
       <div class="text-center mb-10">
         <div class="flex flex-wrap items-center justify-center gap-2 mb-5">
           <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold">
-            ЕГЭ и ОГЭ · спецификация ФИПИ · официальные шкалы
+            Русский язык и литература · спецификация ФИПИ · официальные шкалы
           </span>
           ${st?`<span class="inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-semibold ${st.cls}">${escHtml(st.text)}</span>`:""}
         </div>
         <h1 class="font-display font-extrabold text-3xl sm:text-4xl tracking-tight leading-tight mb-4">
-          Аналитика пробников ЕГЭ и ОГЭ<br class="hidden sm:block"> по русскому языку
+          Аналитика пробников ЕГЭ и ОГЭ<br class="hidden sm:block"> по русскому языку и литературе
         </h1>
         <p class="text-ink-500 text-base leading-relaxed max-w-2xl mx-auto mb-7">
           Инструмент для преподавателя, который ведёт учеников к экзамену. Вместо тетради с баллами —
@@ -1701,6 +1815,12 @@ const FAQ=[
    a:"Пока ФИПИ не опубликовал расписание, стоит предварительная дата по прошлому году, о чём написано рядом со счётчиком. Как только появится официальная дата, она обновляется."},
   {q:"Насколько точен прогноз?",
    a:"Это диапазон по взвешенному тренду с поправкой на разброс результатов, а не гарантия балла. При двух пробниках или нестабильных результатах приложение честно пишет, что тренда нет."},
+  {q:"Какие предметы поддерживаются?",
+   a:"Русский язык — ЕГЭ и ОГЭ, литература — ЕГЭ. Предмет выбирается при входе и переключается в шапке, классы и ученики каждого предмета хранятся отдельно."},
+  {q:"Как считается литература?",
+   a:"По спецификации ФИПИ 2026: задания 1–3 и 6–8 по одному баллу, задания 4 и 9 по четыре, задания 5 и 10 по семь, сочинение 11 — двадцать. Максимум 48 первичных баллов, перевод в тестовые по официальной шкале, порог для вузов 32."},
+  {q:"Почему аналитика литературы разбита по номерам заданий?",
+   a:"Потому что у каждого развёрнутого ответа свои критерии: у заданий 4 и 9 два критерия, у 5 и 10 три, у сочинения девять. Разделы «Тест», «№4», «№5», «№9», «№10» и «№11» показывают, где именно теряются баллы."},
   {q:"Поддерживается ли ОГЭ?",
    a:"Да. В шапке переключаются ЕГЭ и ОГЭ, механика кабинета одинаковая. Для ОГЭ учтены 13 заданий, критерии изложения ИК1–ИК3, сочинения СК1–СК4 и грамотности ГК1–ГК4 с ФК1, а вместо тестового балла считается отметка по федеральной шкале."},
   {q:"Почему отметка ниже, чем ожидалось по сумме баллов?",
@@ -1850,6 +1970,9 @@ function renderLegal(){
 function renderAuth(){
   const prev=consentStore.read();
   const preChecked=Boolean(prev && prev.version===CONSENT_VERSION);
+  let startSubject=state.subject||"rus";
+  try{ startSubject=localStorage.getItem(SUBJECT_KEY)||startSubject; }catch(e){}
+  if(!SUBJECTS[startSubject]) startSubject="rus";
 
   $("#screen-auth").innerHTML=`
     <div class="max-w-sm mx-auto bg-white rounded-2xl shadow-soft p-7 mt-6">
@@ -1861,7 +1984,20 @@ function renderAuth(){
         </div>
       </div>
       <h1 class="font-display font-extrabold text-xl mb-1">Вход для преподавателя</h1>
-      <p class="text-sm text-ink-500 mb-6">Ученики открывают свои результаты по личной ссылке, вход им не нужен.</p>
+      <p class="text-sm text-ink-500 mb-5">Ученики открывают свои результаты по личной ссылке, вход им не нужен.</p>
+
+      <div class="mb-5">
+        <span class="text-xs uppercase tracking-wide text-ink-500">Предмет</span>
+        <div class="mt-2 grid grid-cols-2 gap-2">
+          ${Object.values(SUBJECTS).map(s=>`
+            <button type="button" data-subject="${escAttr(s.id)}"
+              class="subject-btn px-3 py-2.5 rounded-xl border text-sm font-semibold transition ${startSubject===s.id?"border-brand-500 bg-brand-50 text-brand-700":"border-gray-200 bg-paper text-ink-500 hover:border-brand-500"}">
+              ${escHtml(s.label)}
+              <span class="block text-[11px] font-normal ${startSubject===s.id?"text-brand-600":"text-ink-300"}">${escHtml(s.exams.map(e=>EXAMS[e].label.replace(" · литература","")).join(" и "))}</span>
+            </button>`).join("")}
+        </div>
+        <p class="text-[11px] text-ink-500 mt-2 leading-relaxed">Предмет можно переключить в шапке в любой момент, данные разных предметов хранятся отдельно.</p>
+      </div>
       <label class="block mb-3">
         <span class="text-xs uppercase tracking-wide text-ink-500">Почта</span>
         <input id="auth-email" type="email" autocomplete="username"
@@ -1908,6 +2044,11 @@ function renderAuth(){
   $("#screen-auth").querySelectorAll("[data-open-legal]").forEach(b=>{
     b.onclick=()=>openLegal(b.dataset.openLegal);
   });
+  $("#screen-auth").querySelectorAll(".subject-btn").forEach(b=>b.onclick=()=>{
+    startSubject=b.dataset.subject;
+    applyExam(SUBJECTS[startSubject].exams[0]);
+    renderAuth();
+  });
 
   const submit=async()=>{
     if(btn.disabled) return;
@@ -1920,6 +2061,7 @@ function renderAuth(){
     btn.textContent="Войти";
     if(error){ msg.textContent="Не удалось войти: "+error.message; return; }
     consentStore.save(email);
+    applyExam(SUBJECTS[startSubject].exams[0]);
     msg.textContent=""; boot();
   };
   btn.onclick=submit;
@@ -2014,7 +2156,7 @@ function renderStudentList(){
       <div>
         <h1 class="font-display font-extrabold text-2xl tracking-tight">${escHtml(classKeyTitle(state.currentClass))}</h1>
         <p class="text-sm text-ink-500 mt-1">
-          ${escHtml(EXAMS[state.exam].label)} · ${escHtml(EXAMS[state.exam].grade)} · ${state.allStudents.length} из ${limit} ${plural(limit,"места","мест","мест")} занято на тарифе «${escHtml(state.plan.name)}»
+          ${escHtml(EXAMS[state.exam].subject)} · ${escHtml(EXAMS[state.exam].label.replace(" · литература",""))} · ${escHtml(EXAMS[state.exam].grade)} · ${state.allStudents.length} из ${limit} ${plural(limit,"места","мест","мест")} занято на тарифе «${escHtml(state.plan.name)}»
         </p>
       </div>
       <div class="flex flex-wrap gap-2">
@@ -2086,15 +2228,24 @@ function renderStudentList(){
 
     ${empty.length?`
     <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6 mb-4">
-      <h2 class="font-display font-bold text-lg mb-1">Без данных</h2>
-      <p class="text-xs text-ink-500 mb-4">Коды заведены, но пробники ещё не внесены</p>
-      <div class="flex flex-wrap gap-2">
+      <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+        <h2 class="font-display font-bold text-lg">Ждут первого пробника</h2>
+        <span class="text-xs text-ink-500">${empty.length} ${plural(empty.length,"код","кода","кодов")} без результатов</span>
+      </div>
+      <p class="text-xs text-ink-500 mb-4">Нажмите «Внести пробник» — форма откроется с уже выбранным учеником</p>
+      <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         ${empty.map(st=>`
-          <span class="inline-flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-xl bg-paper text-sm font-mono">
-            ${escHtml(st.code)}
-            <span class="px-1.5 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[10px] font-sans font-semibold">${escHtml(classKeyTitle(studentClassKey(st)))}</span>
-            ${canEdit?`<button data-settings="${escAttr(st.id)}" class="student-settings text-[11px] font-sans font-semibold text-brand-600 hover:text-brand-700">изменить</button>`:""}
-          </span>`).join("")}
+          <div class="flex items-center gap-3 p-3 rounded-xl border border-dashed border-gray-200 hover:border-brand-500 transition">
+            <div class="min-w-0">
+              <div class="font-mono font-bold text-sm leading-tight">${escHtml(st.code)}</div>
+              <div class="text-[11px] text-ink-500 mt-0.5 truncate">${escHtml(classKeyTitle(studentClassKey(st)))}${book[st.code]?" · "+escHtml(book[st.code]):""}</div>
+            </div>
+            ${canEdit?`
+            <div class="ml-auto flex items-center gap-1.5 shrink-0">
+              <button data-entry-for="${escAttr(st.id)}" class="entry-for px-3 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold transition whitespace-nowrap">Внести пробник</button>
+              <button data-settings="${escAttr(st.id)}" class="student-settings w-7 h-7 rounded-lg text-ink-300 hover:text-brand-600 hover:bg-brand-50 transition grid place-items-center text-sm" title="Изменить код или класс">⋯</button>
+            </div>`:""}
+          </div>`).join("")}
       </div>
     </div>`:""}
 
@@ -2187,6 +2338,13 @@ function renderStudentList(){
     }catch(err){ if(msg){ msg.className="text-xs mt-2 text-rose-600"; msg.textContent=err.message; } }
   });
 
+  $("#screen-list").querySelectorAll(".entry-for").forEach(b=>b.onclick=()=>{
+    destroyCharts();
+    renderEntry(b.dataset.entryFor);
+    showScreen("screen-entry");
+    window.scrollTo({top:0});
+  });
+
   $("#screen-list").querySelectorAll(".drop-student").forEach(b=>b.onclick=async()=>{
     const st=state.students.find(s=>s.id===b.dataset.drop);
     const msg=$("#list-msg");
@@ -2259,8 +2417,8 @@ function openClassEditor(classId){
       <p class="text-sm text-ink-500 mb-4 leading-relaxed">Название видите только вы. Подойдёт 11А, группа Пн-Ср или поток 2027.</p>
       <input id="class-name" value="${escAttr(cls?cls.name:"")}" maxlength="${CLASS_MAX}" placeholder="${state.exam==="oge"?"9А":"11А"}"
         class="w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
-      ${cls?`<p class="text-xs text-ink-500 mt-3">Экзамен класса — ${escHtml(EXAMS[cls.exam].label)}, ${escHtml(EXAMS[cls.exam].grade)}. Сменить его нельзя, создайте отдельный класс.</p>`
-           :`<p class="text-xs text-ink-500 mt-3">Класс создаётся для ${escHtml(EXAMS[state.exam].label)}, ${escHtml(EXAMS[state.exam].grade)}. Для другого экзамена сначала переключите вкладку в шапке.</p>`}
+      ${cls?`<p class="text-xs text-ink-500 mt-3">Класс относится к предмету «${escHtml(EXAMS[cls.exam].subject)}», ${escHtml(EXAMS[cls.exam].label.replace(" · литература",""))}. Сменить это нельзя, создайте отдельный класс.</p>`
+           :`<p class="text-xs text-ink-500 mt-3">Класс создаётся для предмета «${escHtml(EXAMS[state.exam].subject)}», ${escHtml(EXAMS[state.exam].label.replace(" · литература",""))}, ${escHtml(EXAMS[state.exam].grade)}. Для другого предмета или экзамена сначала переключите вкладку в шапке.</p>`}
       <div class="flex gap-2 mt-4">
         <button id="class-save" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">${cls?"Сохранить":"Создать"}</button>
         <button id="class-close" class="ml-auto px-4 py-2 rounded-xl text-ink-500 hover:text-ink-900 text-sm font-semibold transition">Отмена</button>
@@ -2376,6 +2534,10 @@ function openStudentEditor(studentId){
 function openAddStudents(){
   const free=state.plan.limit-state.allStudents.length;
   const preselect=(state.currentClass!=="all"&&state.currentClass!==NO_CLASS)?state.currentClass:"";
+  // начало кода подставляем из названия класса, чтобы коды сразу были осмысленными
+  const presetClass=preselect?classById(preselect):null;
+  const rawPrefix=(presetClass?presetClass.name:"").replace(/\s+/g,"").slice(0,6);
+  const defaultPrefix=(rawPrefix?rawPrefix+"-":"К-");
   const modal=document.createElement("div");
   modal.className="fixed inset-0 z-[9998] bg-ink-900/40 backdrop-blur-sm flex items-center justify-center p-5";
   modal.innerHTML=`
@@ -2398,15 +2560,30 @@ function openAddStudents(){
         Ограничения кода — не длиннее ${CODE_MAX} символов, без пробелов, обязательна хотя бы одна цифра,
         подряд не больше трёх букв. Имена и фамилии ввести нельзя.
       </div>
-      <div class="flex items-center gap-2 mb-3">
-        <input id="gen-prefix" value="У-" placeholder="префикс" maxlength="6"
-          class="w-24 px-3 py-2 rounded-lg bg-paper border border-gray-200 text-sm font-mono focus:border-brand-500 outline-none transition">
-        <input id="gen-count" type="number" min="1" max="${Math.max(1,free)}" value="${Math.min(Math.max(free,1),10)}"
-          class="w-20 px-3 py-2 rounded-lg bg-paper border border-gray-200 text-sm font-mono focus:border-brand-500 outline-none transition">
-        <button id="gen-btn" class="px-3 py-2 rounded-lg bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Сгенерировать</button>
+      <div class="rounded-xl border border-gray-200 p-3 mb-3">
+        <div class="text-xs font-semibold text-ink-900 mb-1">Создать коды по порядку</div>
+        <p class="text-[11px] text-ink-500 mb-3 leading-relaxed">Приложение само составит коды вида «начало кода + номер». Их можно потом отредактировать в поле ниже.</p>
+        <div class="flex flex-wrap items-end gap-2">
+          <label class="block">
+            <span class="block text-[11px] text-ink-500 mb-1">Начало кода</span>
+            <input id="gen-prefix" value="${escAttr(defaultPrefix)}" placeholder="11А-" maxlength="8"
+              class="w-28 px-3 py-2 rounded-lg bg-paper border border-gray-200 text-sm font-mono focus:border-brand-500 outline-none transition">
+          </label>
+          <label class="block">
+            <span class="block text-[11px] text-ink-500 mb-1">Сколько кодов</span>
+            <input id="gen-count" type="number" min="1" max="${Math.max(1,free)}" value="${Math.min(Math.max(free,1),10)}"
+              class="w-24 px-3 py-2 rounded-lg bg-paper border border-gray-200 text-sm font-mono focus:border-brand-500 outline-none transition">
+          </label>
+          <button id="gen-btn" class="px-3 py-2 rounded-lg bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Составить список</button>
+        </div>
+        <div id="gen-preview" class="text-[11px] text-ink-500 mt-2 font-mono"></div>
       </div>
-      <textarea id="codes-input" rows="8" placeholder="11А-07&#10;11А-12&#10;У-03"
-        class="w-full text-sm font-mono bg-paper rounded-xl p-4 border border-gray-200 focus:border-brand-500 outline-none transition resize-none"></textarea>
+
+      <label class="block">
+        <span class="block text-xs font-semibold text-ink-900 mb-1">Список кодов, по одному в строке</span>
+        <textarea id="codes-input" rows="7" placeholder="${escAttr(defaultPrefix)}01&#10;${escAttr(defaultPrefix)}02&#10;${escAttr(defaultPrefix)}03"
+          class="w-full text-sm font-mono bg-paper rounded-xl p-4 border border-gray-200 focus:border-brand-500 outline-none transition resize-none"></textarea>
+      </label>
       <div class="flex gap-2 mt-4">
         <button id="codes-save" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">Добавить</button>
         <button id="codes-close" class="ml-auto px-4 py-2 rounded-xl text-ink-500 hover:text-ink-900 text-sm font-semibold transition">Закрыть</button>
@@ -2417,17 +2594,31 @@ function openAddStudents(){
   modal.querySelector("#codes-close").onclick=()=>modal.remove();
   modal.onclick=e=>{if(e.target===modal)modal.remove();};
 
-  modal.querySelector("#gen-btn").onclick=()=>{
-    const prefix=modal.querySelector("#gen-prefix").value.trim()||"У-";
+  const buildCodes=()=>{
+    const prefix=modal.querySelector("#gen-prefix").value.trim()||defaultPrefix;
     const count=Math.max(1,Math.min(free,parseInt(modal.querySelector("#gen-count").value,10)||1));
-    const existing=new Set(state.students.map(s=>s.code.toLowerCase()));
+    const existing=new Set(state.allStudents.map(s=>s.code.toLowerCase()));
     const out=[]; let i=1;
-    while(out.length<count && i<200){
+    while(out.length<count && i<300){
       const code=prefix+String(i).padStart(2,"0");
       if(!existing.has(code.toLowerCase()) && !validateCode(code)) out.push(code);
       i++;
     }
-    modal.querySelector("#codes-input").value=out.join("\n");
+    return out;
+  };
+  const refreshPreview=()=>{
+    const out=buildCodes();
+    const box=modal.querySelector("#gen-preview");
+    if(!out.length){ box.textContent="Такие коды уже заняты или начало кода не подходит"; return; }
+    const shown=out.length>4?[...out.slice(0,3),"…",out[out.length-1]]:out;
+    box.textContent="Получится: "+shown.join(", ");
+  };
+  modal.querySelector("#gen-prefix").oninput=refreshPreview;
+  modal.querySelector("#gen-count").oninput=refreshPreview;
+  refreshPreview();
+
+  modal.querySelector("#gen-btn").onclick=()=>{
+    modal.querySelector("#codes-input").value=buildCodes().join("\n");
   };
 
   modal.querySelector("#codes-save").onclick=async e=>{
@@ -2581,7 +2772,7 @@ function renderGroup(){
     </div>
 
     ${g.essayParts.length?`
-    <div class="grid gap-4 lg:grid-cols-3 mb-6">
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
       ${g.essayParts.map(part=>{
         const pc=Math.round(part.rate*100);
         const rows=g.essayRows.filter(r=>r.meta.block===part.block);
@@ -2594,7 +2785,18 @@ function renderGroup(){
           <p class="text-xs text-ink-500 mb-4">средний ${part.avg} из ${part.max} · разброс ${part.min}–${part.max_value} · ${part.count} ${plural(part.count,"работа","работы","работ")}</p>
           <div class="h-2 rounded-full bg-gray-100 overflow-hidden mb-5"><div class="h-full rounded-full ${barColor(pc)}" style="width:${pc}%"></div></div>
           <div class="space-y-2.5">
-            ${rows.map(r=>{const rp=Math.round(r.rate*100);return `
+            ${part.isTest?g.rows.filter(r=>TEST_BLOCK && TEST_BLOCK.tasks.includes(r.task)).map(r=>{
+              const rp=Math.round(r.rate*100);
+              const topic=EGE_TOPICS[r.task]||{title:"Задание "+r.task,review:""};
+              return `
+              <div class="flex items-center gap-2.5">
+                <span class="task-chip font-mono text-[12px] font-bold tnum text-brand-600 w-9 shrink-0"
+                  data-label="Задание ${escAttr(r.task)}" data-title="${escAttr(topic.title)}" data-rule="${escAttr(topic.review)}" tabindex="0">${r.task}</span>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between gap-2 text-[13px] mb-1"><span class="truncate">${escHtml(topic.title)}</span><span class="font-mono tnum text-ink-500">${rp}%</span></div>
+                  <div class="h-1.5 rounded-full bg-gray-100 overflow-hidden"><div class="h-full rounded-full ${barColor(rp)}" style="width:${rp}%"></div></div>
+                </div>
+              </div>`;}).join(""):rows.map(r=>{const rp=Math.round(r.rate*100);return `
               <div class="flex items-center gap-2.5">
                 <span class="task-chip font-mono text-[12px] font-bold tnum text-brand-600 w-9 shrink-0"
                   data-label="Критерий ${escAttr(r.key)}" data-title="${escAttr(r.meta.title)}" data-rule="${escAttr(r.meta.review)}" tabindex="0">${r.key}</span>
@@ -2728,7 +2930,7 @@ function groupReportText(g,examLabel,groupName){
     lines.push(`${i+1}. Задание ${r.task} — ${t.title}. Успешность ${Math.round(r.rate*100)}%. ${t.review}`);
   });
   if(g.essayParts.length){
-    lines.push(``,`Творческая часть по классу:`);
+    lines.push(``,`Разбор по частям работы:`);
     g.essayParts.forEach(part=>{
       const w=part.weakest;
       lines.push(`  ${part.block} — ${Math.round(part.rate*100)}% (средний ${part.avg} из ${part.max}, разброс ${part.min}–${part.max_value}).${w?` Слабее всего ${w.key} — ${w.title}.`:""}`);
@@ -2821,7 +3023,7 @@ function groupReportDocument(g,examLabel,images,groupName){
 </table>
 
 ${g.essayParts.length?`
-<h2>Творческая часть по классу</h2>
+<h2>Разбор по частям работы</h2>
 <table>
   <thead><tr><th>Часть работы</th><th class="num">Максимум</th><th class="num">Средний</th><th class="num">Разброс</th><th class="num">Выполнение</th></tr></thead>
   <tbody>
@@ -2838,7 +3040,7 @@ ${g.essayParts.length?`
 </table>
 
 ${g.essayParts.map(part=>{
-  const rows=g.essayRows.filter(r=>r.meta.block===part.block);
+  const rows=part.isTest?[]:g.essayRows.filter(r=>r.meta.block===part.block);
   if(!rows.length) return "";
   return `
   <h2>${escHtml(part.block)}: критерии</h2>
@@ -3106,7 +3308,7 @@ function essayMarkup(essay){
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-5">
       <div class="bg-paper rounded-xl p-4">
-        <div class="text-xs text-ink-500 mb-2">Вся творческая часть</div>
+        <div class="text-xs text-ink-500 mb-2">Все критерии</div>
         <div class="font-mono font-bold text-2xl tnum">${essay.last} <span class="text-ink-300 text-base">/ ${ESSAY_MAX}</span></div>
         <div class="mt-2">${trendMarkup(essay.delta)}</div>
         <div class="text-[11px] text-ink-500 mt-2">средний ${essay.avg} за ${essay.count} ${plural(essay.count,"работу","работы","работ")}</div>
@@ -3115,7 +3317,7 @@ function essayMarkup(essay){
         const pc=Math.round(b.lastRate*100);
         return `
         <div class="bg-paper rounded-xl p-4">
-          <div class="text-xs text-ink-500 mb-2">${escHtml(b.block)}</div>
+          <div class="text-xs text-ink-500 mb-2">${escHtml(b.block)}${b.isTest?" · краткие ответы":""}</div>
           <div class="font-mono font-bold text-2xl tnum">${b.last} <span class="text-ink-300 text-base">/ ${b.max}</span></div>
           <div class="mt-2">${trendMarkup(b.delta)}</div>
           <div class="h-1.5 rounded-full bg-gray-100 overflow-hidden mt-3"><div class="h-full rounded-full ${blockColors[b.block]||"bg-brand-500"}" style="width:${pc}%"></div></div>
@@ -3141,8 +3343,8 @@ function essayMarkup(essay){
         </thead>
         <tbody>
           ${essay.blocks.map(b=>{
-            const rows=essay.rows.filter(r=>r.meta.block===b.block);
-            if(!rows.length) return "";
+            const rows=b.isTest?[]:essay.rows.filter(r=>r.meta.block===b.block);
+            if(!rows.length && !b.isTest) return "";
             return `
             <tr class="bg-paper">
               <th class="sticky left-0 z-10 bg-paper px-4 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-ink-700">${escHtml(b.block)} · максимум ${b.max}</th>
@@ -3375,7 +3577,7 @@ function reportText(student,s,fc,weakest,essay){
   });
   if(essay){
     const w=[...essay.rows].filter(r=>r.lost>0).sort((a,b)=>a.rate-b.rate)[0];
-    lines.push(``,`Творческая часть: последняя работа ${essay.last} из ${ESSAY_MAX}, средний за ${essay.count} ${plural(essay.count,"работу","работы","работ")} — ${essay.avg}.`);
+    lines.push(``,`Развёрнутая часть: последняя работа ${essay.last} из ${ESSAY_MAX}, средний за ${essay.count} ${plural(essay.count,"работу","работы","работ")} — ${essay.avg}.`);
     essay.blocks.forEach(b=>lines.push(`  ${b.block} — ${b.last} из ${b.max} в последней работе, средний ${b.avg}, за всё время ${Math.round(b.rate*100)}%.`));
     if(w) lines.push(`Основная потеря — ${w.key} (${w.meta.title}), ${Math.round(w.rate*100)}% от возможного. ${w.meta.review}`);
   }
@@ -3512,8 +3714,8 @@ ${essay?`<h2>Сочинение по критериям</h2>
   </thead>
   <tbody>
     ${essay.blocks.map(b=>{
-      const rows=essay.rows.filter(r=>r.meta.block===b.block);
-      if(!rows.length) return "";
+      const rows=b.isTest?[]:essay.rows.filter(r=>r.meta.block===b.block);
+      if(!rows.length && !b.isTest) return "";
       const bp=Math.round(b.rate*100);
       return `
       <tr style="background:#F3F4F6">
@@ -3630,12 +3832,12 @@ function renderEntry(preselectId){
                 class="entry-input js-score px-1 py-2 rounded-lg bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
             </label>`).join("")}
         </div>
-        <div class="text-xs uppercase tracking-wide text-ink-500 mb-3">Критерии · ${escHtml(CRITERIA_KEYS[0])}–${escHtml(CRITERIA_KEYS[CRITERIA_KEYS.length-1])}</div>
-        <div class="grid grid-cols-[repeat(auto-fill,minmax(58px,1fr))] gap-2">
+        <div class="text-xs uppercase tracking-wide text-ink-500 mb-3">Критерии развёрнутых ответов · ${escHtml(CRITERIA_KEYS[0])}–${escHtml(CRITERIA_KEYS[CRITERIA_KEYS.length-1])}</div>
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(66px,1fr))] gap-2">
           ${CRITERIA_KEYS.map(k=>`
             <label class="block">
               <span class="block text-[11px] text-ink-500 text-center mb-1 font-mono">${k}<span class="text-ink-300">·${ESSAY_CRITERIA[k].max}</span></span>
-              <input type="number" min="0" max="${ESSAY_CRITERIA[k].max}" data-criterion="${k}" title="${escAttr(ESSAY_CRITERIA[k].title)}"
+              <input type="number" min="0" max="${ESSAY_CRITERIA[k].max}" data-criterion="${k}" title="${escAttr(ESSAY_CRITERIA[k].block+" · "+ESSAY_CRITERIA[k].title)}"
                 class="entry-input js-score px-1 py-2 rounded-lg bg-paper border border-gray-200 text-sm focus:border-brand-500 outline-none transition">
             </label>`).join("")}
         </div>
@@ -3904,7 +4106,9 @@ function renderImport(){
       <div class="bg-white rounded-2xl shadow-soft p-5">
         <h2 class="font-display font-bold text-lg mb-3">Как заполнить</h2>
         <div class="space-y-3 text-[13px] text-ink-700 leading-relaxed">
-          <p>Первый столбец — код ученика, второй — дата пробника. Дальше по одному столбцу на задание с 1 по 26 и на критерии К1–К10.</p>
+          <p class="font-semibold text-ink-900">Скачайте шаблон выше, прочитайте инструкцию и заполните данные.</p>
+          <p>Первый столбец — код ученика, второй — класс, третий — дата пробника. Дальше по одному столбцу на каждое задание с кратким ответом и на каждый критерий (${escHtml(CRITERIA_KEYS[0])}–${escHtml(CRITERIA_KEYS[CRITERIA_KEYS.length-1])}).</p>
+          <p class="text-ink-500">Шаблон формируется под выбранный экзамен: сейчас это ${escHtml(EXAMS[state.exam].subject)}, ${escHtml(EXAMS[state.exam].label.replace(" · литература",""))}.</p>
           <p>Одна строка — один пробник одного ученика. Несколько дат по одному коду вносите отдельными строками.</p>
           <p>Пустая ячейка означает, что задание не проверялось. Ноль означает, что ученик получил ноль баллов.</p>
           <p>Дата принимается в виде 20.09.2025 или 2025-09-20.</p>
