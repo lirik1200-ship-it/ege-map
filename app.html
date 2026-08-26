@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ЕГЭ_Мар · Русский язык. Результаты. Аналитика</title>
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E7C6B'/%3E%3Cg fill='white'%3E%3Crect x='5' y='5' width='6' height='6' rx='1.8'/%3E%3Crect x='13' y='5' width='6' height='6' rx='1.8' opacity='.45'/%3E%3Crect x='21' y='5' width='6' height='6' rx='1.8'/%3E%3Crect x='5' y='13' width='6' height='6' rx='1.8' opacity='.45'/%3E%3Crect x='13' y='13' width='6' height='6' rx='1.8'/%3E%3Crect x='21' y='13' width='6' height='6' rx='1.8' opacity='.7'/%3E%3Crect x='5' y='21' width='6' height='6' rx='1.8'/%3E%3Crect x='13' y='21' width='6' height='6' rx='1.8' opacity='.7'/%3E%3Crect x='21' y='21' width='6' height='6' rx='1.8' opacity='.45'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316171A'/%3E%3Cg fill='white'%3E%3Crect x='5' y='5' width='6' height='6' rx='1.8'/%3E%3Crect x='13' y='5' width='6' height='6' rx='1.8' opacity='.45'/%3E%3Crect x='21' y='5' width='6' height='6' rx='1.8'/%3E%3Crect x='5' y='13' width='6' height='6' rx='1.8' opacity='.45'/%3E%3Crect x='13' y='13' width='6' height='6' rx='1.8' fill='%23E3F54A'/%3E%3Crect x='21' y='13' width='6' height='6' rx='1.8' opacity='.7'/%3E%3Crect x='5' y='21' width='6' height='6' rx='1.8'/%3E%3Crect x='13' y='21' width='6' height='6' rx='1.8' opacity='.7'/%3E%3Crect x='21' y='21' width='6' height='6' rx='1.8' opacity='.45'/%3E%3C/g%3E%3C/svg%3E">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -18,7 +18,7 @@
   tailwind.config = { theme: { extend: {
     fontFamily:{display:['Manrope','system-ui','sans-serif'],sans:['Inter','system-ui','sans-serif'],mono:['"JetBrains Mono"','ui-monospace','monospace']},
     colors:{ink:{900:'#111827',700:'#374151',500:'#6B7280',300:'#D1D5DB'},paper:'#F7F8FA',
-      brand:{50:'#E8F4F1',100:'#CBE7E0',500:'#0E7C6B',600:'#0A6357',700:'#084C43'}},
+      brand:{50:'#F4FAD3',100:'#E7F3A0',500:'#16171A',600:'#000000',700:'#000000'}},
     boxShadow:{soft:'0 1px 2px rgba(17,24,39,.04), 0 8px 24px -12px rgba(17,24,39,.12)',
       lift:'0 2px 4px rgba(17,24,39,.05), 0 18px 40px -18px rgba(17,24,39,.22)'}
   }}}
@@ -40,7 +40,7 @@
   .matrix-wrap{overflow:auto;max-height:70vh}
   .matrix th,.matrix td{border-bottom:1px solid #EEF0F4}
   .task-chip{cursor:help;border-bottom:1px dashed #C7CBD4}
-  .task-chip:hover{color:#0A6357;border-bottom-color:#0A6357}
+  .task-chip:hover{color:#000000;border-bottom-color:#000000}
   .cell{width:30px;height:30px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
   .row-open{cursor:pointer}
   .matrix-wrap::-webkit-scrollbar{height:10px;width:10px}
@@ -76,9 +76,9 @@
           font-size:11px;line-height:1.45;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease;pointer-events:none}
   .pv:hover .pv-tip{opacity:1;transform:translateY(0)}
   .pv-num{transition:transform .3s cubic-bezier(.2,.8,.3,1),color .3s ease}
-  .pv:hover .pv-num{transform:scale(1.08);color:#0A6357}
+  .pv:hover .pv-num{transform:scale(1.08);color:#000000}
   .pv-btn{transition:background .2s ease,transform .2s ease}
-  .pv:hover .pv-btn{background:#0A6357;transform:translateY(-1px)}
+  .pv:hover .pv-btn{background:#000000;transform:translateY(-1px)}
 
   .legal h3{font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;margin:22px 0 8px}
   .legal p{font-size:13px;line-height:1.7;color:#374151;margin-bottom:8px}
@@ -87,7 +87,7 @@
     *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
     .pv-bar>i{width:var(--w)} .pv-spark{stroke-dashoffset:0} .pv-dot{opacity:1;transform:scale(1)}
   }
-  :focus-visible{outline:2px solid #0E7C6B;outline-offset:2px;border-radius:8px}
+  :focus-visible{outline:2px solid #8FB000;outline-offset:2px;border-radius:8px}
 </style>
 </head>
 
@@ -107,7 +107,7 @@
             <rect x="12.3" y="3"  width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".45"/>
             <rect x="21.6" y="3"  width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".95"/>
             <rect x="3"  y="12.3" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".45"/>
-            <rect x="12.3" y="12.3" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".95"/>
+            <rect x="12.3" y="12.3" width="7.4" height="7.4" rx="2.2" fill="#E3F54A"/>
             <rect x="21.6" y="12.3" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".7"/>
             <rect x="3"  y="21.6" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".95"/>
             <rect x="12.3" y="21.6" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".7"/>
@@ -704,7 +704,7 @@ function logoMarkup(size){
       <rect x="12.3" y="3" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".45"/>
       <rect x="21.6" y="3" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".95"/>
       <rect x="3" y="12.3" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".45"/>
-      <rect x="12.3" y="12.3" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".95"/>
+      <rect x="12.3" y="12.3" width="7.4" height="7.4" rx="2.2" fill="#E3F54A"/>
       <rect x="21.6" y="12.3" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".7"/>
       <rect x="3" y="21.6" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".95"/>
       <rect x="12.3" y="21.6" width="7.4" height="7.4" rx="2.2" fill="#fff" opacity=".7"/>
@@ -1553,12 +1553,12 @@ function previewChart(){
     <svg viewBox="0 0 240 90" class="w-full h-24" preserveAspectRatio="none" aria-hidden="true">
       <rect x="0" y="62" width="240" height="28" fill="#FCEBEB"></rect>
       <line x1="0" y1="62" x2="240" y2="62" stroke="#F09999" stroke-width="1" stroke-dasharray="4 4"></line>
-      <path class="pv-spark" d="M8,54 L58,46 L108,40 L158,30 L208,22" fill="none" stroke="#0E7C6B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
-      <path d="M208,22 L232,14" fill="none" stroke="#0E7C6B" stroke-width="2" stroke-dasharray="4 4"></path>
-      <circle class="pv-dot" cx="58" cy="46" r="4" fill="#fff" stroke="#0E7C6B" stroke-width="2.5"></circle>
-      <circle class="pv-dot" cx="108" cy="40" r="4" fill="#fff" stroke="#0E7C6B" stroke-width="2.5"></circle>
-      <circle class="pv-dot" cx="158" cy="30" r="4" fill="#fff" stroke="#0E7C6B" stroke-width="2.5"></circle>
-      <circle class="pv-dot" cx="208" cy="22" r="4" fill="#fff" stroke="#0E7C6B" stroke-width="2.5"></circle>
+      <path class="pv-spark" d="M8,54 L58,46 L108,40 L158,30 L208,22" fill="none" stroke="#16171A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      <path d="M208,22 L232,14" fill="none" stroke="#8FB000" stroke-width="2.5" stroke-dasharray="4 4"></path>
+      <circle class="pv-dot" cx="58" cy="46" r="4" fill="#fff" stroke="#16171A" stroke-width="2.5"></circle>
+      <circle class="pv-dot" cx="108" cy="40" r="4" fill="#fff" stroke="#16171A" stroke-width="2.5"></circle>
+      <circle class="pv-dot" cx="158" cy="30" r="4" fill="#fff" stroke="#16171A" stroke-width="2.5"></circle>
+      <circle class="pv-dot" cx="208" cy="22" r="4" fill="#fff" stroke="#16171A" stroke-width="2.5"></circle>
     </svg>
     <div class="flex items-center gap-4 text-[10px] text-ink-500 mt-1">
       <span class="inline-flex items-center gap-1.5"><span class="w-3 h-0.5 rounded bg-brand-500"></span>факт</span>
@@ -1568,7 +1568,7 @@ function previewChart(){
 }
 function previewHeatmap(){
   const vals=[2,1,0,2,2,1,2,0,2,2,1,2,2,2,0,2,1,2,2,2,2,0,1,2];
-  const style=v=>v===2?"background:#E4F7C4;color:#3F6212":v===1?"background:#FEF3C7;color:#B45309":"background:#FEE2E2;color:#B91C1C";
+  const style=v=>v===2?"background:#D1FAE5;color:#047857":v===1?"background:#FEF3C7;color:#B45309":"background:#FEE2E2;color:#B91C1C";
   return `
   <div class="pv">
     <span class="pv-tag">история баллов</span>
@@ -1682,8 +1682,8 @@ function renderLanding(){
           разбор по каждому заданию, динамика, прогноз и готовый план занятия.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">
-          <button id="landing-login" class="px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">Войти</button>
-          <button id="landing-pricing" class="px-6 py-3 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Посмотреть тарифы</button>
+          <button id="landing-login" class="px-7 py-3 rounded-full bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition">Войти</button>
+          <button id="landing-pricing" class="px-7 py-3 rounded-full bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Посмотреть тарифы</button>
         </div>
       </div>
 
@@ -1975,8 +1975,10 @@ function renderAuth(){
   if(!SUBJECTS[startSubject]) startSubject="rus";
 
   $("#screen-auth").innerHTML=`
-    <div class="max-w-sm mx-auto bg-white rounded-2xl shadow-soft p-7 mt-6">
-      <div class="flex items-center gap-3 mb-5">
+    <div class="max-w-sm mx-auto bg-white rounded-2xl shadow-soft p-7 mt-6 relative overflow-hidden">
+      <div class="absolute -top-10 -right-10 w-36 h-36 rounded-full pointer-events-none"
+        style="background:radial-gradient(circle,#E3F54A 0%,rgba(227,245,74,0) 70%);opacity:.55"></div>
+      <div class="flex items-center gap-3 mb-5 relative">
         ${logoMarkup("w-10 h-10")}
         <div>
           <div class="font-display font-extrabold leading-tight">${escHtml(AUTHOR.brand)}</div>
@@ -2028,7 +2030,7 @@ function renderAuth(){
         </label>
       </div>
 
-      <button id="auth-submit" class="w-full px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed" ${preChecked?"":"disabled"}>Войти</button>
+      <button id="auth-submit" class="w-full px-4 py-2.5 rounded-full bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed" ${preChecked?"":"disabled"}>Войти</button>
       <p id="auth-msg" class="text-xs text-rose-600 mt-3"></p>
       <div class="mt-5 pt-5 border-t border-gray-100 text-xs text-ink-500 leading-relaxed">
         Нет доступа? Напишите <a href="${escAttr(AUTHOR.telegram)}" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700">в Telegram</a>, выдам учётную запись.
@@ -2086,7 +2088,7 @@ function trendMarkup(delta,unit){
 }
 function cellStyle(value,max){
   if(value===undefined||value===null) return {cls:"bg-gray-50 text-ink-300",text:"·",label:"нет данных"};
-  if(value>=max) return {cls:"bg-lime-100 text-lime-800",text:String(value),label:`${value} из ${max}`};
+  if(value>=max) return {cls:"bg-emerald-100 text-emerald-700",text:String(value),label:`${value} из ${max}`};
   if(value<=0) return {cls:"bg-rose-100 text-rose-700",text:"0",label:`0 из ${max}`};
   return {cls:"bg-amber-100 text-amber-700",text:String(value),label:`${value} из ${max}`};
 }
@@ -2890,9 +2892,9 @@ function renderGroup(){
   makeChart("group-dynamics",{
     type:"line",
     data:{labels:g.dynamics.map(d=>d.label),datasets:[
-      {label:"Максимум",data:g.dynamics.map(d=>d.max),borderColor:"#CBE7E0",backgroundColor:"rgba(14,124,107,.07)",borderWidth:1,pointRadius:0,fill:"+2",tension:.3},
-      {label:"Средний",data:g.dynamics.map(d=>d.avg),borderColor:"#0E7C6B",borderWidth:2.5,pointRadius:4,pointBackgroundColor:"#fff",pointBorderColor:"#0E7C6B",pointBorderWidth:2.5,fill:false,tension:.3},
-      {label:"Минимум",data:g.dynamics.map(d=>d.min),borderColor:"#CBE7E0",borderWidth:1,pointRadius:0,fill:false,tension:.3}
+      {label:"Максимум",data:g.dynamics.map(d=>d.max),borderColor:"rgba(22,23,26,.18)",backgroundColor:"rgba(22,23,26,.05)",borderWidth:1,pointRadius:0,fill:"+2",tension:.3},
+      {label:"Средний",data:g.dynamics.map(d=>d.avg),borderColor:"#16171A",borderWidth:2.5,pointRadius:4,pointBackgroundColor:"#fff",pointBorderColor:"#16171A",pointBorderWidth:2.5,fill:false,tension:.3},
+      {label:"Минимум",data:g.dynamics.map(d=>d.min),borderColor:"rgba(22,23,26,.18)",borderWidth:1,pointRadius:0,fill:false,tension:.3}
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
       plugins:{legend:{display:false},tooltip:{backgroundColor:"#111827",padding:12,cornerRadius:12,displayColors:false,
@@ -2906,7 +2908,7 @@ function renderGroup(){
   makeChart("group-distribution",{
     type:"bar",
     data:{labels:g.buckets.map(b=>b.label),datasets:[{data:g.buckets.map(b=>b.count),
-      backgroundColor:["#E24B4A","#EF9F27","#0E7C6B","#1D9E75"].slice(0,g.buckets.length),borderRadius:8,barThickness:38}]},
+      backgroundColor:["#E24B4A","#EF9F27","#059669","#047857"].slice(0,g.buckets.length),borderRadius:8,barThickness:38}]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{backgroundColor:"#111827",padding:12,cornerRadius:12,displayColors:false,
         callbacks:{label:i=>`${i.parsed.y} ${plural(i.parsed.y,"ученик","ученика","учеников")}`}}},
@@ -2947,8 +2949,8 @@ function groupReportDocument(g,examLabel,images,groupName){
 <html lang="ru"><head><meta charset="UTF-8"><title>${escHtml(AUTHOR.brand)} · отчёт по классу</title>
 <style>
  body{font-family:-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:#111827;max-width:860px;margin:32px auto;padding:0 20px;line-height:1.6}
- .brandbar{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid #0E7C6B;margin-bottom:20px}
- .mark{width:38px;height:38px;border-radius:11px;background:#0E7C6B;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;overflow:hidden}
+ .brandbar{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid #16171A;margin-bottom:20px}
+ .mark{width:38px;height:38px;border-radius:11px;background:#16171A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;overflow:hidden}
  .brandname{font-weight:800;font-size:15px;line-height:1.2}
  .brandsub{font-size:11px;color:#6B7280}
  h1{font-size:22px;margin:0 0 4px} h2{font-size:16px;margin:26px 0 10px}
@@ -2964,8 +2966,8 @@ function groupReportDocument(g,examLabel,images,groupName){
  .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
  .low{color:#B91C1C;font-weight:600}
  ol{padding-left:18px} li{margin-bottom:9px;font-size:13px}
- .author{margin-top:24px;padding:16px 18px;border-radius:14px;background:#E8F4F1;font-size:13px}
- .author a{color:#0A6357;font-weight:600;text-decoration:none}
+ .author{margin-top:24px;padding:16px 18px;border-radius:14px;background:#F4FAD3;font-size:13px}
+ .author a{color:#16171A;font-weight:600;text-decoration:none}
  .note{font-size:11px;color:#6B7280;border-top:1px solid #E5E7EB;padding-top:10px;margin-top:20px}
  @media print{body{margin:0} .charts img{max-width:330px}}
 </style></head><body>
@@ -2980,7 +2982,7 @@ function groupReportDocument(g,examLabel,images,groupName){
   <div><span class="lbl">Средний балл</span><span class="val">${g.avgSecondary}</span></div>
   <div><span class="lbl">Медиана</span><span class="val">${g.median}</span></div>
   <div><span class="lbl">Разброс</span><span class="val">${g.min}–${g.max}</span></div>
-  <div><span class="lbl">Ниже порога</span><span class="val" style="color:${g.belowPass?"#B45309":"#3F6212"}">${g.belowPass}</span></div>
+  <div><span class="lbl">Ниже порога</span><span class="val" style="color:${g.belowPass?"#B45309":"#047857"}">${g.belowPass}</span></div>
 </div>
 
 <div class="charts">
@@ -3254,7 +3256,7 @@ function scoreChartMarkup(fc){
       </div>
       <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-ink-500">
         <span class="inline-flex items-center gap-1.5"><span class="w-4 h-0.5 rounded-full bg-brand-500"></span>факт</span>
-        <span class="inline-flex items-center gap-1.5"><span class="w-4 h-0.5 rounded-full" style="background-image:repeating-linear-gradient(90deg,#0E7C6B 0 3px,transparent 3px 6px)"></span>прогноз</span>
+        <span class="inline-flex items-center gap-1.5"><span class="w-4 h-0.5 rounded-full" style="background-image:repeating-linear-gradient(90deg,#8FB000 0 3px,transparent 3px 6px)"></span>прогноз</span>
         <span class="inline-flex items-center gap-1.5"><span class="w-4 h-2 rounded bg-rose-100"></span>${state.exam==="oge"?"отметка «2»":"ниже порога 36"}</span>
       </div>
     </div>
@@ -3383,7 +3385,7 @@ function historyMarkup(student,report,readOnly,classKey){
         <p class="text-xs text-ink-500 mt-1">Наведите на номер задания, чтобы увидеть, что повторить${readOnly?"":", а на процент — сравнение с классом"}</p>
       </div>
       <div class="flex items-center gap-3 text-[11px] text-ink-500">
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-lime-100 border border-lime-200"></span>максимум</span>
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-emerald-100 border border-emerald-200"></span>максимум</span>
         <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-amber-100 border border-amber-200"></span>частично</span>
         <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-rose-100 border border-rose-200"></span>ноль</span>
         <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-gray-50 border border-gray-200"></span>нет данных</span>
@@ -3459,7 +3461,7 @@ function drawStudentChart(exams,fc){
       const {ctx,chartArea,scales:{y}}=chart;
       if(!chartArea) return;
       const lines=isOge
-        ? [{v:15,label:"отметка 3",color:"#F09999"},{v:26,label:"отметка 4",color:"#EAB308"},{v:33,label:"отметка 5",color:"#1D9E75"}]
+        ? [{v:15,label:"отметка 3",color:"#F09999"},{v:26,label:"отметка 4",color:"#EAB308"},{v:33,label:"отметка 5",color:"#059669"}]
         : [{v:36,label:"порог 36",color:"#F09999"}];
       const yLow=y.getPixelForValue(lines[0].v);
       ctx.save();
@@ -3497,7 +3499,7 @@ function drawStudentChart(exams,fc){
       const fmeta=chart.getDatasetMeta(3);
       if(fmeta && fmeta.data[n]){
         const pt=fmeta.data[n];
-        ctx.fillStyle="#0A6357";
+        ctx.fillStyle="#6B7A00";
         ctx.fillText(String(fcBase),pt.x,pt.y-12);
       }
       ctx.restore();
@@ -3507,13 +3509,13 @@ function drawStudentChart(exams,fc){
   makeChart("score-chart",{
     type:"line",
     data:{labels,datasets:[
-      {label:"Верх диапазона",data:high,borderColor:"rgba(14,124,107,.22)",borderWidth:1,pointRadius:0,fill:"+2",backgroundColor:"rgba(14,124,107,.09)",tension:0},
-      {label:"Тестовый балл",data:actual,borderColor:"#0E7C6B",backgroundColor:"rgba(14,124,107,.10)",borderWidth:3,fill:true,tension:.35,
-       pointRadius:5,pointHoverRadius:8,pointBackgroundColor:"#fff",pointBorderColor:"#0E7C6B",pointBorderWidth:3,
-       pointHoverBackgroundColor:"#0E7C6B",pointHoverBorderColor:"#fff",pointHoverBorderWidth:3},
-      {label:"Низ диапазона",data:low,borderColor:"rgba(14,124,107,.22)",borderWidth:1,pointRadius:0,fill:false,tension:0},
-      {label:"Прогноз",data:predicted,borderColor:"#0E7C6B",borderWidth:2,borderDash:[5,5],fill:false,tension:0,
-       pointRadius:ctx=>ctx.dataIndex===n?6:0,pointStyle:"rectRot",pointBackgroundColor:"#fff",pointBorderColor:"#0E7C6B",pointBorderWidth:3}
+      {label:"Верх диапазона",data:high,borderColor:"rgba(143,176,0,.35)",borderWidth:1,pointRadius:0,fill:"+2",backgroundColor:"rgba(227,245,74,.20)",tension:0},
+      {label:"Тестовый балл",data:actual,borderColor:"#16171A",backgroundColor:"rgba(22,23,26,.06)",borderWidth:3,fill:true,tension:.35,
+       pointRadius:5,pointHoverRadius:8,pointBackgroundColor:"#fff",pointBorderColor:"#16171A",pointBorderWidth:3,
+       pointHoverBackgroundColor:"#16171A",pointHoverBorderColor:"#fff",pointHoverBorderWidth:3},
+      {label:"Низ диапазона",data:low,borderColor:"rgba(143,176,0,.35)",borderWidth:1,pointRadius:0,fill:false,tension:0},
+      {label:"Прогноз",data:predicted,borderColor:"#8FB000",borderWidth:2,borderDash:[5,5],fill:false,tension:0,
+       pointRadius:ctx=>ctx.dataIndex===n?6:0,pointStyle:"rectRot",pointBackgroundColor:"#fff",pointBorderColor:"#8FB000",pointBorderWidth:3}
     ]},
     options:{
       responsive:true,maintainAspectRatio:false,
@@ -3547,7 +3549,7 @@ function drawStudentChart(exams,fc){
            grid:{color:"#F3F4F6",drawTicks:false}},
         x:{border:{display:false},grid:{display:false},
            ticks:{padding:8,font:ctx=>({family:"Inter",size:11,weight:ctx.index===labels.length-1?"600":"400"}),
-                  color:ctx=>ctx.index===labels.length-1?"#0A6357":"#6B7280"}}
+                  color:ctx=>ctx.index===labels.length-1?"#6B7A00":"#6B7280"}}
       }
     },
     plugins:[passZone,pointValues]
@@ -3606,8 +3608,8 @@ function reportDocument(student,s,fc,weakest,essay,images){
 <html lang="ru"><head><meta charset="UTF-8"><title>${escHtml(AUTHOR.brand)} · ${escHtml(student.code)}</title>
 <style>
  body{font-family:-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:#111827;max-width:860px;margin:32px auto;padding:0 20px;line-height:1.6}
- .brandbar{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid #0E7C6B;margin-bottom:20px}
- .mark{width:38px;height:38px;border-radius:11px;background:#0E7C6B;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;overflow:hidden}
+ .brandbar{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid #16171A;margin-bottom:20px}
+ .mark{width:38px;height:38px;border-radius:11px;background:#16171A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;overflow:hidden}
  .brandname{font-weight:800;font-size:15px;line-height:1.2}
  .brandsub{font-size:11px;color:#6B7280}
  h1{font-size:22px;margin:0 0 4px} h2{font-size:16px;margin:26px 0 8px}
@@ -3624,12 +3626,12 @@ function reportDocument(student,s,fc,weakest,essay,images){
  table.grid td.num,table.grid th.num{text-align:right;font-variant-numeric:tabular-nums}
  table.grid td.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
  table.grid td.c{text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
- td.green{background:#E4F7C4;color:#3F6212} td.amber{background:#FEF3C7;color:#B45309}
+ td.green{background:#D1FAE5;color:#047857} td.amber{background:#FEF3C7;color:#B45309}
  td.red{background:#FEE2E2;color:#B91C1C} td.gray{background:#F3F4F6;color:#9CA3AF}
  td.low{color:#B91C1C;font-weight:700}
  .note{font-size:11px;color:#6B7280;border-top:1px solid #E5E7EB;padding-top:10px;margin-top:24px}
- .author{margin-top:22px;padding:16px 18px;border-radius:14px;background:#E8F4F1;font-size:13px}
- .author a{color:#0A6357;font-weight:600;text-decoration:none}
+ .author{margin-top:22px;padding:16px 18px;border-radius:14px;background:#F4FAD3;font-size:13px}
+ .author a{color:#16171A;font-weight:600;text-decoration:none}
  @media print{body{margin:0} table.grid{page-break-inside:auto} table.grid tr{page-break-inside:avoid}}
 </style></head><body>
 <div class="brandbar">
@@ -3642,7 +3644,7 @@ function reportDocument(student,s,fc,weakest,essay,images){
   <div><span class="lbl">${escHtml(SCORE_WORD)}</span><span class="val">${escHtml(s.last.scoreText)}</span></div>
   <div><span class="lbl">Средний</span><span class="val">${s.avgSecondary}</span></div>
   <div><span class="lbl">Прогноз</span><span class="val">${fc.lowSecondary}–${fc.highSecondary}</span></div>
-  <div><span class="lbl">С проработкой тем</span><span class="val" style="color:#0A6357">${fc.potentialSecondary}</span></div>
+  <div><span class="lbl">С проработкой тем</span><span class="val" style="color:#6B7A00">${fc.potentialSecondary}</span></div>
 </div>
 ${images.score?`<img src="${images.score}" alt="Динамика баллов">`:""}
 <h2>Все пробники</h2>
