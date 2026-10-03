@@ -110,11 +110,8 @@
 <div class="min-h-screen flex flex-col">
   <header class="sticky top-0 z-30 bg-white/85 backdrop-blur border-b-2 border-route-500">
     <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
-      <button id="logo-btn" class="flex items-center gap-3 text-left">
-        <svg viewBox="-22 0 273 251" class="w-9 h-9 shrink-0" aria-hidden="true"><use href="#egm"></use></svg>
-        <div>
-          <div class="font-display font-extrabold text-lg leading-tight tracking-tight">ЕГЭ_Map</div>
-        </div>
+      <button id="logo-btn" class="flex items-center text-left" aria-label="ЕГЭ_Map — на главную" title="ЕГЭ_Map">
+        <svg viewBox="-22 0 273 251" class="w-11 h-11 shrink-0" role="img" aria-label="ЕГЭ_Map"><use href="#egm"></use></svg>
       </button>
       <div id="subject-switch" class="hidden relative"></div>
       <nav id="main-nav" class="hidden md:flex items-center gap-1 text-sm"></nav>
@@ -162,18 +159,20 @@
   </main>
 
   <footer class="border-t border-gray-100 bg-white">
-    <div class="max-w-6xl mx-auto px-5 py-6 flex flex-wrap items-start justify-between gap-6">
-      <div class="text-xs text-ink-500 leading-relaxed max-w-md">
-        <p class="mb-2">ЕГЭ считается по официальной шкале перевода в тестовые баллы, ОГЭ — по федеральной шкале отметок Рособрнадзора, в регионах границы могут отличаться.
+    <div class="max-w-6xl mx-auto px-5 py-6 grid gap-8 md:grid-cols-2 items-start text-xs">
+      <div class="text-ink-500 leading-relaxed">
+        <div id="footer-channels"></div>
+        <p class="mt-4 max-w-md">ЕГЭ считается по официальной шкале перевода в тестовые баллы, ОГЭ — по федеральной шкале отметок Рособрнадзора, в регионах границы могут отличаться.
         Прогноз — диапазон по взвешенному тренду, а не обещание результата.</p>
+      </div>
+      <div class="flex flex-col gap-4 md:items-end md:text-right">
         <p>
           <button data-legal="offer" class="legal-link font-semibold text-brand-600 hover:text-brand-700">Публичная оферта</button>
           <span class="text-ink-300 mx-1">·</span>
           <button data-legal="privacy" class="legal-link font-semibold text-brand-600 hover:text-brand-700">Политика обработки персональных данных</button>
         </p>
-        <div id="footer-channels" class="mt-4"></div>
+        <div id="footer-links" class="flex flex-col gap-4 md:items-end"></div>
       </div>
-      <div id="footer-links" class="text-xs flex flex-wrap items-start gap-x-12 gap-y-5 md:ml-auto"></div>
     </div>
   </footer>
 </div>
@@ -266,24 +265,22 @@ document.addEventListener("click",e=>{
 function renderFooterLinks(){
   const ch=document.getElementById("footer-channels"), el=document.getElementById("footer-links");
   if(!el) return;
-  // слева — каналы платформы (под текстом об оферте), справа — автор и поддержка
+  // слева — каналы платформы; справа — оферта, автор проекта и «Поддержка»
   if(ch) ch.innerHTML=`
     <div class="text-ink-500 mb-1.5">Канал ЕГЭ_Map</div>
     <div class="flex flex-wrap items-center gap-2">${socialPill("tg","channel")}${socialPill("max","channel")}</div>`;
   el.innerHTML=`
     <div>
-      <div class="text-ink-500 mb-1.5">Автор проекта</div>
-      <div class="font-display font-bold text-sm mb-1.5">${escHtml(AUTHOR.name)}</div>
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="text-ink-500 mb-1">Автор проекта</div>
+      <div class="font-display font-bold text-sm mb-1">${escHtml(AUTHOR.name)}</div>
+      <div class="flex flex-wrap items-center gap-3 md:justify-end">
         <a href="${escAttr(AUTHOR.authorChannel)}" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700 transition">Telegram</a>
         <a href="${escAttr(AUTHOR.vk)}" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700 transition">ВКонтакте</a>
       </div>
     </div>
-    <div data-support-chrome>
-      <div class="text-ink-500 mb-1.5">Нужна помощь?</div>
-      ${supportButton()}
-    </div>`;
+    <div data-support-chrome>${supportButton()}</div>`;
 }
+
 
 
 // Реквизиты для документов. Заполните перед публикацией.
@@ -3236,12 +3233,8 @@ function renderAuth(){
         <div class="relative bg-ink-900 text-white p-7 sm:p-10 overflow-hidden">
           <svg viewBox="-22 18 273 216" class="absolute -right-14 -top-8 w-[420px] max-w-none h-auto opacity-[.07] pointer-events-none" aria-hidden="true"><use href="#egb"></use></svg>
 
-          <div class="relative flex items-center gap-3 mb-9">
-            <svg viewBox="0 0 251 251" class="w-11 h-11 rounded-xl shrink-0" aria-hidden="true"><use href="#egt"></use></svg>
-            <div>
-              <div class="font-display font-black text-lg leading-tight">${escHtml(AUTHOR.brand)}</div>
-              <div class="text-xs text-white/50 leading-tight">${escHtml(AUTHOR.tagline)}</div>
-            </div>
+          <div class="relative flex items-center mb-9">
+            <svg viewBox="0 0 251 251" class="w-14 h-14 rounded-xl shrink-0" role="img" aria-label="${escAttr(AUTHOR.brand)}"><use href="#egt"></use></svg>
           </div>
 
           <h1 class="relative font-display font-black text-[26px] sm:text-[30px] leading-[1.15] tracking-tight mb-9">
@@ -3324,10 +3317,7 @@ function renderAuth(){
           ${authMode==="signup"?`<p class="text-[11px] text-ink-500 mt-3 leading-relaxed">Минимальная длина пароля — 8 символов. После регистрации придёт письмо со ссылкой подтверждения, без неё вход не сработает.</p>`:`<button type="button" id="auth-forgot" class="mt-3 text-xs text-ink-500 hover:text-ink-900 underline">Забыли пароль?</button>`}
           <div class="mt-5 pt-5 border-t border-gray-100 text-xs text-ink-500 leading-relaxed">
             Вопросы по доступам и тарифам — <button type="button" id="auth-to-pricing" class="font-semibold text-ink-900 hover:text-route-700 underline">смотрите страницу с тарифами</button>.
-            <div class="mt-4 flex flex-wrap items-center gap-2">
-              ${supportButton("!py-1.5 text-xs")}
-              <span class="text-ink-500">Наш канал:</span>${socialPill("tg","channel")}${socialPill("max","channel")}
-            </div>
+            <div class="mt-4">${supportButton("!py-1.5 text-xs")}</div>
           </div>
         </div>
 
