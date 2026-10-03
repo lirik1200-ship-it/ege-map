@@ -205,13 +205,28 @@ const AUTHOR = {
   name: "Кирилл Минкин",
   tagline: "Аналитика пробных экзаменов в одном месте",
   bio: "Создатель ЕГЭ_Map и учитель словесности. Разработка собственных образовательных продуктов, подготовка к ЕГЭ и истории из жизни.",
-  channel: "https://t.me/egeminkin",   // Telegram-канал автора
-  telegram: "https://t.me/ege_minkin",   // личный контакт для связи
+    channel: "https://t.me/ege_map",            // Telegram-канал платформы
+  authorChannel: "https://t.me/egeminkin",    // личный канал автора (карточка автора)
+  telegram: "https://t.me/ege_minkin",        // личные сообщения: поддержка и вопросы
+  maxChannel: "https://max.ru/join/R1cgYamSBVfV25pGjEGgQ1w3P0NoiATfPgrQkD7XhfE",   // канал платформы в MAX
+  maxSupport: "https://max.ru/u/f9LHodD0cOJ4o8p3989HkQLh1dM5nkfzjlCdqqIR7L_NeFxZ8L8zFcH4nHU",   // личные сообщения в MAX: поддержка и вопросы
   vk: "https://vk.ru/egeminkin",
-  email: "[укажите почту для обращений]",
+  email: "e.g.e-map@yandex.ru",
   photo: "author.jpg",   // положите квадратное фото рядом с этим файлом; пусто — останутся буквы
   initials: "ЕМ"
 };
+
+// Значки мессенджеров рядом со ссылками. Иконка MAX — официальный значок max.ru, уменьшенный.
+const MAX_ICON="data:image/png;base64,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";
+const TG_ICON=`<svg viewBox="0 0 24 24" width="16" height="16" class="shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#229ED9"/><path fill="#fff" d="M5.5 12.15l11.1-4.28c.5-.2 1 .12.82.94l-1.9 8.95c-.13.61-.5.75-1.02.47l-2.8-2.07-1.35 1.3c-.15.15-.28.28-.55.28l.2-2.8 5.1-4.6c.22-.2 0-.3-.3-.1l-6.3 3.97-2.71-.85c-.6-.18-.6-.6.1-.9z"/></svg>`;
+const MAX_ICON_IMG=`<img src="${MAX_ICON}" alt="" width="16" height="16" class="shrink-0 rounded-[4px]">`;
+// kind: "support" — личные сообщения, «channel» — канал платформы
+function socialLink(net,kind){
+  const tg=net==="tg";
+  const href=tg ? (kind==="support"?AUTHOR.telegram:AUTHOR.channel) : (kind==="support"?AUTHOR.maxSupport:AUTHOR.maxChannel);
+  return `<a href="${escAttr(href)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 font-semibold text-ink-900 hover:text-route-700 underline decoration-route-500 decoration-2 underline-offset-4">${tg?TG_ICON:MAX_ICON_IMG}<span>${tg?"Telegram":"MAX"}</span></a>`;
+}
+const socialLinks=(kind,sep=" или ")=>socialLink("tg",kind)+sep+socialLink("max",kind);
 
 // Реквизиты для документов. Заполните перед публикацией.
 const LEGAL_META = {
@@ -342,7 +357,7 @@ const LEGAL_OFFER = {
     {h:"12. Реквизиты Исполнителя",p:[
       `Исполнитель: ${LEGAL_META.operator}, ${LEGAL_META.status}.`,
       `ИНН: ${LEGAL_META.inn}. Адрес для корреспонденции: ${LEGAL_META.address}.`,
-      `Электронная почта для обращений: ${AUTHOR.email}. Telegram: ${AUTHOR.telegram}.`
+      `Электронная почта для обращений: ${AUTHOR.email}. Telegram: ${AUTHOR.telegram}. MAX: ${AUTHOR.maxSupport}.`
     ]}
   ]
 };
@@ -353,7 +368,7 @@ const LEGAL_PRIVACY = {
   sections:[
     {h:"1. Оператор",p:[
       `Оператором персональных данных является ${LEGAL_META.operator}, ${LEGAL_META.status}, ИНН ${LEGAL_META.inn}.`,
-      `Обращения по вопросам обработки данных принимаются по адресу ${AUTHOR.email} и в Telegram ${AUTHOR.telegram}.`
+      `Обращения по вопросам обработки данных принимаются по адресу ${AUTHOR.email}, в Telegram ${AUTHOR.telegram} и в MAX ${AUTHOR.maxSupport}.`
     ]},
     {h:"2. Какие данные обрабатываются",p:[
       "Адрес электронной почты Пользователя, указанный при создании учётной записи.",
@@ -2168,7 +2183,7 @@ async function notifyTelegram(student,dateKey){
       if(weak.length){ lines.push("","📌 Темы для повторения:",...weak); }
       if(ex.comment) lines.push("",`💬 ${escHtml(ex.comment)}`);
       lines.push("",`Ознакомиться с баллами по всем заданиям можно в <a href="${escAttr(dashLink)}">личном кабинете</a>.`);
-      lines.push("",`<a href="${escAttr(SITE_URL)}">${escHtml(AUTHOR.brand)}</a> · <a href="${escAttr(AUTHOR.channel)}">Telegram-канал</a>`);
+      lines.push("",`<a href="${escAttr(SITE_URL)}">${escHtml(AUTHOR.brand)}</a> · <a href="${escAttr(AUTHOR.channel)}">Telegram-канал</a> · <a href="${escAttr(AUTHOR.maxChannel)}">MAX-канал</a>`);
       await db.functions.invoke("telegram-notify",{body:{studentId:student.id,text:lines.join("\n")}});
       return;
     }
@@ -2187,7 +2202,7 @@ async function notifyTelegram(student,dateKey){
     if(weak.length){ lines.push("","📌 Темы для повторения:",...weak); }
     if(ex.comment) lines.push("",`💬 ${escHtml(ex.comment)}`);
     lines.push("",`Ознакомиться с баллами по всем заданиям можно в <a href="${escAttr(dashLink)}">личном кабинете</a>.`);
-    lines.push("",`<a href="${escAttr(SITE_URL)}">${escHtml(AUTHOR.brand)}</a> · <a href="${escAttr(AUTHOR.channel)}">Telegram-канал</a>`);
+    lines.push("",`<a href="${escAttr(SITE_URL)}">${escHtml(AUTHOR.brand)}</a> · <a href="${escAttr(AUTHOR.channel)}">Telegram-канал</a> · <a href="${escAttr(AUTHOR.maxChannel)}">MAX-канал</a>`);
     await db.functions.invoke("telegram-notify",{body:{studentId:student.id,text:lines.join("\n")}});
   }catch(e){ console.warn("Telegram-уведомление не отправлено:",e.message); }
 }
@@ -2755,7 +2770,7 @@ function renderPricing(){
       </div>
 
       <p class="text-sm text-ink-700 mb-10">Попробовать можно бесплатно на 3 учениках. Нужно больше 150 мест —
-        <a href="${escAttr(AUTHOR.telegram)}" target="_blank" rel="noopener" class="font-semibold text-ink-900 underline decoration-route-500 decoration-2 underline-offset-4 hover:text-route-700">напишите, обсудим условия</a>.</p>
+        напишите нам в ${socialLinks("support")}, обсудим условия.</p>
 
       <div class="rounded-3xl bg-route-tint p-5 sm:p-6 mb-10 flex flex-wrap items-center gap-4">
         <div class="flex-1 min-w-[240px]">
@@ -2824,12 +2839,13 @@ function renderAccount(){
         </p>
         ${expDate?`<p class="text-xs text-ink-500 leading-relaxed">Доступ действует до ${formatDate(expDate,true)}.</p>`:""}
         ${pct>=80?`<div class="mt-3 bg-amber-50 text-amber-800 rounded-xl p-3 text-xs leading-relaxed">
-          Свободных мест почти не осталось (${Math.max(0,limit-used)}). Освободите место, удалив выпустившегося ученика,
-          или перейдите на тариф выше.
+          ${pct>=100
+            ? `<b>Лимит исчерпан:</b> все ${limit} ${plural(limit,"место","места","мест")} заняты. Перейдите на другой тариф: <button type="button" data-acc-pricing class="font-semibold underline">смотреть тарифы</button>.`
+            : `<b>Лимит скоро будет исчерпан:</b> свободно ${Math.max(0,limit-used)} из ${limit}. Можно заранее перейти на другой тариф: <button type="button" data-acc-pricing class="font-semibold underline">смотреть тарифы</button>.`}
         </div>`:""}
         <div class="flex flex-wrap gap-2 mt-4">
           <button id="acc-to-pricing" class="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Сравнить тарифы</button>
-          <a href="${escAttr(AUTHOR.channel)}" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">Продлить / сменить тариф</a>
+          <span class="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-500 px-1">Вопросы по тарифу: ${socialLinks("support"," · ")}</span>
         </div>
       </div>
 
@@ -2875,7 +2891,8 @@ function renderAccount(){
       </div>
     </div>`;
 
-  $("#acc-to-pricing").onclick=()=>route("screen-pricing");
+    $("#acc-to-pricing").onclick=()=>route("screen-pricing");
+  $("#screen-account").querySelectorAll("[data-acc-pricing]").forEach(b=>b.onclick=()=>route("screen-pricing"));
 
   $("#codebook-export").onclick=()=>{
     const book=codebook.read();
@@ -2954,9 +2971,7 @@ function renderAccount(){
    ========================================================================= */
 const HELP_STEPS=[
   {icon:"1", title:"Создайте класс",
-   body:`Класс — это группа учеников одного предмета и уровня (11А, поток Пн-Ср, группа «Литература подготовка»).
-         Статистика и прогноз всегда считаются отдельно по каждому классу, поэтому завести его — первый шаг.
-         Название видите только вы, ученики его не видят. Класс можно создать заранее и добавить учеников позже.`,
+   body:`Класс — это группа учеников одного предмета и уровня (вы можете назвать его любым образом, например, 11А, поток Пн-Ср, группа «Подготовка к ЕГЭ РЯ»). Статистика и прогноз всегда считаются отдельно по каждому классу, поэтому создать его — первый шаг в работе с приложением.`,
    action:{label:"Открыть «Новый класс» →", screen:"screen-list", sel:"#new-class, #first-class"},
    done:()=>state.classes.length>0,
    visual:`<div class="mt-3 flex items-center gap-2 text-xs flex-wrap">
@@ -2967,10 +2982,7 @@ const HELP_STEPS=[
       <span class="px-3 py-1.5 rounded-xl bg-accent-500 text-ink-900 font-bold">Создать</span>
     </div>`},
   {icon:"2", title:"Добавьте учеников",
-   body:`Кнопка «Добавить учеников» на экране «Ученики». Быстрее всего — выбрать класс, указать количество и нажать «Добавить»:
-         коды вида 11А-01, 11А-02 составятся сами по номеру. Нужны свои коды (например, по журналу) — ссылка «Ввести свои коды»
-         под кнопкой открывает поле для ручного списка. Фамилии в приложение не вносятся — этого требует закон о персональных данных. Чтобы не путаться, впишите
-         фамилию в поле «подпись для себя» в карточке ученика: её видите только вы, она хранится на вашем компьютере.`,
+   body:`Чтобы воспользоваться этой функцией, найдите кнопку «Добавить учеников» на экране «Ученики». Быстрее всего — выбрать класс, указать количество и нажать «Добавить»: коды вида 11А-01, 11А-02 составятся сами по номеру. Если вам нужны свои коды (например, по журналу), нажмите на ссылку «Ввести свои коды» под кнопкой: откроется поле для ручного списка. Фамилии в приложение не вносятся, поскольку этого требует закон о персональных данных. Чтобы не путаться, впишите фамилию в поле «подпись для себя» в карточке ученика: её видите только вы, она хранится только на вашем компьютере в используемом браузере.`,
    action:{label:"Открыть «Добавить учеников» →", screen:"screen-list", sel:"#add-students"},
    done:()=>state.students.length>0,
    visual:`<div class="mt-3 flex flex-wrap gap-1.5 items-center">
@@ -2981,18 +2993,7 @@ const HELP_STEPS=[
       <span class="text-[11px] text-ink-400 ml-1">— составляются сами</span>
     </div>`},
   {icon:"3", title:"Внесите первый пробник",
-   body:`Кнопка «Ввести пробник» в шапке. Выберите код ученика и дату, дальше баллы проставляются по каждому заданию
-         (для сочинения, изложения и других развёрнутых ответов — по критериям). Итоговый первичный и переводной балл
-         считаются на лету, справа сразу видно результат.
-         Если в работе есть критерий, который по правилам обнуляет другие, ничего считать не нужно: поставьте за него баллы,
-         и приложение само проставит нули в зависимых критериях и заблокирует их (клетки станут серыми, при наведении видна причина).
-         Пример для сочинения ЕГЭ по русскому языку: за К1 «Позиция автора» поставили 0 — значит, К2 и К3 автоматически тоже 0.
-         В литературе 0 за первый критерий сочинения («Раскрытие темы») обнуляет остальные критерии этого сочинения.
-         Перед вводом выберите, что писал ученик. «Стандартный вариант» — все задания экзамена; если какие-то клетки пусты,
-         приложение спросит, засчитать ли их нулём. «Набор заданий» — сокращённый пробник: заполните только те задания,
-         что были в работе, а остальные оставьте пустыми — они не попадут в статистику. Тестовый балл и прогноз по набору
-         не считаются, зато баллы идут в разбор по заданиям и в зоны роста. Если баллов много и они уже в таблице — на этом же экране есть кнопка «Импорт из
-         таблицы» с готовым шаблоном: не придётся вбивать по одному.`,
+   body:`Нажмите на кнопку «Ввести пробник» в шапке сайта. Выберите код ученика и дату, дальше баллы проставляются по каждому заданию (для сочинения, изложения и других развёрнутых ответов — по критериям). Итоговый первичный и переводной балл считаются автоматически, справа сразу видно результат. Если в работе есть критерий, который по правилам обнуляет другие, ничего считать не нужно: поставьте за него баллы, и приложение само проставит нули в зависимых критериях и заблокирует их (клетки станут серыми, при наведении видна причина).¶Отдельной кнопкой вы выбираете, что писал ученик: полный вариант или только часть заданий. Так можно вносить как стандартные варианты, так и работы с выбранными заданиями. «Стандартный вариант» — все задания экзамена. «Набор заданий» — сокращённый пробник: заполните только те задания, что были в работе, а остальные оставьте пустыми — они не попадут в статистику, поскольку не могут быть переведены по шкале. Тестовый балл и прогноз по набору не считаются, зато баллы идут в разбор по заданиям и в зоны роста.`,
    action:{label:"Открыть «Ввести пробник» →", screen:"screen-entry"},
    done:()=>state.students.some(st=>st.exams&&st.exams.length>0),
    visual:`<div class="mt-3 flex gap-1.5 items-center">
@@ -3001,30 +3002,17 @@ const HELP_STEPS=[
       <span class="px-2.5 py-1.5 rounded-lg bg-brand-50 text-brand-700 font-mono font-bold text-xs">2 / 4</span>
     </div>`},
   {icon:"4", title:"Смотрите разбор",
-   body:`На карточке ученика (клик по коду в списке «Ученики») — прогноз балла к экзамену, сильные и слабые задания
-         и зоны роста — три задания, где ученик теряет больше всего баллов, и что по ним повторить. На вкладке «Класс» — то же самое по всей группе: средний балл, разброс,
-         сводная таблица по каждому заданию и по каждому ученику, чтобы сразу видеть, кому что подтянуть.`,
+   body:`Нажмите на карточку ученика (клик по коду в списке «Ученики») и увидите прогноз балла к экзамену, сильные и слабые задания и зоны роста — три задания, где ученик теряет больше всего баллов, и что по ним повторить. На вкладке «Класс» — то же самое по всей группе: средний балл, разброс, сводная таблица по каждому заданию и по каждому ученику, чтобы сразу видеть, кому что подтянуть.`,
    action:{label:"Открыть вкладку «Класс» →", screen:"screen-group"}},
   {icon:"5", title:"Скачайте отчёт для родителей",
-   body:`На карточке ученика — кнопка «Скачать отчёт». Отчёт оформлен как документ (шапка, знак, ваши контакты
-         внизу), с прогнозом и зонами роста — его можно сразу переслать родителям.
-         Какой файл выбрать: <b>PDF</b> — готовый документ, он одинаково открывается на любом компьютере и телефоне, его удобно
-         печатать и пересылать. <b>HTML</b> — та же страница, но она открывается в браузере, как сайт (дважды щёлкните по файлу).
-         Если не уверены, выбирайте PDF. У класса целиком — такая же пара кнопок на вкладке «Класс», один файл сразу на всех.
-         Отчёт можно и просто скопировать текстом, без скачивания.`,
+   body:`Чтобы скачать отчёт, откройте карточку ученика, затем нажмите на кнопку «Скачать отчёт». Отчёт оформлен как документ (шапка, знак, ваши контакты внизу), с прогнозом и зонами роста — его можно сразу переслать родителям.¶Какой файл выбрать? **PDF** — готовый документ, он одинаково открывается на любом компьютере и телефоне, его удобно печатать и пересылать. Однако учтите, что поля в таком отчёте могут немного съезжать из-за объёма. Мы рекомендуем выбирать **HTML** — та же страница, но она открывается в браузере, как сайт (дважды щёлкните по файлу).¶У класса целиком — такая же пара кнопок на вкладке «Класс», один файл сразу на всех. Отчёт можно и просто скопировать текстом, без скачивания.`,
    action:{label:"Открыть карточку первого ученика →", screen:"screen-list", sel:".student-card"},
    visual:`<div class="mt-3 flex items-center gap-2 text-xs">
       <span class="px-3 py-1.5 rounded-full bg-accent-500 text-ink-900 font-bold">Скачать PDF</span>
       <span class="px-3 py-1.5 rounded-full bg-route-500 text-ink-900 font-bold">Скачать HTML (страница)</span>
     </div>`},
   {icon:"6", title:"Отправьте ученику ссылку",
-   body:`В карточке ученика — кнопка «Ссылка ученику». По ней открываются только его собственные баллы: без входа,
-         без пароля и без данных других учеников класса.
-         На этой же странице у ученика есть кнопка «Подключить Telegram-бота». Отправлять отдельную ссылку на бота
-         не нужно — всё в одной ссылке. Подписка не включается автоматически: ученик или родитель должен сам нажать
-         кнопку и подтвердить в Telegram. После этого бот будет присылать короткую карточку после каждого нового
-         пробника — балл, изменение к прошлому разу, прогноз и темы, которые стоит повторить. Бот знает только код
-         ученика, не имя. Отписаться можно в любой момент командой /stop прямо в боте.`,
+   body:`Чтобы ученик получил доступ к баллам, внизу карточки ученика нажмите на кнопку «Ссылка ученику», после чего отправьте её ученику. Это персональная ссылка: она не требует входа и пароля и не показывает данные других учеников класса.¶На этой же странице у ученика есть кнопка «Подключить бота». Отправлять отдельную ссылку на бота не нужно — всё в одной ссылке. Подписка не включается автоматически: ученик или родитель должен сам нажать кнопку и подтвердить в Telegram. После этого бот будет присылать в личные сообщения короткую карточку после каждого нового пробника: балл, изменение к прошлому разу, прогноз и темы, которые стоит повторить. Бот знает только код ученика, не имя. Отписаться можно в любой момент командой /stop прямо в боте.`,
    action:{label:"Показать кнопку у первого ученика →", screen:"screen-list", sel:".share-btn"},
    done:()=>state.students.some(st=>st.shareToken),
    visual:`<div class="mt-3 inline-flex items-center gap-2 rounded-xl border border-gray-100 bg-paper px-3 py-2 text-xs">
@@ -3032,9 +3020,7 @@ const HELP_STEPS=[
       <span class="px-2 py-0.5 rounded-md bg-route-tint text-route-700 font-semibold">только этот ученик</span>
     </div>`},
   {icon:"7", title:"Переключайте предмет и класс",
-   body:`Название предмета рядом с логотипом в шапке — это список, который раскрывается по нажатию: в нём все ваши предметы.
-         Рядом переключатель ЕГЭ/ОГЭ, если у предмета есть обе версии. Данные разных предметов и уровней хранятся
-         отдельно — переключение не путает баллы между ними.`,
+   body:`Если вы хотите вносить разные предметы или экзамены, выберите в выпадающем списке название необходимого предмета рядом с логотипом в шапке. Рядом нажмите на переключатель ЕГЭ/ОГЭ, если у предмета есть обе версии. Данные разных предметов и уровней хранятся отдельно — переключение не путает и не смешивает баллы между ними.`,
    action:{label:"Показать переключатель →", screen:"screen-list", sel:"[data-subject-toggle]"},
    visual:`<div class="mt-3 flex items-center gap-2 text-xs">
       <span class="px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 font-semibold text-ink-900 shadow-soft">Русский язык ▾</span>
@@ -3068,8 +3054,7 @@ function renderHelp(){
         <h1 class="font-display font-extrabold text-2xl tracking-tight">Инструкция</h1>
         ${canEdit&&trackable.length?`<span class="text-xs font-mono tnum text-ink-500 shrink-0">${doneCount} / ${trackable.length} готово</span>`:""}
       </div>
-      <p class="text-sm text-ink-500 mb-3">Порядок действий учителя — от создания класса до ссылки для ученика. Нажмите на шаг, чтобы раскрыть,
-        а на голубую кнопку внутри — чтобы сразу перейти к нужному месту в приложении, оно подсветится.</p>
+      <p class="text-sm text-ink-500 mb-3">В этом разделе представлен порядок работы с личным кабинетом. Нажмите на шаг, чтобы раскрыть инструкцию, а на голубую кнопку внутри, – чтобы сразу перейти к нужной кнопке в приложении, после перехода оно будет подсвечено синим.</p>
       ${canEdit&&trackable.length?`
       <div class="h-1.5 rounded-full bg-paper overflow-hidden mb-6">
         <div class="h-full bg-route-600 transition-all" style="width:${doneCount/trackable.length*100}%"></div>
@@ -3086,7 +3071,7 @@ function renderHelp(){
               <span class="help-chevron text-ink-300 text-xs transition-transform shrink-0" style="${openByDefault?"transform:rotate(180deg)":""}">▾</span>
             </button>
             <div class="help-body ${openByDefault?"":"hidden"} px-4 pb-4 pl-[62px] text-sm text-ink-600 leading-relaxed">
-              ${escHtml(s.body).replace(/\s{2,}/g," ")}
+              ${s.body.split("¶").map(t=>`<p class="mb-2.5 last:mb-0">${escHtml(t.trim()).replace(/\s{2,}/g," ").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}</p>`).join("")}
               ${s.visual||""}
               ${s.action?`<div class="mt-3">
                 <button type="button" class="help-action" data-jump-screen="${escAttr(s.action.screen)}" ${s.action.sel?`data-jump-sel="${escAttr(s.action.sel)}"`:""}>${escHtml(s.action.label)}</button>
@@ -3095,7 +3080,7 @@ function renderHelp(){
           </div>`;}).join("")}
       </div>
       <p class="text-xs text-ink-500 mt-6 leading-relaxed">
-        Если что-то осталось непонятным, пишите в <a href="${escAttr(AUTHOR.telegram)}" target="_blank" rel="noopener" class="font-semibold text-ink-900 hover:text-route-700">Telegram</a>.
+        Если что-то осталось непонятным, пишите в ${socialLinks("support")}.
       </p>
     </div>`;
 
@@ -3426,9 +3411,10 @@ function authorCardMarkup(){
     <div class="flex-1 min-w-[200px]">
       <div class="font-display font-bold">${escHtml(AUTHOR.name)}</div>
       <div class="text-xs text-ink-500 leading-relaxed">${escHtml(AUTHOR.bio)}</div>
+      <div class="text-xs text-ink-500 mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">Канал ЕГЭ_Map: ${socialLinks("channel"," · ")}</div>
     </div>
     <div class="flex gap-2">
-      <a href="${escAttr(AUTHOR.channel)}" target="_blank" rel="noopener"
+      <a href="${escAttr(AUTHOR.authorChannel)}" target="_blank" rel="noopener"
         class="px-4 py-2 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">Telegram @egeminkin</a>
       <a href="${escAttr(AUTHOR.vk)}" target="_blank" rel="noopener"
         class="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">ВКонтакте</a>
@@ -3501,10 +3487,12 @@ function renderStudentList(){
 
     ${tabsMarkup(state.currentClass)}
 
-    ${atLimit&&canEdit?`
+    ${(atLimit||used>=Math.ceil(limit*0.8))&&canEdit?`
       <div class="bg-amber-50 rounded-2xl p-4 mb-6 flex flex-wrap items-center gap-3">
         <div class="flex-1 min-w-[240px] text-sm text-amber-800">
-          Все ${limit} ${plural(limit,"место","места","мест")} тарифа «${escHtml(state.plan.name)}» заняты. Лимит общий на весь аккаунт — считает учеников по всем предметам сразу, не только по «${escHtml(EXAMS[state.exam].subject)}». Освободите место, удалив выпустившегося ученика, или перейдите на тариф выше.
+          ${atLimit
+            ? `<b>Лимит исчерпан:</b> все ${limit} ${plural(limit,"место","места","мест")} заняты. Перейдите на другой тариф.`
+            : `<b>Лимит скоро будет исчерпан:</b> свободно ${limit-used} из ${limit}. Можно заранее перейти на другой тариф.`}
         </div>
         <button id="to-pricing" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition">Тарифы</button>
       </div>`:""}
@@ -4353,7 +4341,7 @@ function renderGroup(){
         const t=EGE_TOPICS[r.task]||{title:"Задание "+r.task,review:""};
         return `${i+1}. Задание ${r.task} — ${t.title}. Успешность ${Math.round(r.rate*100)}%. ${t.review}`;
       }))
-      .concat(["",`${AUTHOR.name} · ${AUTHOR.brand} · ${AUTHOR.channel}`]).join("\n");
+      .concat(["",`${AUTHOR.name} · ${AUTHOR.brand}`,`Telegram: ${AUTHOR.channel}`,`MAX: ${AUTHOR.maxChannel}`]).join("\n");
     const ok=await copyText(text);
     $("#plan-msg").textContent=ok?"План скопирован":"Скопировать не удалось";
     setTimeout(()=>{$("#plan-msg").textContent="";},2200);
@@ -4409,7 +4397,7 @@ function groupReportText(g,examLabel,groupName){
       lines.push(`  ${part.block} — ${Math.round(part.rate*100)}% (средний ${part.avg} из ${part.max}, разброс ${part.min}–${part.max_value}).${w?` Слабее всего ${w.key} — ${w.title}.`:""}`);
     });
   }
-  lines.push(``,`———`,`${AUTHOR.name} · ${AUTHOR.brand}`,`Telegram: ${AUTHOR.channel}`,`ВКонтакте: ${AUTHOR.vk}`);
+  lines.push(``,`———`,`${AUTHOR.name} · ${AUTHOR.brand}`,`Telegram: ${AUTHOR.channel}`,`MAX: ${AUTHOR.maxChannel}`,`ВКонтакте: ${AUTHOR.vk}`);
   return lines.join("\n");
 }
 
@@ -4538,7 +4526,7 @@ ${g.essayParts.map(part=>{
 
 <div class="author">
   <b>${escHtml(AUTHOR.name)}</b> — подготовка к ${escHtml(EXAMS[state.exam].fullName)}. ${escHtml(AUTHOR.brand)}<br>
-  <a href="${escAttr(AUTHOR.channel)}">Telegram</a> · <a href="${escAttr(AUTHOR.vk)}">ВКонтакте</a>
+  <a href="${escAttr(AUTHOR.channel)}">Telegram</a> · <a href="${escAttr(AUTHOR.maxChannel)}">MAX</a> · <a href="${escAttr(AUTHOR.vk)}">ВКонтакте</a>
 </div>
 <p class="note">В отчёте используются обезличенные коды учеников. ${escHtml(EXAMS[state.exam].passNote)}.${(state.exam==="oge"||state.exam==="mathoge")?" Отметка выставлена по федеральной шкале Рособрнадзора, регион вправе установить свои границы.":""}</p>
 </body></html>`;
@@ -5152,6 +5140,7 @@ function reportText(student,s,fc,weakest,essay){
     `${AUTHOR.name} · ${AUTHOR.brand}`,
     `${AUTHOR.tagline}`,
     `Telegram: ${AUTHOR.channel}`,
+    `MAX: ${AUTHOR.maxChannel}`,
     `ВКонтакте: ${AUTHOR.vk}`);
   return lines.join("\n");
 }
@@ -5317,6 +5306,7 @@ ${worst?`<p style="font-size:14px"><b>${worst.key} — ${escHtml(worst.meta.titl
 <div class="author">
   <b>${escHtml(AUTHOR.name)}</b> — подготовка к ${escHtml(EXAMS[state.exam].fullName)}. ${escHtml(AUTHOR.brand)}<br>
   <a href="${escAttr(AUTHOR.channel)}">Telegram</a> ·
+  <a href="${escAttr(AUTHOR.maxChannel)}">MAX</a> ·
   <a href="${escAttr(AUTHOR.vk)}">ВКонтакте</a>
 </div>
 <p class="note">${escHtml(EXAMS[state.exam].passNote)}. Прогноз рассчитан по взвешенному тренду и не является гарантией результата.${(state.exam==="oge"||state.exam==="mathoge")?" Отметка выставлена по федеральной шкале Рособрнадзора, регион вправе установить свои границы.":""}</p>
