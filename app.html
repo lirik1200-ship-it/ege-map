@@ -113,8 +113,7 @@
       <button id="logo-btn" class="flex items-center gap-3 text-left">
         <svg viewBox="-22 0 273 251" class="w-9 h-9 shrink-0" aria-hidden="true"><use href="#egm"></use></svg>
         <div>
-          <div class="font-display font-extrabold leading-tight tracking-tight">ЕГЭ_Map</div>
-          <div class="text-xs text-ink-500 leading-tight">Аналитика пробных экзаменов в одном месте</div>
+          <div class="font-display font-extrabold text-lg leading-tight tracking-tight">ЕГЭ_Map</div>
         </div>
       </button>
       <div id="subject-switch" class="hidden relative"></div>
@@ -172,8 +171,9 @@
           <span class="text-ink-300 mx-1">·</span>
           <button data-legal="privacy" class="legal-link font-semibold text-brand-600 hover:text-brand-700">Политика обработки персональных данных</button>
         </p>
+        <div id="footer-channels" class="mt-4"></div>
       </div>
-      <div id="footer-links" class="text-xs flex flex-wrap items-start gap-x-10 gap-y-5"></div>
+      <div id="footer-links" class="text-xs flex flex-wrap items-start gap-x-12 gap-y-5 md:ml-auto"></div>
     </div>
   </footer>
 </div>
@@ -264,17 +264,17 @@ document.addEventListener("click",e=>{
 
 // Подвал: соцсети рядом с офертой, автор и «Поддержка»
 function renderFooterLinks(){
-  const el=document.getElementById("footer-links");
+  const ch=document.getElementById("footer-channels"), el=document.getElementById("footer-links");
   if(!el) return;
+  // слева — каналы платформы (под текстом об оферте), справа — автор и поддержка
+  if(ch) ch.innerHTML=`
+    <div class="text-ink-500 mb-1.5">Канал ЕГЭ_Map</div>
+    <div class="flex flex-wrap items-center gap-2">${socialPill("tg","channel")}${socialPill("max","channel")}</div>`;
   el.innerHTML=`
     <div>
-      <div class="text-ink-500 mb-1.5">Канал ЕГЭ_Map</div>
-      <div class="flex flex-wrap items-center gap-2">${socialPill("tg","channel")}${socialPill("max","channel")}</div>
-    </div>
-    <div>
       <div class="text-ink-500 mb-1.5">Автор проекта</div>
+      <div class="font-display font-bold text-sm mb-1.5">${escHtml(AUTHOR.name)}</div>
       <div class="flex flex-wrap items-center gap-3">
-        <span class="font-display font-bold text-sm">${escHtml(AUTHOR.name)}</span>
         <a href="${escAttr(AUTHOR.authorChannel)}" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700 transition">Telegram</a>
         <a href="${escAttr(AUTHOR.vk)}" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700 transition">ВКонтакте</a>
       </div>
@@ -284,6 +284,7 @@ function renderFooterLinks(){
       ${supportButton()}
     </div>`;
 }
+
 
 // Реквизиты для документов. Заполните перед публикацией.
 const LEGAL_META = {
@@ -2788,9 +2789,13 @@ function renderPricing(){
                 : `<button type="button" data-go-signup class="px-4 py-3 rounded-xl ${featured?"bg-accent-500 hover:bg-accent-600 text-ink-900":"bg-white border-2 border-ink-900 hover:bg-ink-900 hover:text-white"} text-sm font-bold text-center transition">Зарегистрироваться</button>`;
     return `
     <div class="relative pt-8">
-      <div class="absolute left-1/2 -translate-x-1/2 top-0 z-10 w-14 h-14 rounded-full grid place-items-center font-mono font-bold text-base
-        ${featured?"bg-route-500 text-ink-900 ring-4 ring-paper":"bg-white text-ink-900 border-[3px] border-route-500 ring-4 ring-paper"}">${p.limit}</div>
-      <div class="h-full bg-white rounded-3xl p-5 pt-10 flex flex-col ${featured?"ring-2 ring-route-500 shadow-lift":"shadow-soft"}">
+      <div class="absolute left-1/2 -translate-x-1/2 top-0 z-10 w-16 h-16 rounded-full flex flex-col items-center justify-center leading-none
+        ${featured?"bg-route-500 text-ink-900 ring-4 ring-paper":"bg-white text-ink-900 border-[3px] border-route-500 ring-4 ring-paper"}"
+        title="${p.limit} ${plural(p.limit,"место","места","мест")}: одно место — один ученик" aria-label="${p.limit} ${plural(p.limit,"место","места","мест")}">
+        <span class="font-mono font-bold text-lg tnum">${p.limit}</span>
+        <span class="text-[9px] font-semibold uppercase tracking-wide mt-0.5 ${featured?"text-ink-700":"text-ink-500"}">${plural(p.limit,"место","места","мест")}</span>
+      </div>
+      <div class="h-full bg-white rounded-3xl p-5 pt-11 flex flex-col ${featured?"ring-2 ring-route-500 shadow-lift":"shadow-soft"}">
         <div class="text-center mb-4">
           <div class="font-display font-extrabold text-lg">${escHtml(p.name)}</div>
           <div class="text-[13px] text-ink-700 leading-snug mt-1 min-h-[36px]">${escHtml(p.pitch)}</div>
@@ -2821,7 +2826,7 @@ function renderPricing(){
 
       <div class="mb-10 max-w-2xl">
         <h1 class="font-display font-extrabold text-3xl sm:text-[42px] leading-[1.05] tracking-tight">Платите за места, а не за функции</h1>
-        <p class="text-[15px] text-ink-700 leading-relaxed mt-4">Всё в сервисе открыто на любом пакете. Выберите, сколько учеников будете вести, — пакет действует до ${escHtml(SEASON_END_LABEL)}, а купленный с 1 июня идёт на следующий учебный год.</p>
+        <p class="text-[15px] text-ink-700 leading-relaxed mt-4">Всё в сервисе открыто на любом пакете. Выберите, сколько учеников будете вести: число в кружке — это количество мест, одно место занимает один ученик. Пакет действует до ${escHtml(SEASON_END_LABEL)}, а купленный с 1 июня идёт на следующий учебный год.</p>
       </div>
 
       <div class="relative mb-6">
