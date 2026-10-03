@@ -121,6 +121,7 @@
       <nav id="main-nav" class="hidden md:flex items-center gap-1 text-sm"></nav>
       <div class="flex items-center gap-3">
         <div id="exam-switch" class="hidden items-center gap-0.5 p-0.5 rounded-xl bg-paper border border-gray-200"></div>
+        <button type="button" id="support-btn" data-open-support data-support-chrome aria-label="Поддержка" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-xs font-bold transition"><svg viewBox="0 0 24 24" width="16" height="16" class="shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span class="hidden sm:inline">Поддержка</span></button>
         <button id="signout-btn" class="hidden text-xs font-semibold text-ink-500 hover:text-ink-900 transition">Выйти</button>
       </div>
     </div>
@@ -172,14 +173,7 @@
           <button data-legal="privacy" class="legal-link font-semibold text-brand-600 hover:text-brand-700">Политика обработки персональных данных</button>
         </p>
       </div>
-      <div class="text-xs">
-        <div class="text-ink-500 mb-1.5">Автор проекта</div>
-        <div class="flex flex-wrap items-center gap-3">
-          <span class="font-display font-bold text-sm">Кирилл Минкин</span>
-          <a href="https://t.me/ege_minkin" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700 transition">Telegram</a>
-          <a href="https://vk.ru/egeminkin" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700 transition">ВКонтакте</a>
-        </div>
-      </div>
+      <div id="footer-links" class="text-xs flex flex-wrap items-start gap-x-10 gap-y-5"></div>
     </div>
   </footer>
 </div>
@@ -227,6 +221,69 @@ function socialLink(net,kind){
   return `<a href="${escAttr(href)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 font-semibold text-ink-900 hover:text-route-700 underline decoration-route-500 decoration-2 underline-offset-4">${tg?TG_ICON:MAX_ICON_IMG}<span>${tg?"Telegram":"MAX"}</span></a>`;
 }
 const socialLinks=(kind,sep=" или ")=>socialLink("tg",kind)+sep+socialLink("max",kind);
+
+// Кнопки-«пилюли» со значком мессенджера (подвал, экран входа)
+function socialPill(net,kind){
+  const tg=net==="tg";
+  const href=tg ? (kind==="support"?AUTHOR.telegram:AUTHOR.channel) : (kind==="support"?AUTHOR.maxSupport:AUTHOR.maxChannel);
+  return `<a href="${escAttr(href)}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paper border border-gray-200 hover:border-brand-500 text-xs font-semibold text-ink-900 transition">${tg?TG_ICON:MAX_ICON_IMG}<span>${tg?"Telegram":"MAX"}</span></a>`;
+}
+const CHAT_ICON=`<svg viewBox="0 0 24 24" width="16" height="16" class="shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>`;
+// Кнопка «Поддержка»: откроет окно с выбором мессенджера
+const supportButton=(extra="")=>`<button type="button" data-open-support class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition ${extra}">${CHAT_ICON}<span>Поддержка</span></button>`;
+
+function openSupport(){
+  document.querySelectorAll(".js-support-modal").forEach(m=>m.remove());
+  const modal=document.createElement("div");
+  modal.className="js-support-modal fixed inset-0 z-[9998] bg-ink-900/40 backdrop-blur-sm flex items-center justify-center p-5";
+  const big=(net)=>{
+    const tg=net==="tg";
+    return `<a href="${escAttr(tg?AUTHOR.telegram:AUTHOR.maxSupport)}" target="_blank" rel="noopener" class="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-paper border border-gray-200 hover:border-brand-500 transition">
+      <span class="w-6 h-6 grid place-items-center shrink-0 [&>*]:w-6 [&>*]:h-6">${tg?TG_ICON:MAX_ICON_IMG}</span>
+      <span class="font-display font-bold text-sm">Написать в ${tg?"Telegram":"MAX"}</span>
+    </a>`;
+  };
+  modal.innerHTML=`
+    <div class="bg-white rounded-2xl shadow-lift max-w-sm w-full p-6" role="dialog" aria-label="Поддержка">
+      <h2 class="font-display font-extrabold text-xl mb-1">Поддержка</h2>
+      <p class="text-sm text-ink-500 mb-5 leading-relaxed">Задайте вопрос по тарифам, оплате или работе приложения. Выберите, где вам удобнее написать:</p>
+      <div class="grid gap-2.5 mb-4">${big("tg")}${big("max")}</div>
+      <p class="text-xs text-ink-500 mb-4">Или напишите на почту <a href="mailto:${escAttr(AUTHOR.email)}" class="font-semibold text-ink-900 underline decoration-route-500 decoration-2 underline-offset-4">${escHtml(AUTHOR.email)}</a></p>
+      <button type="button" class="js-support-close w-full px-4 py-2 rounded-xl text-ink-500 hover:text-ink-900 text-sm transition">Закрыть</button>
+    </div>`;
+  const close=()=>{ modal.remove(); document.removeEventListener("keydown",onKey); };
+  const onKey=e=>{ if(e.key==="Escape") close(); };
+  modal.addEventListener("click",e=>{ if(e.target===modal||e.target.closest(".js-support-close")) close(); });
+  document.addEventListener("keydown",onKey);
+  document.body.appendChild(modal);
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-open-support]");
+  if(b){ e.preventDefault(); openSupport(); }
+});
+
+// Подвал: соцсети рядом с офертой, автор и «Поддержка»
+function renderFooterLinks(){
+  const el=document.getElementById("footer-links");
+  if(!el) return;
+  el.innerHTML=`
+    <div>
+      <div class="text-ink-500 mb-1.5">Канал ЕГЭ_Map</div>
+      <div class="flex flex-wrap items-center gap-2">${socialPill("tg","channel")}${socialPill("max","channel")}</div>
+    </div>
+    <div>
+      <div class="text-ink-500 mb-1.5">Автор проекта</div>
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="font-display font-bold text-sm">${escHtml(AUTHOR.name)}</span>
+        <a href="${escAttr(AUTHOR.authorChannel)}" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700 transition">Telegram</a>
+        <a href="${escAttr(AUTHOR.vk)}" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700 transition">ВКонтакте</a>
+      </div>
+    </div>
+    <div data-support-chrome>
+      <div class="text-ink-500 mb-1.5">Нужна помощь?</div>
+      ${supportButton()}
+    </div>`;
+}
 
 // Реквизиты для документов. Заполните перед публикацией.
 const LEGAL_META = {
@@ -2361,7 +2418,9 @@ function showScreen(id){
 
 function renderChrome(){
   const cfg=modeConfig();
-  $("#signout-btn").classList.toggle("hidden",state.mode!=="teacher");
+    $("#signout-btn").classList.toggle("hidden",state.mode!=="teacher");
+  // Ученик по личной ссылке с вопросами идёт к своему учителю, а не в поддержку сервиса
+  document.querySelectorAll("[data-support-chrome]").forEach(el=>el.classList.toggle("hidden",state.mode==="share"));
 
   // Смена предмета целиком — выпадающий список рядом с логотипом. Отмеченные
   // в личном кабинете предметы («Мои предметы») показываются первыми.
@@ -2464,6 +2523,7 @@ function openLegal(tab){
   window.scrollTo({top:0});
 }
 document.querySelectorAll(".legal-link").forEach(b=>b.onclick=()=>openLegal(b.dataset.legal));
+renderFooterLinks();
 
 // Закрыть выпадающий список предметов по клику вне него
 document.addEventListener("click",()=>{
@@ -3259,6 +3319,10 @@ function renderAuth(){
           ${authMode==="signup"?`<p class="text-[11px] text-ink-500 mt-3 leading-relaxed">Минимальная длина пароля — 8 символов. После регистрации придёт письмо со ссылкой подтверждения, без неё вход не сработает.</p>`:`<button type="button" id="auth-forgot" class="mt-3 text-xs text-ink-500 hover:text-ink-900 underline">Забыли пароль?</button>`}
           <div class="mt-5 pt-5 border-t border-gray-100 text-xs text-ink-500 leading-relaxed">
             Вопросы по доступам и тарифам — <button type="button" id="auth-to-pricing" class="font-semibold text-ink-900 hover:text-route-700 underline">смотрите страницу с тарифами</button>.
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+              ${supportButton("!py-1.5 text-xs")}
+              <span class="text-ink-500">Наш канал:</span>${socialPill("tg","channel")}${socialPill("max","channel")}
+            </div>
           </div>
         </div>
 
