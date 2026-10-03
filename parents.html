@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #FFFCFC; font-family: "Onest", "Helvetica Neue", Helvetica, sans-serif; -webkit-font-smoothing: antialiased; color: #0C0C0A; overflow-x: hidden }
+  * { box-sizing: border-box; }
+  a { color: #0C0C0A; text-decoration: none; }
+  a:hover { color: #45514F; }
+  button { font-family: inherit; }
+</style>
+</helmet>
+
+<div style="padding: clamp(10px, 2vw, 24px) clamp(10px, 2vw, 20px) 56px">
+<div style="max-width: 1080px; margin: 0 auto; background: #FFFFFF; border-radius: clamp(26px, 4vw, 44px); overflow: hidden; box-shadow: 0 40px 90px -52px rgba(0,40,42,.55)">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: clamp(16px, 2.4vw, 24px) clamp(18px, 3.6vw, 40px)">
+    <div style="display: flex; align-items: center; gap: 14px">
+      <button onClick="{{ goBack }}" style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px 0 8px; border: none; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer" style-hover="background: #2C2C24"><span style="display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #00FDFF; color: #0C0C0A; font-size: 17px">←</span>Назад</button>
+      <a href="./index.html" style="display: flex; align-items: center"><img src="./logo-lockup.svg" alt="ЕГЭ_Map" style="height: 28px; width: auto; display: block"></a>
+    </div>
+    <button onClick="{{ share }}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border: 1.5px solid rgba(12,12,10,.2); border-radius: 999px; background: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer" style-hover="border-color: #0C0C0A; background: #E4FDFE">{{ shareLabel }}</button>
+  </div>
+
+  <div style="padding: 0 clamp(10px, 1.8vw, 20px)">
+    <div style="border-radius: clamp(24px, 3vw, 36px); background: #00FDFF; padding: clamp(28px, 5vw, 56px) clamp(20px, 4.6vw, 52px)">
+      <div style="display: inline-flex; align-items: center; gap: 9px; padding: 7px 15px 7px 11px; border-radius: 999px; background: rgba(12,12,10,.1); font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #0C0C0A"></span>Памятка для родителей
+      </div>
+      <h1 style="margin: 22px 0 0; font-size: clamp(32px, 5.4vw, 56px); line-height: .98; font-weight: 800; letter-spacing: -.04em; max-width: 720px; text-wrap: balance">Как читать результаты пробника вашего ребёнка</h1>
+      <p style="margin: 20px 0 0; font-size: clamp(15.5px, 1.6vw, 17.5px); line-height: 1.5; font-weight: 500; color: rgba(12,12,10,.74); max-width: 560px; text-wrap: pretty">Учитель ведёт подготовку в ЕГЭ_Map и присылает вам ссылку на страницу с результатами ребёнка. Здесь — коротко, что на этой странице и как получать баллы в Telegram.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px">
+        <a href="#stranica" style="display: inline-flex; align-items: center; height: 52px; padding: 0 24px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 15px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">Что на странице</a>
+        <a href="#bot" style="display: inline-flex; align-items: center; height: 52px; padding: 0 24px; border-radius: 999px; background: #FFFFFF; font-size: 15px; font-weight: 600" style-hover="color: #0C0C0A; background: #E4FDFE">Подключить Telegram-бота</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="stranica" style="padding: clamp(52px, 7vw, 78px) clamp(18px, 3.6vw, 40px) 0">
+    <h2 style="margin: 0; font-size: clamp(26px, 3.6vw, 38px); line-height: 1.04; font-weight: 800; letter-spacing: -.035em">Что на странице ученика</h2>
+    <p style="margin: 12px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59; max-width: 560px">Открывается по ссылке от учителя, без логина и пароля. Видны только результаты вашего ребёнка.</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 24px">
+      <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 22px; border-radius: 24px; background: {{ b.bg }}; color: {{ b.fg }}">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; opacity: .6">{{ b.n }}</span>
+          <span style="font-size: 19px; font-weight: 800; letter-spacing: -.025em; line-height: 1.15">{{ b.title }}</span>
+          <span style="font-size: 14px; line-height: 1.5; opacity: .78">{{ b.text }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: clamp(40px, 5vw, 56px) clamp(18px, 3.6vw, 40px) 0">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(20px, 3vw, 36px); align-items: center; padding: clamp(22px, 3.4vw, 36px); border-radius: 30px; background: #F5F7F8">
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: #7B8A8F">прогноз</div>
+        <h3 style="margin: 10px 0 0; font-size: clamp(22px, 2.8vw, 30px); line-height: 1.08; font-weight: 800; letter-spacing: -.03em">Прогноз — это диапазон, а не обещание</h3>
+        <p style="margin: 12px 0 0; font-size: 14.5px; line-height: 1.55; color: #3D4746; text-wrap: pretty">Он считается по динамике всех пробников: последние весят больше. Чем больше пробников, тем точнее диапазон. Балл ЕГЭ переводится по официальной шкале, отметка ОГЭ — по федеральной.</p>
+      </div>
+      <div style="padding: 22px; border-radius: 22px; background: #FFFFFF; box-shadow: 0 0 0 1px rgba(12,12,10,.06)">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
+          <span style="font-size: 13px; color: #7B8A8F">сейчас</span>
+          <span style="font-size: 13px; color: #7B8A8F">прогноз на экзамен</span>
+        </div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 6px">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 34px; font-weight: 700; letter-spacing: -.03em">74</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 34px; font-weight: 700; letter-spacing: -.03em">76–81</span>
+        </div>
+        <div style="position: relative; height: 10px; border-radius: 99px; background: #EEF1F2; margin-top: 16px">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 74%; border-radius: 99px; background: #0C0C0A"></div>
+          <div style="position: absolute; left: 76%; top: -3px; bottom: -3px; width: 5%; border-radius: 99px; background: #00FDFF; box-shadow: 0 0 0 2px #FFFFFF"></div>
+        </div>
+        <div style="font-size: 12px; color: #7B8A8F; margin-top: 10px">по 5 пробникам · сентябрь — январь</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bot" style="padding: clamp(52px, 7vw, 78px) clamp(18px, 3.6vw, 40px) 0">
+    <div style="border-radius: 30px; background: #0C0C0A; color: #FFFFFF; padding: clamp(24px, 4vw, 44px)">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.5)">telegram-бот</div>
+      <h2 style="margin: 12px 0 0; font-size: clamp(26px, 3.6vw, 38px); line-height: 1.04; font-weight: 800; letter-spacing: -.035em; max-width: 560px">Баллы после каждого пробника — в Telegram</h2>
+      <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.7); max-width: 560px">Балл, изменение к прошлому разу, прогноз, темы на повторение и комментарий учителя. Подписка не включается сама — только после вашего подтверждения.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 26px">
+        <sc-for list="{{ botSteps }}" as="s" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: 20px; background: rgba(255,255,255,.07); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1)">
+            <span style="display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: {{ s.dot }}; color: #0C0C0A; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700">{{ s.n }}</span>
+            <span style="font-size: 16.5px; font-weight: 700; letter-spacing: -.015em">{{ s.title }}</span>
+            <span style="font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,.65)">{{ s.text }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin: 18px 0 0; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: rgba(255,255,255,.55)">/stop — отписаться в любой момент</p>
+    </div>
+  </div>
+
+  <div style="padding: clamp(40px, 5vw, 56px) clamp(18px, 3.6vw, 40px) 0">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; padding: clamp(22px, 3.4vw, 34px); border-radius: 30px; background: #E4FDFE">
+      <span style="display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 12px; background: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 700; letter-spacing: -.02em">11А-07</span>
+      <div style="flex: 1 1 320px">
+        <div style="font-size: 19px; font-weight: 800; letter-spacing: -.02em">Ни имени, ни фамилии</div>
+        <p style="margin: 6px 0 0; font-size: 14.5px; line-height: 1.55; color: #3D4746; text-wrap: pretty">В системе хранится только код ученика и баллы за задания. Какой код у вашего ребёнка, знает только учитель. Бот тоже видит только код.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: clamp(52px, 7vw, 78px) clamp(18px, 3.6vw, 40px) 0">
+    <h2 style="margin: 0; font-size: clamp(26px, 3.6vw, 38px); line-height: 1.04; font-weight: 800; letter-spacing: -.035em">Частые вопросы</h2>
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 22px">
+      <sc-for list="{{ faq }}" as="f" hint-placeholder-count="4">
+        <div style="border-radius: 20px; background: {{ f.bg }}; box-shadow: 0 0 0 1px rgba(12,12,10,.08); overflow: hidden">
+          <button onClick="{{ f.click }}" style="display: flex; align-items: center; gap: 16px; width: 100%; min-height: 56px; padding: 16px 20px; border: none; background: transparent; text-align: left; cursor: pointer; color: #0C0C0A">
+            <span style="flex: 1; font-size: 16px; font-weight: 700; letter-spacing: -.015em">{{ f.q }}</span>
+            <span style="display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 0 1px rgba(12,12,10,.08); font-size: 14px; flex-shrink: 0; transition: transform .25s ease; transform: {{ f.rot }}">+</span>
+          </button>
+          <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+            <p style="margin: 0; padding: 0 20px 18px; font-size: 14.5px; line-height: 1.6; color: #3D4746; text-wrap: pretty">{{ f.a }}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-top: clamp(52px, 7vw, 78px); padding: 28px clamp(18px, 3.6vw, 40px); background: #0C0C0A; color: #FFFFFF">
+    <span style="font-size: 14px; color: rgba(255,255,255,.6)">Вы учитель или репетитор?</span>
+    <a href="./index.html" style="display: inline-flex; align-items: center; height: 46px; padding: 0 22px; border-radius: 999px; background: #00FDFF; color: #0C0C0A; font-size: 14.5px; font-weight: 700" style-hover="background: #6EF7F9; color: #0C0C0A">Узнать о ЕГЭ_Map →</a>
+  </div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const BLOCKS = [
+  ["01", "Балл и динамика", "Тестовый балл за последний пробник, изменение к прошлому разу и прогноз на экзамен.", "#0C0C0A", "#FFFFFF"],
+  ["02", "Задания по блокам", "Какие темы уже получаются, а где ребёнок теряет баллы — по каждому заданию экзамена.", "#E4FDFE", "#0C0C0A"],
+  ["03", "Сочинение по критериям", "Баллы за каждый критерий отдельно: видно, что тянет вниз — содержание или грамотность.", "#00FDFF", "#0C0C0A"],
+  ["04", "Что повторить", "Темы на повторение и комментарий учителя к последнему пробнику.", "#D7F205", "#0C0C0A"]
+];
+const BOT_STEPS = [
+  ["1", "Откройте ссылку", "Ту, что прислал учитель, — страницу с результатами ребёнка.", "#00FDFF"],
+  ["2", "Нажмите «Подключить бота»", "Кнопка — на этой же странице, отдельная ссылка не нужна.", "#D7F205"],
+  ["3", "Подтвердите в Telegram", "После этого бот пришлёт карточку после каждого нового пробника.", "#FFFFFF"]
+];
+const FAQ = [
+  ["Нужно ли регистрироваться?", "Нет. Страница открывается по ссылке от учителя — без логина и пароля."],
+  ["Видно ли результаты других учеников?", "Нет. По ссылке — только баллы и рекомендации вашего ребёнка. Сравнение с классом видит только учитель."],
+  ["Ссылка попала не тому человеку?", "Напишите учителю — он выпустит новую ссылку, а старая сразу перестанет работать."],
+  ["Как отписаться от бота?", "Отправьте боту команду /stop — уведомления прекратятся сразу."]
+];
+
+class Component extends DCLogic {
+  state = { faq: 0, copied: false };
+  componentWillUnmount() { clearTimeout(this.t); }
+  share() {
+    const url = location.href.split("#")[0];
+    const done = () => { this.setState({ copied: true }); clearTimeout(this.t); this.t = setTimeout(() => this.setState({ copied: false }), 2200); };
+    if (navigator.share) { navigator.share({ title: "ЕГЭ_Map · памятка для родителей", url: url }).catch(() => {}); return; }
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, done); else done();
+  }
+  renderVals() {
+    const st = this.state;
+    return {
+      share: () => this.share(),
+      goBack: () => { if (history.length > 1 && document.referrer) history.back(); else location.href = "./index.html"; },
+      shareLabel: st.copied ? "✓ Ссылка скопирована" : "Переслать памятку",
+      blocks: BLOCKS.map(b => ({ n: b[0], title: b[1], text: b[2], bg: b[3], fg: b[4] })),
+      botSteps: BOT_STEPS.map(s => ({ n: s[0], title: s[1], text: s[2], dot: s[3] })),
+      faq: FAQ.map((f, i) => ({
+        q: f[0], a: f[1], open: st.faq === i,
+        bg: st.faq === i ? "#E4FDFE" : "#FFFFFF",
+        rot: st.faq === i ? "rotate(45deg)" : "rotate(0deg)",
+        click: () => this.setState(s => ({ faq: s.faq === i ? -1 : i }))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

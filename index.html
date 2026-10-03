@@ -27,6 +27,7 @@
   @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
   @keyframes pulse { 0% { transform: scale(.6); opacity: .8 } 100% { transform: scale(1.5); opacity: 0 } }
   @keyframes popIn { from { opacity: 0; transform: translateY(24px) scale(.985) } to { opacity: 1; transform: none } }
+  @media (min-width: 981px) { [data-m="mbar"] { display: none !important } }
 
   /* ===== ПЛАНШЕТ И МОБИЛЬНЫЙ ===== */
   @media (max-width: 980px) {
@@ -43,8 +44,11 @@
 
     /* навигация */
     [id="top"] { flex-wrap: wrap !important; gap: 12px !important }
-    [style*="gap: 22px"][style*="font-size: 14.5px"] { order: 3 !important; width: 100% !important; overflow-x: auto !important; gap: 18px !important; padding-bottom: 2px !important; -webkit-overflow-scrolling: touch }
-    [style*="gap: 22px"][style*="font-size: 14.5px"] > a { flex: 0 0 auto !important }
+    [style*="gap: 22px"][style*="font-size: 14.5px"] { order: 2 !important; width: 100% !important; overflow-x: auto !important; gap: 18px !important; padding-bottom: 2px !important; -webkit-overflow-scrolling: touch }
+    [style*="gap: 22px"][style*="font-size: 14.5px"] > a { flex: 0 0 auto !important; padding: 11px 0 !important; font-size: 15px !important }
+    [id="top"] > [style*="gap: 10px"] { flex: 1 1 100% !important; order: 3 !important }
+    [id="top"] a[style*="height: 42px"] { height: 48px !important; flex: 1 1 0 !important; justify-content: center !important; padding: 0 12px !important; white-space: nowrap !important }
+    [id="top"] > a[href="#top"] { order: 1 !important }
 
     /* заголовки-шапки секций: в колонку */
     [style*="align-items: flex-end"][style*="space-between"][style*="gap: 30px"] { flex-direction: column !important; align-items: flex-start !important; gap: 14px !important }
@@ -92,7 +96,26 @@
     [style*="max-height: 460px"] { max-height: 300px !important }
 
     /* модальная карточка */
-    [style*="padding: 40px 24px"] { padding: 10px 8px !important }
+    [style*="padding: 40px 24px"] { padding: 10px 8px 90px !important }
+
+    /* шапка на телефоне: только логотип и «Войти» */
+    [data-m="navlinks"], [data-m="navcta"] { display: none !important }
+    [id="top"][id="top"] { flex-wrap: nowrap !important }
+    [id="top"] > [data-m="navbtns"] { flex: 0 0 auto !important; order: 2 !important }
+    [data-m="navbtns"] a { flex: 0 0 auto !important; height: 44px !important; padding: 0 18px !important; box-shadow: inset 0 0 0 1.5px rgba(12,12,10,.2) }
+
+    /* заголовки с жёсткой шириной/высотой из ручных правок */
+    h1, h2, p { width: auto !important; height: auto !important; max-width: 100% !important }
+
+    /* шаги: без дублирующего списка и без «плавающих» карточек */
+    [data-m="steplist"] { display: none !important }
+    [data-m="stepcard"] { opacity: 1 !important; transform: none !important }
+    [data-m="stephead"] { flex-wrap: wrap !important; row-gap: 4px !important }
+
+    /* тарифы */
+    [data-m="tariffs"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important }
+    [data-m="tariffs3"] { grid-template-columns: minmax(0, 1fr) !important }
+    [data-m="calc"] { padding: 18px !important }
   }
 
   @media (max-width: 640px) {
@@ -112,8 +135,13 @@
     /* кнопки на всю ширину */
     [style*="height: 56px"] { width: auto !important; flex: 1 1 100% !important; justify-content: center !important }
 
-    [style*="height: 620px"], [style*="height: 470px"] { height: 700px !important }
+    [style*="height: 620px"], [style*="height: 470px"] { height: 790px !important }
+    [style*="height: 470px"] > [style*="padding: 22px 24px"] { padding: 18px 16px !important }
     [style*="justify-content: space-between"][style*="border-top: 1px solid rgba(255, 255, 255, 0.1)"] { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important }
+    /* тап-зоны ссылок в футере */
+    [style*="flex-direction: column"] > a[style*="color: rgba(255,255,255,.72)"],
+    [style*="flex-direction: column"] > a[style*="color: rgba(255, 255, 255, 0.72)"] { padding: 9px 0 !important; font-size: 14.5px !important }
+    [data-m="tariffs"] { grid-template-columns: minmax(0, 1fr) !important }
   }
 </style>
 </helmet>
@@ -123,20 +151,18 @@
 
   <!-- NAV -->
   <div id="top" style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 40px 22px">
-    <a href="#top" style="display: flex; align-items: center; gap: 4px; font-size: 21px; font-weight: 800; letter-spacing: -.035em">
-      <span>ЕГЭ_Мар</span>
-      <span style="width: 9px; height: 9px; border-radius: 50%; background: #D7F205; margin-top: 6px"></span>
+    <a href="#top" aria-label="ЕГЭ_Map" style="display: flex; align-items: center; flex: 0 0 auto">
+      <img src="./logo-lockup.svg" alt="ЕГЭ_Map" style="height: 32px; width: auto; display: block">
     </a>
-    <div style="display: flex; align-items: center; gap: 22px; font-size: 14.5px; font-weight: 500; color: #45514F">
-      <a href="#ucheniki" style="color: inherit">Ученики</a>
-      <a href="#klass" style="color: inherit">Класс</a>
-      <a href="#probnik" style="color: inherit">Пробник</a>
-      <a href="#otchet" style="color: inherit">Отчёты</a>
-      <a href="#avtor" style="color: inherit">Автор</a>
+    <div data-m="navlinks" style="display: flex; align-items: center; gap: 26px; font-size: 14.5px; font-weight: 500; color: #45514F">
+      <a href="#vozmozhnosti" style="color: inherit">Возможности</a>
+      <a href="#bot" style="color: inherit">Telegram-бот</a>
+      <a href="#tarify" style="color: inherit">Тарифы</a>
+      <a href="#faq" style="color: inherit">Вопросы</a>
     </div>
-    <div style="display: flex; align-items: center; gap: 10px">
-      <a href="app.html"" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; height: 42px; padding: 0 18px; border-radius: 999px; border: 1.5px solid rgba(12,12,10,.2); font-size: 14px; font-weight: 600" style-hover="border-color: #0C0C0A; background: #E4FDFE">Открыть приложение</a>
-      <a href="#zayavka" style="display: inline-flex; align-items: center; height: 42px; padding: 0 22px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 14px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">Связаться</a>
+    <div data-m="navbtns" style="display: flex; align-items: center; gap: 8px">
+      <a href="{{ appUrl }}" style="display: inline-flex; align-items: center; height: 42px; padding: 0 18px; border-radius: 999px; font-size: 14px; font-weight: 600" style-hover="background: #E4FDFE">Войти</a>
+      <a data-m="navcta" href="{{ appUrl }}" style="display: inline-flex; align-items: center; height: 42px; padding: 0 22px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 14px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">Начать бесплатно</a>
     </div>
   </div>
 
@@ -148,34 +174,34 @@
         <div style="max-width: 570px">
           <div style="display: inline-flex; align-items: center; gap: 9px; padding: 7px 15px 7px 11px; border-radius: 999px; background: rgba(12,12,10,.1); font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 24px">
             <span style="width: 7px; height: 7px; border-radius: 50%; background: #0C0C0A"></span>
-            Для учителей русского языка и литературы
+            Для учителей всех предметов — от русского до информатики
           </div>
           <h1 style="margin: 0; font-size: 62px; line-height: .95; font-weight: 800; letter-spacing: -.04em; text-wrap: balance">Подготовка к ЕГЭ и ОГЭ под полным контролем</h1>
-          <p style="margin: 26px 0 0; font-size: 17.5px; line-height: 1.5; font-weight: 500; color: rgba(12,12,10,.72); max-width: 470px; text-wrap: pretty">Проверка по официальным критериям, аналитика по каждому ученику и готовые отчёты для родителей — в одном приложении для учителя.</p>
+          <p style="margin: 26px 0 0; font-size: 17.5px; line-height: 1.5; font-weight: 500; color: rgba(12,12,10,.72); max-width: 470px; text-wrap: pretty">Приложение для учителей и репетиторов, учеников и их родителей, которое помогает увидеть, как добиться лучшего результата на экзамене!&nbsp;</p>
 
           <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px">
             <a href="#zayavka" style="display: inline-flex; align-items: center; gap: 14px; height: 56px; padding: 0 24px 0 28px; border-radius: 999px; color: #FFFFFF; font-size: 16px; font-weight: 600; width: 180px; background-color: #0C0C0A" style-hover="background: #2C2C24; color: #FFFFFF">
               Связаться
               <span style="display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #D7F205; color: #0C0C0A; font-size: 14px">→</span>
             </a>
-            <a href="#ucheniki" style="display: inline-flex; align-items: center; height: 56px; padding: 0 28px; border-radius: 999px; background: #FFFFFF; color: #0C0C0A; font-size: 16px; font-weight: 600; border: 1.5px solid rgba(12,12,10,.14)" style-hover="border-color: #0C0C0A; color: #0C0C0A">Открыть демо</a>
+            <a href="{{ appUrl }}" style="display: inline-flex; align-items: center; height: 56px; padding: 0 28px; border-radius: 999px; background: #FFFFFF; color: #0C0C0A; font-size: 16px; font-weight: 600; border: 1.5px solid rgba(12,12,10,.14)" style-hover="border-color: #0C0C0A; color: #0C0C0A">Открыть приложение</a>
           </div>
-          <p style="margin: 16px 0 0; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .03em; color: rgba(12,12,10,.6)">окно справа листает экраны кабинета — можно переключить точками</p>
+          <p style="margin: 16px 0 0; font-size: 14px; font-weight: 600"><a href="{{ demoUrl }}" style="text-decoration: underline; text-decoration-color: #0C0C0A; text-decoration-thickness: 1.5px; text-underline-offset: 4px" style-hover="color: #0C0C0A; text-decoration-thickness: 2.5px">Посмотреть на примере класса — без регистрации →</a></p>
 
           <div style="display: flex; align-items: center; gap: 18px; margin-top: 40px; padding-top: 26px; border-top: 1px solid rgba(12,12,10,.18)">
             <div>
-              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 600; letter-spacing: -.02em">{{ days }}</div>
-              <div style="font-size: 12px; font-weight: 500; color: rgba(12,12,10,.62); margin-top: 2px">дней до ЕГЭ по русскому</div>
+              
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 600; letter-spacing: -.02em; width: 143px; height: 35px">ЕГЭ и ОГЭ</div><div style="font-size: 12px; font-weight: 500; color: rgba(12,12,10,.62); margin-top: 2px">в одном месте</div>
             </div>
             <div style="width: 1px; height: 42px; background: rgba(12,12,10,.18)"></div>
             <div>
-              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 600; letter-spacing: -.02em">27 + 13</div>
-              <div style="font-size: 12px; font-weight: 500; color: rgba(12,12,10,.62); margin-top: 2px">заданий ЕГЭ и ОГЭ в разборе</div>
+              
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 600; letter-spacing: -.02em; width: 118px; height: 35px">&gt;20&nbsp;</div><div style="font-size: 12px; font-weight: 500; color: rgba(12,12,10,.62); margin-top: 2px; width: 126px; height: 16px">функций аналитики&nbsp;</div>
             </div>
-            <div style="width: 1px; height: 42px; background: rgba(12,12,10,.18)"></div>
-            <div>
+            
+            <div style="width: 1px; height: 42px; background: rgba(12,12,10,.18)"></div><div>
               <div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 600; letter-spacing: -.02em">2 мин</div>
-              <div style="font-size: 12px; font-weight: 500; color: rgba(12,12,10,.62); margin-top: 2px">на ввод пробника класса</div>
+              <div style="font-size: 12px; font-weight: 500; color: rgba(12,12,10,.62); margin-top: 2px; width: 108px; height: 20px">на ввод пробника</div>
             </div>
           </div>
         </div>
@@ -185,7 +211,7 @@
           <div style="border-radius: 24px; overflow: hidden; background: #F5F7F8; box-shadow: -14px 30px 66px -30px rgba(0,40,42,.55), 0 0 0 1px rgba(12,12,10,.08)">
             <div style="display: flex; align-items: center; gap: 14px; padding: 13px 18px; background: #FFFFFF; border-bottom: 1px solid #ECEFF1">
               <div style="display: flex; align-items: center; gap: 3px; font-size: 14px; font-weight: 800; letter-spacing: -.035em">
-                ЕГЭ_Мар<span style="width: 6px; height: 6px; border-radius: 50%; background: #D7F205; margin-top: 5px"></span>
+                ЕГЭ_Map<span style="width: 6px; height: 6px; border-radius: 50%; background: #D7F205; margin-top: 5px"></span>
               </div>
               <div style="font-size: 10px; color: #7B8A8F; padding-left: 10px; border-left: 1px solid #ECEFF1">Русский язык · ЕГЭ · 11А</div>
               <div style="margin-left: auto; display: flex; align-items: center; gap: 7px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7B8A8F">
@@ -312,7 +338,7 @@
                   <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ d.dot }}"></span>{{ d.label }}
                 </button>
               </sc-for>
-              <span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #9AA6AA">демо-данные · 3 пробника</span>
+              <span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #9AA6AA"><br></span>
             </div>
           </div>
         </div>
@@ -326,14 +352,14 @@
     <div style="display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 2fr); gap: 40px">
       <div>
         <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em">Что это даёт учителю</h2>
-        <p style="margin: 16px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59">Приложение делает учитель-практик — поэтому здесь нет лишних экранов, только то, что нужно между пробником и родительским собранием.</p>
+        <p style="margin: 16px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59">Отслеживайте прогресс ученика и всего класса в одном окне. Приложение создано учителем-практиком, поэтому оно учитывает всё, что необходимо для эффективной подготовки к экзамену</p>
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 34px 46px">
         <div style="display: grid; grid-template-columns: 26px 1fr; gap: 14px; padding-bottom: 4px">
           <div style="display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #00FDFF; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600">01</div>
           <div>
-            <div style="font-size: 16.5px; font-weight: 700; letter-spacing: -.01em">Проверка вместо арифметики</div>
-            <p style="margin: 8px 0 12px; font-size: 14px; line-height: 1.5; color: #4F5A59">Цифра переводит курсор на следующее поле, итог считается на лету — по официальной шкале перевода.</p>
+            <div style="font-size: 16.5px; font-weight: 700; letter-spacing: -.01em">Проверка вместо Excel-таблиц</div>
+            <p style="margin: 8px 0 12px; font-size: 14px; line-height: 1.5; color: #4F5A59; width: 281px; height: 190px; text-align: left">Заполняете до сих пор Excel? Сбиваетесь при вводе? Считаете вручную или по формуле баллы? Наше приложение автоматически переводит курсор на следующее поле, не позволяет выставить больше или меньше, чем возможно за задание, а итоговый балл считается и переводится во вторичный по официальной шкале сам.</p>
             <a href="#probnik" style="display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: #E4FDFE; font-size: 12.5px; font-weight: 600" style-hover="background: #CFFBFC">Попробовать ввод</a>
           </div>
         </div>
@@ -341,23 +367,23 @@
           <div style="display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #00FDFF; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600">02</div>
           <div>
             <div style="font-size: 16.5px; font-weight: 700; letter-spacing: -.01em">Аналитика всего класса</div>
-            <p style="margin: 8px 0 12px; font-size: 14px; line-height: 1.5; color: #4F5A59">План занятия по самым слабым заданиям, кто вырос и кто просел, разбор сочинения по блокам критериев.</p>
-            <a href="#klass" style="display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: #E4FDFE; font-size: 12.5px; font-weight: 600" style-hover="background: #CFFBFC">Посмотреть класс</a>
+            <p style="margin: 8px 0 12px; font-size: 14px; line-height: 1.5; color: #4F5A59">Пытаетесь вручную подсказать ученикам, где у них пробелы? Теперь они видят процент выполнения по каждому заданию с пояснением, что необходимо повторить, а вы знаете средний балл класса, прогноз и топ-сильных и слабых мест всех учеников сразу!</p>
+            <a href="#klass" style="display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: #E4FDFE; font-size: 12.5px; font-weight: 600" style-hover="background: #CFFBFC">Посмотреть экран класса</a>
           </div>
         </div>
         <div style="display: grid; grid-template-columns: 26px 1fr; gap: 14px">
           <div style="display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #00FDFF; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600">03</div>
           <div>
             <div style="font-size: 16.5px; font-weight: 700; letter-spacing: -.01em">Отчёт родителям в один клик</div>
-            <p style="margin: 8px 0 12px; font-size: 14px; line-height: 1.5; color: #4F5A59">PDF по каждому коду: баллы по блокам, сравнение с классом и список тем на повторение.</p>
+            <p style="margin: 8px 0 12px; font-size: 14px; line-height: 1.5; color: #4F5A59">Надоело готовить отчет для родителей вручную? Забудьте: все результаты пробников по каждому ученику за один клик: внутри баллы по всем заданиям с пояснениями, сравнение с классом и список тем для повторения.</p>
             <a href="#otchet" style="display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: #E4FDFE; font-size: 12.5px; font-weight: 600" style-hover="background: #CFFBFC">Посмотреть отчёт</a>
           </div>
         </div>
         <div style="display: grid; grid-template-columns: 26px 1fr; gap: 14px">
           <div style="display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #00FDFF; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600">04</div>
           <div>
-            <div style="font-size: 16.5px; font-weight: 700; letter-spacing: -.01em">Данные учеников не покидают код</div>
-            <p style="margin: 8px 0 12px; font-size: 14px; line-height: 1.5; color: #4F5A59">В приложении нет ни фамилий, ни классных журналов — только короткие обезличенные коды.</p>
+            <div style="font-size: 16.5px; font-weight: 700; letter-spacing: -.01em; width: 258px; height: 18px">Ученик управляет подготовкой</div>
+            <p style="margin: 8px 0 12px; font-size: 14px; line-height: 1.5; color: #4F5A59; width: 256px; height: 123px">Ученик без регистрации видит все результаты по каждому пробнику в личном кабинете, рекомендации по слабым зонам формируются автоматически на основании внесенных результатов&nbsp;</p>
             <a href="#privatnost" style="display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: #E4FDFE; font-size: 12.5px; font-weight: 600" style-hover="background: #CFFBFC">Про приватность</a>
           </div>
         </div>
@@ -369,12 +395,11 @@
   <div id="ucheniki" style="padding: 82px 40px 0">
     <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 24px">
       <div>
-        <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 560px">У каждого ученика — своя карта пробелов</h2>
-        <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59; max-width: 540px">Пять кодов из демо-класса с разными результатами. Нажмите на карточку — откроется та же карточка ученика, что и в приложении: зоны развития и сочинение по критериям.</p>
+        <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 560px">У каждого ученика своя карта результатов</h2>
+        <div style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59; max-width: 540px">Ниже примеры карточек 5 учеников с разными результатами&nbsp;<div>из демо-класса, внутри аналитика, как из приложения.&nbsp;</div></div>
       </div>
       <div style="display: flex; align-items: center; gap: 8px; padding-bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: #7C8786">
-        <span style="width: 7px; height: 7px; border-radius: 50%; background: #00FDFF"></span>живое демо
-      </div>
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: rgb(0, 253, 255);"></span>демо-класс &nbsp; &nbsp; &nbsp;&nbsp;</div>
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px">
@@ -419,9 +444,9 @@
       <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 30px">
         <div>
           <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 520px">Статистика по классу</h2>
-          <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #33403F; max-width: 520px">Общие метрики после трёх пробников, план занятия по самым слабым заданиям и список тех, кто вырос и просел.</p>
+          <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #33403F; max-width: 520px">Общие метрики после пробников, зоны роста по самым слабым заданиям и список тех, кто изменил результат.</p>
         </div>
-        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: #5E6B6A; padding-bottom: 6px">11А · 11 кодов · русский язык · ЕГЭ</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: #5E6B6A; padding-bottom: 6px">11А · РУССКИЙ ЯЗЫК · ЕГЭ</div>
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 26px">
@@ -434,7 +459,7 @@
           <div style="font-size: 12.5px; color: rgba(12,12,10,.66); margin-top: 8px">к первому пробнику · выросли 6 из 11</div>
         </div>
         <div style="padding: 20px 20px 18px; border-radius: 20px; background: #FFFFFF">
-          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 32px; font-weight: 700; letter-spacing: -.04em">28.5</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 32px; font-weight: 700; letter-spacing: -.04em">28</div>
           <div style="font-size: 12.5px; color: #7B8A8F; margin-top: 8px">средний первичный из 50</div>
         </div>
         <div style="padding: 20px 20px 18px; border-radius: 20px; background: #0C0C0A; color: #FFFFFF">
@@ -446,7 +471,7 @@
       <div style="display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 12px; margin-top: 12px">
         <div style="padding: 24px 24px 22px; border-radius: 20px; background: #FFFFFF">
           <div style="display: flex; align-items: baseline; justify-content: space-between">
-            <div style="font-size: 21px; font-weight: 800; letter-spacing: -.025em">План занятия</div>
+            <div style="font-size: 21px; font-weight: 800; letter-spacing: -.025em">Зоны развития</div>
             <span style="font-size: 12.5px; color: #7B8A8F">пять заданий с наибольшими потерями</span>
           </div>
           <div ref="{{ visPlan }}" style="display: flex; flex-direction: column; gap: 16px; margin-top: 18px">
@@ -459,7 +484,7 @@
                     <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #4F5A59">{{ p.pct }} %</span>
                   </div>
                   <div style="height: 7px; border-radius: 99px; background: #EEF1F2; margin-top: 7px; overflow: hidden"><div style="height: 100%; border-radius: 99px; background: #0C0C0A; transform-origin: left center; transition: transform 1.1s cubic-bezier(.2,.8,.25,1); transform: scaleX({{ planScale }}); width: {{ p.w }}"></div></div>
-                  <div style="font-size: 12px; color: #9AA6AA; margin-top: 6px">не набрали максимум: {{ p.miss }} учеников</div>
+                  
                 </div>
               </div>
             </sc-for>
@@ -484,10 +509,10 @@
         <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="3">
           <div style="padding: 24px 24px 22px; border-radius: 20px; background: #FFFFFF">
             <div style="display: flex; align-items: baseline; justify-content: space-between">
-              <span style="font-size: 20px; font-weight: 800; letter-spacing: -.025em">{{ b.name }}</span>
-              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 19px; font-weight: 700">{{ b.pct }} %</span>
+              <span style="font-size: 18px; font-weight: 800; letter-spacing: -.025em">{{ b.name }}</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 700">{{ b.pct }} %</span>
             </div>
-            <div style="font-size: 12.5px; color: #7B8A8F; margin-top: 6px">{{ b.sub }}</div>
+            
             <div style="height: 8px; border-radius: 99px; background: #EEF1F2; margin-top: 14px; overflow: hidden"><div style="height: 100%; border-radius: 99px; background: #00FDFF; transform-origin: left center; transition: transform 1.1s cubic-bezier(.2,.8,.25,1); transform: scaleX({{ blocksScale }}); width: {{ b.w }}"></div></div>
             <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 18px">
               <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="3">
@@ -503,7 +528,7 @@
                 </div>
               </sc-for>
             </div>
-            <p style="margin: 16px 0 0; padding-top: 14px; border-top: 1px solid #F1F4F4; font-size: 12.5px; line-height: 1.5; color: #4F5A59">{{ b.note }}</p>
+            
           </div>
         </sc-for>
       </div>
@@ -515,7 +540,7 @@
     <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 24px">
       <div>
         <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 520px">Ввод пробника, как в приложении</h2>
-        <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59; max-width: 540px">Введите балл — курсор сам перейдёт в следующее поле. Enter и стрелки тоже работают, итог и тестовый балл пересчитываются на лету по официальной шкале.</p>
+        <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59; max-width: 540px">Попробуйте функционал прямо здесь. Введите балл — курсор сам перейдёт в следующее поле. Enter и стрелки тоже работают, первичный и тестовый балл пересчитываются автоматически по официальной шкале 2026 года.</p>
       </div>
       <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: #7C8786; padding-bottom: 6px">попробуйте с клавиатуры</div>
     </div>
@@ -603,13 +628,13 @@
       <div style="flex: 1 1 0; min-width: 0; padding: 26px 26px 24px; border-radius: 26px; background: #00FDFF; min-height: 260px; display: flex; flex-direction: column; transition: flex-grow .55s cubic-bezier(.2,.8,.3,1)" style-hover="flex-grow: 1.9">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: rgba(12,12,10,.6)">учителю</div>
         <div style="font-size: 21px; font-weight: 800; letter-spacing: -.025em; margin-top: 12px">Класс целиком</div>
-        <p style="margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: rgba(12,12,10,.72)">Пробник вносится за две минуты, а план занятия строится по тем заданиям, где класс реально просел.</p>
+        <p style="margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: rgba(12,12,10,.72)">Инструментов планирования подготовки к экзаменам, персонализации за счет понимания пробелов каждого ученика и автоматизированной обратной связи для родителей</p>
         <div style="display: flex; flex-direction: column; gap: 7px; margin-top: 16px; font-size: 13px; color: rgba(12,12,10,.72)">
           <span>· разделение на классы с отдельной статистикой</span>
-          <span>· пять слабейших заданий сразу в плане занятия</span>
-          <span>· кто вырос и кто просел между пробниками</span>
+          <span>· отчеты для родителей в любой момент&nbsp;</span>
+          <span>· статистика по тем, кто вырос и кто просел между пробниками</span>
         </div>
-        <div style="margin-top: auto; padding-top: 18px; font-size: 13px; font-weight: 700">11 кодов в одном кабинете</div>
+        <div style="margin-top: auto; padding-top: 18px; font-size: 13px; font-weight: 700">весь класс в одном кабинете</div>
       </div>
       <div style="flex: 1 1 0; min-width: 0; padding: 26px 26px 24px; border-radius: 26px; background: #E4FDFE; min-height: 260px; display: flex; flex-direction: column; transition: flex-grow .55s cubic-bezier(.2,.8,.3,1)" style-hover="flex-grow: 1.9">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #6F7B7A">репетитору</div>
@@ -625,13 +650,13 @@
       <div style="flex: 1 1 0; min-width: 0; padding: 26px 26px 24px; border-radius: 26px; background: #0C0C0A; color: #FFFFFF; min-height: 260px; display: flex; flex-direction: column; transition: flex-grow .55s cubic-bezier(.2,.8,.3,1)" style-hover="flex-grow: 1.9">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.45)">родителю</div>
         <div style="font-size: 21px; font-weight: 800; letter-spacing: -.025em; margin-top: 12px">Понятный отчёт</div>
-        <p style="margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: rgba(255,255,255,.7)">Вместо «нормально написал» — таблица по блокам, сравнение с классом и конкретные темы на повторение.</p>
+        <p style="margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: rgba(255,255,255,.7)">Вместо «нормально написал» таблица по блокам, сравнение с классом и конкретные темы для &nbsp;повторения.</p>
         <div style="display: flex; flex-direction: column; gap: 7px; margin-top: 16px; font-size: 13px; color: rgba(255,255,255,.7)">
           <span>· баллы по блокам заданий и по сочинению</span>
           <span>· сравнение с классом в процентах</span>
           <span>· ни одной фамилии в файле</span>
         </div>
-        <div style="margin-top: auto; padding-top: 18px; font-size: 13px; font-weight: 700; color: #D7F205">PDF на одну страницу</div>
+        <div style="margin-top: auto; padding-top: 18px; font-size: 13px; font-weight: 700; color: #D7F205">Отчет &nbsp;на одну страницу</div>
       </div>
     </div>
   </div>
@@ -640,15 +665,15 @@
   <div id="sravnenie" style="padding: 84px 40px 0">
     <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 22px">
       <div>
-        <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 560px">Было в таблице — стало на экране</h2>
-        <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59; max-width: 540px">Потяните разделитель: слева привычный файл с баллами, справа тот же пробник в приложении.</p>
+        <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 560px; width: 665px; height: 123px">Посмотрите, как изменится ваш подход с выбором нашего приложения</h2>
+        <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59; max-width: 540px">Потяните разделитель: справа Excel-таблица, которую вы заполняете каждый год, слева тот же пробник но в нашем приложении.</p>
       </div>
       <div style="display: flex; align-items: center; gap: 8px; padding-bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #7C8786">
-        <span>тяните мышью</span><span style="color: #0C0C0A; font-weight: 700">{{ curPct }}</span>
+        <span style="color: #0C0C0A; font-weight: 700">{{ curPct }}</span>
       </div>
     </div>
 
-    <div ref="{{ curRef }}" onPointerDown="{{ curDown }}" onPointerMove="{{ curMove }}" style="position: relative; height: 470px; border-radius: 30px; overflow: hidden; background: #FFFFFF; box-shadow: 0 0 0 1px rgba(12,12,10,.09); cursor: ew-resize; user-select: none; touch-action: none">
+    <div ref="{{ curRef }}" onPointerDown="{{ curDown }}" onPointerMove="{{ curMove }}" style="position: relative; height: 470px; border-radius: 30px; overflow: hidden; background: #FFFFFF; box-shadow: 0 0 0 1px rgba(12,12,10,.09); cursor: ew-resize; user-select: none; touch-action: pan-y">
 
       <!-- ДО: таблица -->
       <div style="position: absolute; inset: 0; padding: 22px 24px; background: #F5F7F8">
@@ -679,7 +704,7 @@
       <!-- ПОСЛЕ: приложение -->
       <div style="position: absolute; inset: 0; padding: 22px 24px; background: #0C0C0A; color: #FFFFFF; clip-path: {{ curClip }}">
         <div style="display: flex; align-items: center; gap: 10px">
-          <div style="display: flex; align-items: center; gap: 3px; font-size: 14px; font-weight: 800; letter-spacing: -.035em">ЕГЭ_Мар<span style="width: 6px; height: 6px; border-radius: 50%; background: #D7F205; margin-top: 5px"></span></div>
+          <div style="display: flex; align-items: center; gap: 3px; font-size: 14px; font-weight: 800; letter-spacing: -.035em">ЕГЭ_Map<span style="width: 6px; height: 6px; border-radius: 50%; background: #D7F205; margin-top: 5px"></span></div>
           <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.45)">11А · тот же пробник, посчитан сам</span>
         </div>
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px">
@@ -731,7 +756,7 @@
       <div style="position: sticky; top: 40px">
         <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em">Четыре шага от пробника до отчёта</h2>
         <p style="margin: 16px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59">Всё в браузере, без установки. Прокручивайте — шаги подсвечиваются справа.</p>
-        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 28px">
+        <div data-m="steplist" style="display: flex; flex-direction: column; gap: 6px; margin-top: 28px">
           <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
             <div style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; background: {{ s.bg }}; transition: background .4s ease, color .4s ease; color: {{ s.fg }}">
               <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700; opacity: {{ s.numO }}">{{ s.n }}</span>
@@ -743,8 +768,8 @@
       </div>
       <div style="display: flex; flex-direction: column; gap: 14px">
         <sc-for list="{{ stepCards }}" as="c" hint-placeholder-count="4">
-          <div ref="{{ c.ref }}" style="display: flex; flex-direction: column; padding: 20px 22px 18px; border-radius: 22px; background: {{ c.bg }}; color: {{ c.fg }}; transition: opacity .5s ease, transform .5s ease; opacity: {{ c.o }}; transform: {{ c.tr }}">
-            <div style="display: flex; align-items: baseline; gap: 12px">
+          <div ref="{{ c.ref }}" data-m="stepcard" style="display: flex; flex-direction: column; padding: 20px 22px 18px; border-radius: 22px; background: {{ c.bg }}; color: {{ c.fg }}; transition: opacity .5s ease, transform .5s ease; opacity: {{ c.o }}; transform: {{ c.tr }}">
+            <div data-m="stephead" style="display: flex; align-items: baseline; gap: 12px">
               <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; opacity: .6">шаг {{ c.n }}</span>
               <span style="font-size: 19px; font-weight: 800; letter-spacing: -.025em">{{ c.title }}</span>
               <span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; opacity: .55">{{ c.time }}</span>
@@ -770,29 +795,14 @@
       <div style="position: relative; display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: 40px; align-items: center">
         <div>
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.45)">отчёты для родителей</div>
-          <h2 style="margin: 14px 0 0; font-size: 42px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 440px">Отчёт открывается панелью справа</h2>
-          <p style="margin: 18px 0 0; font-size: 15.5px; line-height: 1.55; color: rgba(255,255,255,.68); max-width: 420px">По каждому коду — страница с баллами по блокам, сравнением с классом и темами на повторение. Можно выгрузить весь класс одним архивом или отправить ученику ссылку на его карточку.</p>
-          <div style="margin-top: 26px; padding: 18px 20px 20px; border-radius: 20px; background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1)">
-            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
-              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.45)">собрать отчёт</span>
-              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #00FDFF">{{ repCount }} из 4 блоков</span>
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px">
-              <sc-for list="{{ repItems }}" as="r" hint-placeholder-count="4">
-                <button onClick="{{ r.click }}" style="display: inline-flex; align-items: center; gap: 9px; height: 38px; padding: 0 14px 0 11px; border-radius: 999px; border: {{ r.bd }}; background: {{ r.bg }}; color: #FFFFFF; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: background .2s ease, border-color .2s ease">
-                  <span style="display: grid; place-items: center; width: 17px; height: 17px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.35); background: {{ r.boxBg }}; color: #0C0C0A; font-size: 11px; font-weight: 800">{{ r.mark }}</span>
-                  {{ r.label }}
-                </button>
-              </sc-for>
-            </div>
-          </div>
-
-          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px">
+          <h2 style="margin: 14px 0 0; font-size: 42px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 440px">Пример отчёта открывается панелью справа</h2>
+          <p style="margin: 18px 0 0; font-size: 15.5px; line-height: 1.55; color: rgba(255,255,255,.68); max-width: 420px">По каждому коду своя страница с баллами по блокам, сравнением с классом и темами на повторение. Можно выгрузить статистику по всему классу одним файлом, отправить ученику ссылку на его профиль или родителю сформированный отчет.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px">
             <button onClick="{{ artToggle }}" style="display: inline-flex; align-items: center; gap: 12px; height: 52px; padding: 0 26px; border: none; border-radius: 999px; background: #00FDFF; color: #0C0C0A; font-size: 15.5px; font-weight: 700; cursor: pointer; transition: background .25s ease" style-hover="background: #6EF7F9">
               {{ artLabel }}
               <span style="display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #0C0C0A; color: #00FDFF; font-size: 13px; transition: transform .4s ease; transform: {{ artArrow }}">→</span>
             </button>
-            <a href="app.html" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; height: 52px; padding: 0 24px; border-radius: 999px; background: #D7F205; color: #0C0C0A; font-size: 15px; font-weight: 700" style-hover="background: #E7FF3D; color: #0C0C0A">Открыть приложение</a>
+            <a href="{{ appUrl }}" style="display: inline-flex; align-items: center; height: 52px; padding: 0 24px; border-radius: 999px; background: #D7F205; color: #0C0C0A; font-size: 15px; font-weight: 700" style-hover="background: #E7FF3D; color: #0C0C0A">Открыть приложение</a>
           </div>
           <div style="display: flex; gap: 26px; margin-top: 30px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.12)">
             <div>
@@ -800,8 +810,8 @@
               <div style="font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px">на одного ученика</div>
             </div>
             <div>
-              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; color: #D7F205">11</div>
-              <div style="font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px">отчётов одним архивом</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; color: #D7F205">1 файл</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px">на весь класс</div>
             </div>
             <div>
               <div style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; color: #D7F205">0</div>
@@ -813,70 +823,78 @@
         <div style="position: relative; min-height: 580px">
           <!-- закрытое состояние -->
           <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 14px; padding: 34px; border-radius: 26px; border: 1.5px dashed rgba(255,255,255,.22); background: rgba(255,255,255,.04); transition: opacity .45s ease; opacity: {{ artClosedO }}">
-            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.4)">артефакт · отчёт-11А-04.pdf</div>
-            <div style="font-size: 22px; font-weight: 800; letter-spacing: -.03em; max-width: 300px">Панель с готовым PDF выедет здесь</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.4)">отчёт · ЕГЭ_Map_11А-03.html</div>
+            <div style="font-size: 22px; font-weight: 800; letter-spacing: -.03em; max-width: 300px">Здесь откроется настоящий отчёт из приложения</div>
             <div style="font-size: 14px; line-height: 1.55; color: rgba(255,255,255,.55); max-width: 320px">Нажмите «Показать отчёт» — документ появится поверх, как артефакт, без перехода на другую страницу.</div>
           </div>
 
           <!-- панель-артефакт -->
           <div style="position: absolute; inset: 0; padding: 16px; border-radius: 26px; background: rgba(255,255,255,.12); backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%); box-shadow: 0 40px 80px -40px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.18); overflow: hidden; transition: opacity .5s cubic-bezier(.2,.8,.3,1), transform .5s cubic-bezier(.2,.8,.3,1), filter .5s ease; opacity: {{ artO }}; transform: {{ artT }}; filter: {{ artBlur }}; pointer-events: {{ artPE }}">
             <div style="display: flex; align-items: center; gap: 12px; padding: 4px 6px 14px">
-              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.75)">отчёт-11А-04.pdf</span>
-              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.45)">· 1 стр. · {{ repSize }}</span>
-              <button onClick="{{ artToggle }}" style="margin-left: auto; display: grid; place-items: center; width: 28px; height: 28px; border: none; border-radius: 50%; background: rgba(255,255,255,.18); color: #FFFFFF; font-size: 14px; cursor: pointer" style-hover="background: rgba(255,255,255,.32)">✕</button>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.75)">ЕГЭ_Map_11А-03.html</span>
+              <a href="./report-sample.html" style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #00FDFF" style-hover="color: #6EF7F9">открыть целиком ↗</a>
+              <button onClick="{{ artToggle }}" style="margin-left: auto; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 18px 0 8px; border: none; border-radius: 999px; background: #FFFFFF; color: #0C0C0A; font-size: 14px; font-weight: 700; cursor: pointer" style-hover="background: #E4FDFE"><span style="display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #0C0C0A; color: #FFFFFF; font-size: 15px">←</span>Назад</button>
             </div>
-            <div style="border-radius: 18px; background: #FFFFFF; color: #0C0C0A; padding: 24px 26px 22px; max-height: 508px; overflow: auto">
-              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px">
-                <div>
-                  <div style="font-size: 17px; font-weight: 800; letter-spacing: -.02em">Результат пробника</div>
-                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #7B8A8F; margin-top: 4px">код 11А-04 · ЕГЭ, русский язык · 24.01.2026</div>
-                </div>
-                <div style="text-align: right">
-                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 30px; font-weight: 700; letter-spacing: -.03em; line-height: 1">72</div>
-                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7B8A8F; margin-top: 3px">тестовый балл</div>
-                </div>
-              </div>
-              <sc-if value="{{ repHead }}" hint-placeholder-val="{{ true }}">
-              <div style="display: flex; gap: 8px; margin-top: 18px">
-                <div style="flex: 1; padding: 12px 14px; border-radius: 14px; background: #E4FDFE">
-                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 700">39 / 50</div>
-                  <div style="font-size: 10.5px; color: #4F5A59; margin-top: 3px">первичный балл</div>
-                </div>
-                <div style="flex: 1; padding: 12px 14px; border-radius: 14px; background: #F5F7F8">
-                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 700">67</div>
-                  <div style="font-size: 10.5px; color: #4F5A59; margin-top: 3px">средний ученика</div>
-                </div>
-                <div style="flex: 1; padding: 12px 14px; border-radius: 14px; background: #D7F205">
-                  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 700">↑ 3</div>
-                  <div style="font-size: 10.5px; color: rgba(12,12,10,.66); margin-top: 3px">к первому пробнику</div>
-                </div>
-              </div>
-              </sc-if>
-              <sc-if value="{{ repBlocks }}" hint-placeholder-val="{{ true }}">
-              <div style="margin-top: 18px; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px rgba(12,12,10,.08)">
-                <div style="display: flex; padding: 8px 14px; background: #FAFCFC; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .05em; text-transform: uppercase; color: #7B8A8F"><span style="flex: 1">блок заданий</span><span style="width: 60px; text-align: right">ученик</span><span style="width: 54px; text-align: right">класс</span></div>
-                <div style="display: flex; padding: 9px 14px; font-size: 12px; border-top: 1px solid #F1F4F4"><span style="flex: 1">Текст и стилистика · № 1–3</span><span style="width: 60px; text-align: right; font-family: 'IBM Plex Mono', monospace">2 / 3</span><span style="width: 54px; text-align: right; font-family: 'IBM Plex Mono', monospace; color: #7B8A8F">45 %</span></div>
-                <div style="display: flex; padding: 9px 14px; font-size: 12px; border-top: 1px solid #F1F4F4"><span style="flex: 1">Языковые нормы · № 4–8</span><span style="width: 60px; text-align: right; font-family: 'IBM Plex Mono', monospace">4 / 6</span><span style="width: 54px; text-align: right; font-family: 'IBM Plex Mono', monospace; color: #7B8A8F">54 %</span></div>
-                <div style="display: flex; padding: 9px 14px; font-size: 12px; border-top: 1px solid #F1F4F4"><span style="flex: 1">Орфография · № 9–15</span><span style="width: 60px; text-align: right; font-family: 'IBM Plex Mono', monospace">6 / 7</span><span style="width: 54px; text-align: right; font-family: 'IBM Plex Mono', monospace; color: #7B8A8F">61 %</span></div>
-                <div style="display: flex; padding: 9px 14px; font-size: 12px; border-top: 1px solid #F1F4F4"><span style="flex: 1">Пунктуация · № 16–21</span><span style="width: 60px; text-align: right; font-family: 'IBM Plex Mono', monospace">4 / 6</span><span style="width: 54px; text-align: right; font-family: 'IBM Plex Mono', monospace; color: #7B8A8F">48 %</span></div>
-                <sc-if value="{{ repEssay }}" hint-placeholder-val="{{ true }}">
-                  <div style="display: flex; padding: 9px 14px; font-size: 12px; border-top: 1px solid #F1F4F4"><span style="flex: 1">Сочинение · К1–К10</span><span style="width: 60px; text-align: right; font-family: 'IBM Plex Mono', monospace">17 / 22</span><span style="width: 54px; text-align: right; font-family: 'IBM Plex Mono', monospace; color: #7B8A8F">52 %</span></div>
-                </sc-if>
-              </div>
-              </sc-if>
-              <sc-if value="{{ repRec }}" hint-placeholder-val="{{ true }}">
-              <div style="margin-top: 16px; padding: 14px 16px; border-radius: 14px; background: #0C0C0A; color: #FFFFFF">
-                <div style="font-size: 11px; color: rgba(255,255,255,.55)">Рекомендации к следующему пробнику</div>
-                <div style="font-size: 13px; font-weight: 600; margin-top: 6px; line-height: 1.45">Лексический анализ слова (№ 2) · виды информации в тексте (№ 24) · комментарий в сочинении (К2)</div>
-              </div>
-              </sc-if>
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #9AA6AA">
-                <span>ЕГЭ_Мар · ege-map.ru</span><span>стр. 1 из 1</span>
-              </div>
+            <div ref="{{ repBoxRef }}" style="position: relative; height: 516px; border-radius: 18px; background: #FFFFFF; overflow: hidden">
+              <iframe src="./report-sample.html" title="Пример отчёта для родителей" loading="lazy" style="position: absolute; left: 0; top: 0; width: 860px; height: {{ repH }}; border: 0; transform: scale({{ repScale }}); transform-origin: 0 0"></iframe>
             </div>
           </div>
         </div>
 
+      </div>
+    </div>
+  </div>
+
+  <!-- TELEGRAM-БОТ -->
+  <div id="bot" style="padding: 84px 40px 0">
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: center; border-radius: 34px; background: #E4FDFE; padding: 46px">
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(12,12,10,.55)">telegram-бот для учеников и родителей</div>
+        <h2 style="margin: 14px 0 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 480px; text-wrap: balance">Результат пробника сам приходит в Telegram</h2>
+        <p style="margin: 18px 0 0; font-size: 15.5px; line-height: 1.55; color: #3D4746; max-width: 460px; text-wrap: pretty">После каждого нового пробника бот присылает короткую карточку: балл, изменение к прошлому разу, прогноз и темы, которые стоит повторить. Кнопка подключения уже есть на личной странице ученика — отдельную ссылку отправлять не нужно.</p>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 24px">
+          <sc-for list="{{ botPoints }}" as="b" hint-placeholder-count="4">
+            <div style="display: flex; align-items: flex-start; gap: 12px; font-size: 14.5px; line-height: 1.45">
+              <span style="display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #0C0C0A; color: #00FDFF; font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px">✓</span>
+              <span>{{ b.t }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px">
+          <a href="https://t.me/ege_map_bot" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 12px; height: 52px; padding: 0 24px 0 26px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 15px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">
+            Открыть бота
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #00FDFF">@ege_map_bot</span>
+          </a>
+          <a href="./parents.html" style="display: inline-flex; align-items: center; height: 52px; padding: 0 22px; border-radius: 999px; background: #FFFFFF; font-size: 15px; font-weight: 600; box-shadow: inset 0 0 0 1.5px rgba(12,12,10,.14)" style-hover="box-shadow: inset 0 0 0 1.5px #0C0C0A; color: #0C0C0A">Памятка для родителей</a>
+        </div>
+      </div>
+
+      <div style="border-radius: 28px; background: #FFFFFF; box-shadow: 0 30px 60px -36px rgba(0,40,42,.5), 0 0 0 1px rgba(12,12,10,.06); overflow: hidden; max-width: 440px; width: 100%; justify-self: center">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #ECEFF1">
+          <span style="display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #00FDFF; font-size: 13px; font-weight: 800; letter-spacing: -.03em">ЕМ</span>
+          <div>
+            <div style="font-size: 14.5px; font-weight: 700">ЕГЭ_Map</div>
+            <div style="font-size: 11.5px; color: #7B8A8F">бот</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px; background: #F5F7F8">
+          <div style="align-self: flex-start; max-width: 94%; padding: 14px 16px 10px; border-radius: 18px 18px 18px 6px; background: #FFFFFF; box-shadow: 0 0 0 1px rgba(12,12,10,.05); font-size: 13.5px; line-height: 1.5">
+            <div style="font-weight: 800">📊 Русский язык ЕГЭ</div>
+            <div>Пробник 24 января</div>
+            <div style="margin-top: 10px">Первичный балл — <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 700">39/50</span></div>
+            <div>Тестовый балл — <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 700">74/100</span> <span style="padding: 1px 6px; border-radius: 6px; background: #D7F205; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; font-weight: 700">↑5</span></div>
+            <div>Прогноз — <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 700">76–81</span></div>
+            <div style="margin-top: 10px">📌 Темы для повторения:</div>
+            <div>• №9 — Правописание корней</div>
+            <div>• №21 — Пунктуационный анализ</div>
+            <div>• №2 — Лексический анализ слова</div>
+            <div style="margin-top: 10px; padding: 8px 10px; border-radius: 10px; background: #E4FDFE">💬 Сочинение растёт, держим структуру.</div>
+            <div style="margin-top: 10px">Ознакомиться с баллами по всем заданиям можно в <span style="font-weight: 600; text-decoration: underline; text-decoration-color: #00FDFF; text-decoration-thickness: 2px; text-underline-offset: 3px">личном кабинете</span>.</div>
+            <div style="margin-top: 10px; font-size: 12.5px"><span style="font-weight: 700">ЕГЭ_Map</span> · <span style="text-decoration: underline; text-decoration-color: #00FDFF; text-decoration-thickness: 2px; text-underline-offset: 3px">Telegram-канал</span></div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #9AA6AA; text-align: right; margin-top: 4px">18:42</div>
+          </div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #7B8A8F; text-align: center; margin-top: 4px">/stop — отписаться в любой момент</div>
+        </div>
       </div>
     </div>
   </div>
@@ -886,35 +904,25 @@
     <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 26px">
       <div>
         <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 460px">Как выглядит приложение</h2>
-        <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59; max-width: 460px">Четыре экрана рабочего кабинета: ученики, класс, ввод пробника и карточка ученика.</p>
+        
       </div>
       <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: #7C8786; padding-bottom: 6px">наведите — экран выпрямится</div>
     </div>
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; perspective: 1800px">
-      <div style="border-radius: 26px; background: #E4FDFE; padding: 14px; display: flex; flex-direction: column; gap: 10px; transform: rotateY(7deg); transition: transform .6s cubic-bezier(.2,.8,.3,1)" style-hover="transform: rotateY(0deg) translateY(-6px)">
-        <div style="position: relative; height: 300px; border-radius: 18px; overflow: hidden; background: #FFFFFF">
-          <image-slot id="shot-classes" shape="rounded" radius="18" placeholder="скриншот: ученики" fit="cover"></image-slot>
+      <div style="border-radius: 18px; display: flex; flex-direction: column; gap: 10px; transform: rotateY(7deg); transition: transform .6s cubic-bezier(.2,.8,.3,1)" style-hover="transform: rotateY(0deg) translateY(-6px)">
+        <div style="position: relative; height: 300px; border-radius: 18px; overflow: hidden; box-shadow: 0 14px 34px rgba(12,12,10,.14)">
+          <image-slot id="shot-classes" shape="rounded" radius="18" placeholder="скриншот: ученики" fit="cover" src="./screenshots/shot-classes.png"></image-slot>
         </div>
         <div style="font-size: 13px; font-weight: 600; padding: 0 4px 4px">Ученики</div>
       </div>
-      <div style="border-radius: 26px; background: #E4FDFE; padding: 14px; display: flex; flex-direction: column; gap: 10px; transform: rotateY(3deg); transition: transform .6s cubic-bezier(.2,.8,.3,1)" style-hover="transform: rotateY(0deg) translateY(-6px)">
-        <div style="position: relative; height: 300px; border-radius: 18px; overflow: hidden; background: #FFFFFF">
-          <image-slot id="shot-class" shape="rounded" radius="18" placeholder="скриншот: класс" fit="cover"></image-slot>
+      <div style="border-radius: 18px; display: flex; flex-direction: column; gap: 10px; transform: rotateY(3deg); transition: transform .6s cubic-bezier(.2,.8,.3,1)" style-hover="transform: rotateY(0deg) translateY(-6px)">
+        <div style="position: relative; height: 300px; border-radius: 18px; overflow: hidden; box-shadow: 0 14px 34px rgba(12,12,10,.14)">
+          <image-slot id="shot-class" shape="rounded" radius="18" placeholder="скриншот: класс" fit="cover" src="./screenshots/shot-class.png"></image-slot>
         </div>
         <div style="font-size: 13px; font-weight: 600; padding: 0 4px 4px">Класс</div>
       </div>
-      <div style="border-radius: 26px; background: #E4FDFE; padding: 14px; display: flex; flex-direction: column; gap: 10px; transform: rotateY(-3deg); transition: transform .6s cubic-bezier(.2,.8,.3,1)" style-hover="transform: rotateY(0deg) translateY(-6px)">
-        <div style="position: relative; height: 300px; border-radius: 18px; overflow: hidden; background: #FFFFFF">
-          <image-slot id="shot-entry" shape="rounded" radius="18" placeholder="скриншот: ввести пробник" fit="cover"></image-slot>
-        </div>
-        <div style="font-size: 13px; font-weight: 600; padding: 0 4px 4px">Ввести пробник</div>
-      </div>
-      <div style="border-radius: 26px; background: #E4FDFE; padding: 14px; display: flex; flex-direction: column; gap: 10px; transform: rotateY(-7deg); transition: transform .6s cubic-bezier(.2,.8,.3,1)" style-hover="transform: rotateY(0deg) translateY(-6px)">
-        <div style="position: relative; height: 300px; border-radius: 18px; overflow: hidden; background: #FFFFFF">
-          <image-slot id="shot-report" shape="rounded" radius="18" placeholder="скриншот: карточка ученика" fit="cover"></image-slot>
-        </div>
-        <div style="font-size: 13px; font-weight: 600; padding: 0 4px 4px">Карточка ученика</div>
-      </div>
+      
+      
     </div>
   </div>
 
@@ -923,43 +931,43 @@
     <div style="display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 16px">
       <div style="border-radius: 30px; background: #FFFFFF; box-shadow: 0 0 0 1px rgba(12,12,10,.08); padding: 32px 32px 28px">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: #7C8786">до и после</div>
-        <h2 style="margin: 12px 0 22px; font-size: 30px; line-height: 1.06; font-weight: 800; letter-spacing: -.03em">Таблица в Excel и ЕГЭ_Мар</h2>
+        <h2 style="margin: 12px 0 22px; font-size: 30px; line-height: 1.06; font-weight: 800; letter-spacing: -.03em">Таблица в Excel и ЕГЭ_Map</h2>
         <div style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 0">
-          <div style="padding: 10px 0; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #7C8786">что делаете</div>
-          <div style="padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #7C8786">своя таблица</div>
+          <div style="padding: 10px 0; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #7C8786; text-align: center">что делаете</div>
+          <div style="padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #7C8786; text-align: left">своя таблица</div>
           <div style="padding: 10px 14px; border-radius: 12px 12px 0 0; background: #E4FDFE; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase">ЕГЭ_Мар</div>
 
           <div style="padding: 13px 0; border-top: 1px solid #F1F4F4; font-size: 13.5px; font-weight: 600">Первичный балл</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #F1F4F4; font-size: 13px; color: #7C8786">формулы вручную</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #CFFBFC; background: #E4FDFE; font-size: 13px; font-weight: 500">считается на лету</div>
+          <div style="padding: 13px 14px; border-top: 1px solid #F1F4F4; font-size: 13px; color: #7C8786">формулы вводятся вручную</div>
+          <div style="padding: 13px 14px; border-top: 1px solid #CFFBFC; background: #E4FDFE; font-size: 13px; font-weight: 500">считается &nbsp;втоматически</div>
 
           <div style="padding: 13px 0; border-top: 1px solid #F1F4F4; font-size: 13.5px; font-weight: 600">Перевод в тестовый</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #F1F4F4; font-size: 13px; color: #7C8786">искать таблицу в PDF</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #CFFBFC; background: #E4FDFE; font-size: 13px; font-weight: 500">официальная шкала внутри</div>
+          <div style="padding: 13px 14px; border-top: 1px solid #F1F4F4; font-size: 13px; color: #7C8786">искать таблицу в PDF и переводить вручную</div>
+          <div style="padding: 13px 14px; border-top: 1px solid #CFFBFC; background: #E4FDFE; font-size: 13px; font-weight: 500">переводится автоматически&nbsp;</div>
 
           <div style="padding: 13px 0; border-top: 1px solid #F1F4F4; font-size: 13.5px; font-weight: 600">Слабые задания класса</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #F1F4F4; font-size: 13px; color: #7C8786">считать глазами</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #CFFBFC; background: #E4FDFE; font-size: 13px; font-weight: 500">план занятия и статистика класса</div>
+          <div style="padding: 13px 14px; border-top: 1px solid #F1F4F4; font-size: 13px; color: #7C8786">искать глазами, заливать ячейки разными цветами</div>
+          <div style="padding: 13px 14px; border-top: 1px solid #CFFBFC; background: #E4FDFE; font-size: 13px; font-weight: 500">зоны роста и статистика класса готовы сразу после внесения пробник</div>
 
           <div style="padding: 13px 0; border-top: 1px solid #F1F4F4; font-size: 13.5px; font-weight: 600">Отчёт родителям</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #F1F4F4; font-size: 13px; color: #7C8786">переписывать вручную</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #CFFBFC; background: #E4FDFE; font-size: 13px; font-weight: 500">PDF в один клик</div>
+          <div style="padding: 13px 14px; border-top: 1px solid #F1F4F4; font-size: 13px; color: #7C8786">печатать каждый отчет вручную</div>
+          <div style="padding: 13px 14px; border-top: 1px solid #CFFBFC; background: #E4FDFE; font-size: 13px; font-weight: 500">Скачивать и отправлять полную картинку по всем заданиям</div>
 
-          <div style="padding: 13px 0; border-top: 1px solid #F1F4F4; font-size: 13.5px; font-weight: 600">Фамилии учеников</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #F1F4F4; font-size: 13px; color: #7C8786">в файле на диске</div>
-          <div style="padding: 13px 14px; border-top: 1px solid #CFFBFC; border-radius: 0 0 12px 12px; background: #E4FDFE; font-size: 13px; font-weight: 500">только коды</div>
+          
+          
+          
         </div>
       </div>
       <div id="privatnost" style="border-radius: 30px; background: #0C0C0A; color: #FFFFFF; padding: 32px 30px 28px; display: flex; flex-direction: column">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.45)">приватность</div>
         <h2 style="margin: 12px 0 0; font-size: 30px; line-height: 1.06; font-weight: 800; letter-spacing: -.03em">Без персональных данных учеников</h2>
-        <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: rgba(255,255,255,.68)">Ученик существует в приложении только как короткий код. Расшифровка остаётся у учителя — в приложение она не попадает.</p>
+        <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: rgba(255,255,255,.68)">Ученик существует в приложении только как код. Расшифровка остаётся у учителя в браузере или в письменном виде — в приложение она не попадает. Так вы не становитесь оператором персональных данных несовершеннолетних.</p>
         <div style="display: flex; align-items: center; gap: 12px; margin-top: 24px; padding: 16px 18px; border-radius: 18px; background: rgba(255,255,255,.07)">
           <span style="font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 600; color: #00FDFF">11А-04</span>
           <span style="color: rgba(255,255,255,.3)">→</span>
-          <span style="font-size: 13.5px; color: rgba(255,255,255,.55)">подпись для себя, видна только вам</span>
+          <span style="font-size: 13.5px; color: rgba(255,255,255,.55)">пример кода</span>
         </div>
-        <div style="margin-top: auto; padding-top: 22px; font-size: 13px; line-height: 1.55; color: rgba(255,255,255,.5)">В отчётах для родителей и администрации тоже используются коды — файл можно передавать без опасений.</div>
+        
       </div>
     </div>
   </div>
@@ -967,37 +975,37 @@
   <!-- ОТЗЫВЫ -->
   <div style="padding: 84px 40px 0; text-align: center">
     <h2 style="margin: 0 auto; font-size: 34px; line-height: 1.06; font-weight: 800; letter-spacing: -.03em; max-width: 460px">Учителя, которые уже проверяют так</h2>
-    <p style="margin: 12px auto 0; font-size: 14.5px; color: #4F5A59; max-width: 440px">Бета-версия открыта по заявкам — здесь появятся отзывы первых учителей</p>
+    <p style="margin: 12px auto 0; font-size: 14.5px; color: #4F5A59; max-width: 440px">Русский язык, литература и ОГЭ — учителя разных предметов уже ведут классы в ЕГЭ_Map</p>
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 34px; text-align: left">
       <div style="padding: 26px 26px 24px; border-radius: 26px; background: #E4FDFE; display: flex; flex-direction: column; min-height: 210px">
         <div style="font-size: 40px; line-height: .6; color: #00C9CB; font-weight: 800">«</div>
-        <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.55; color: #2E3736; font-style: italic">Место для реального отзыва: что учитель делал до приложения и сколько времени уходило на разбор пробника.</p>
+        <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.55; color: #2E3736; font-style: italic">Раньше вечер после пробника уходил на подсчёт баллов в Excel. Сейчас регистрируешься в приложении сама, за пять минут вносишь ответы, и весь класс с его проблемами и зонами роста уже перед глазами. Очень удобно.&nbsp;</p>
         <div style="margin-top: auto; padding-top: 20px; display: flex; align-items: center; gap: 11px">
           <div style="width: 36px; height: 36px; border-radius: 50%; background: repeating-linear-gradient(135deg, #C8F3F4 0 5px, #DDFBFC 5px 10px)"></div>
           <div>
-            <div style="font-size: 13.5px; font-weight: 700">Имя учителя</div>
+            <div style="font-size: 13.5px; font-weight: 700">Марина К.</div>
             <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #7C8786; margin-top: 2px">русский язык · ЕГЭ</div>
           </div>
         </div>
       </div>
       <div style="padding: 26px 26px 24px; border-radius: 26px; background: #0C0C0A; color: #FFFFFF; display: flex; flex-direction: column; min-height: 210px">
         <div style="font-size: 40px; line-height: .6; color: #00FDFF; font-weight: 800">«</div>
-        <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.55; font-style: italic">Место для реального отзыва: как выглядел разговор с родителями до отчёта и после него.</p>
+        <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.55; font-style: italic">Вот и нашелся отличный ответ на вопрос родителей о том, каковы успехи его ребенка. Теперь можно можно не только говорить о результатах , но и сразу указывать на те задания, что от пробник к пробник "проседают".&nbsp;</p>
         <div style="margin-top: auto; padding-top: 20px; display: flex; align-items: center; gap: 11px">
           <div style="width: 36px; height: 36px; border-radius: 50%; background: repeating-linear-gradient(135deg, #1F2A2A 0 5px, #2C3838 5px 10px)"></div>
           <div>
-            <div style="font-size: 13.5px; font-weight: 700">Имя учителя</div>
-            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: rgba(255,255,255,.45); margin-top: 2px">литература · ЕГЭ</div>
+            <div style="font-size: 13.5px; font-weight: 700">Артём П.</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: rgba(255,255,255,.45); margin-top: 2px">математика · ЕГЭ</div>
           </div>
         </div>
       </div>
       <div style="padding: 26px 26px 24px; border-radius: 26px; background: #E4FDFE; display: flex; flex-direction: column; min-height: 210px">
         <div style="font-size: 40px; line-height: .6; color: #00C9CB; font-weight: 800">«</div>
-        <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.55; color: #2E3736; font-style: italic">Место для реального отзыва: что изменилось в результатах класса за учебный год.</p>
+        <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.55; color: #2E3736; font-style: italic">Девятиклассников готовлю к ОГЭ параллельно с двумя 11 классами. Раньше это были три разные таблицы, в которых часто путалась. Теперь всё в одном месте, можно свободно перемещаться между классами, не тратя много времени!&nbsp;</p>
         <div style="margin-top: auto; padding-top: 20px; display: flex; align-items: center; gap: 11px">
           <div style="width: 36px; height: 36px; border-radius: 50%; background: repeating-linear-gradient(135deg, #C8F3F4 0 5px, #DDFBFC 5px 10px)"></div>
           <div>
-            <div style="font-size: 13.5px; font-weight: 700">Имя учителя</div>
+            <div style="font-size: 13.5px; font-weight: 700">Наталья Е.</div>
             <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #7C8786; margin-top: 2px">русский язык · ОГЭ</div>
           </div>
         </div>
@@ -1008,7 +1016,7 @@
   <!-- АВТОР -->
   <div id="avtor" style="padding: 84px 40px 0">
     <div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 34px; align-items: stretch; padding: 34px; border-radius: 34px; background: #E4FDFE">
-      <img src="./author.jpg" alt="Кирилл Минкин" style="width: 100%; height: 100%; max-height: 460px; border-radius: 22px; object-fit: cover; object-position: center 20%; display: block">
+      <img src="./author.jpg" alt="Кирилл Минкин" style="width: 296px; height: 539px; max-height: 460px; border-radius: 22px; object-fit: cover; object-position: center 20%; display: block">
       <div style="display: flex; flex-direction: column">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: #6F7B7A">автор проекта</div>
         <h2 style="margin: 12px 0 0; font-size: 38px; line-height: 1.04; font-weight: 800; letter-spacing: -.035em">Кирилл Минкин</h2>
@@ -1018,24 +1026,24 @@
           <span style="display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 999px; background: #D7F205; font-size: 13.5px; font-weight: 700">Эксперт ЕГЭ по литературе</span>
           <span style="display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 13.5px; font-weight: 700">Педагогический дизайнер</span>
           <span style="display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 999px; background: #FFFFFF; font-size: 13.5px; font-weight: 700">Победитель «Флагманов образования»</span>
-          <span style="display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 999px; background: #FFFFFF; font-size: 13.5px; font-weight: 700">Эксперт всероссийских проектов</span>
+          <span style="display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 999px; background: #FFFFFF; font-size: 13.5px; font-weight: 700">Эксперт всероссийских проектов</span><span style="display: inline-flex; align-items: center; height: 35px; padding: 0 16px; border-radius: 999px; background: #FFFFFF; font-size: 13.5px; font-weight: 700; width: 270px">Полуфиналист "Классной темы"</span>
         </div>
 
-        <p style="margin: 22px 0 0; font-size: 16px; line-height: 1.55; color: #33403F; max-width: 620px; text-wrap: pretty">ЕГЭ_Мар вырос из собственных таблиц для разбора пробников — поэтому логика подсчёта совпадает с тем, как считает эксперт, а не с тем, как удобно программе.</p>
-        <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.55; color: #4F5A59; max-width: 620px; text-wrap: pretty">Каждый экран проверялся на реальных классах: сначала на своих одиннадцатых, потом на коллегах-предметниках. То, что не помогало в работе с пробником, из приложения убиралось.</p>
+        
+        <p style="margin: 22px 0 0; font-size: 16px; line-height: 1.55; color: #33403F; max-width: 620px; text-wrap: pretty">ЕГЭ_Map вырос из собственных практик для анализа пробников, поэтому логика подсчёта и интерфейс совпадает с тем, как делает это каждый учитель вручную, а не с тем, как удобно программе.</p><p style="margin: 14px 0 0; font-size: 15px; line-height: 1.55; color: #4F5A59; max-width: 620px; text-wrap: pretty">Приложение прошло апробацию: опыт учителей и выпускников помог улучшить интерфейс, добавить и убрать некоторые функции. Мы открыты для обратной связи и готовы работать над нашим инструментом, облегчая жизнь учителям!&nbsp;</p>
 
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 26px">
-          <div style="padding: 18px 18px 16px; border-radius: 20px; background: #FFFFFF">
-            <div style="font-size: 13.5px; font-weight: 700">Создавался практиком</div>
-            <div style="font-size: 12.5px; color: #7C8786; margin-top: 5px; line-height: 1.45">не студия, а действующий учитель, который сам вносит пробники своих классов</div>
+          <div style="padding: 18px 18px 16px; border-radius: 20px; background: #FFFFFF; width: 174px; height: 170px">
+            <div style="font-size: 13.5px; font-weight: 700">ЕГЭ_Map создавалось практиком</div>
+            <div style="font-size: 12.5px; color: #7C8786; margin-top: 5px; line-height: 1.45">не студия, а учитель, который сам прошел путь подготовки&nbsp;<div>к ЕГЭ и ОГЭ</div></div>
           </div>
-          <div style="padding: 18px 18px 16px; border-radius: 20px; background: #FFFFFF">
+          <div style="padding: 18px 18px 16px; border-radius: 20px; background: #FFFFFF; width: 174px; height: 171px">
             <div style="font-size: 13.5px; font-weight: 700">Прошёл школьную апробацию</div>
-            <div style="font-size: 12.5px; color: #7C8786; margin-top: 5px; line-height: 1.45">два класса и три пробника за полугодие до того, как логика подсчёта стала публичной</div>
+            <div style="font-size: 12.5px; color: #7C8786; margin-top: 5px; line-height: 1.45">Приложение прошло тестирование до того, как &nbsp;стало публичным</div>
           </div>
-          <div style="padding: 18px 18px 16px; border-radius: 20px; background: #FFFFFF">
-            <div style="font-size: 13.5px; font-weight: 700">Спроектирован как учебный инструмент</div>
-            <div style="font-size: 12.5px; color: #7C8786; margin-top: 5px; line-height: 1.45">автор — педагогический дизайнер: экраны ведут от результата к следующему занятию</div>
+          <div style="padding: 18px 18px 16px; border-radius: 20px; background: #FFFFFF; width: 197px; height: 169px">
+            <div style="font-size: 13.5px; font-weight: 700">Педагогический дизайн</div>
+            <div style="font-size: 12.5px; color: #7C8786; margin-top: 5px; line-height: 1.45">приложение учитывает теоретические аспекты педагогического дизайна, в том числе связанные с когнитивной нагрузкой</div>
           </div>
         </div>
         <div style="margin-top: auto; padding-top: 24px">
@@ -1045,6 +1053,93 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ТАРИФЫ -->
+  <div id="tarify" style="padding: 84px 40px 0">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 22px">
+      <div>
+        <h2 style="margin: 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 560px">Платите за места, а не за функции</h2>
+        <p style="margin: 14px 0 0; font-size: 14.5px; line-height: 1.55; color: #4F5A59; max-width: 540px; text-wrap: pretty">Все функции открыты на любом пакете. Выберите, сколько учеников будете вести, — пакет действует до 30 июня, а купленный с 1 июня идёт на следующий учебный год.</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 18px; background: #0C0C0A; color: #FFFFFF; flex-shrink: 0">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 700; color: #00FDFF">−24%</span>
+        <span style="font-size: 13px; line-height: 1.35">Цена запуска<br>до 31 октября</span>
+      </div>
+    </div>
+
+    <div data-m="calc" style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; padding: 22px 26px; border-radius: 26px; background: #F5F7F8">
+      <div style="min-width: 150px">
+        <div style="font-size: 12.5px; font-weight: 600; color: #4F5A59">Сколько учеников будете вести</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 700; letter-spacing: -.03em; margin-top: 4px">{{ seatsLabel }}</div>
+      </div>
+      <input type="range" min="1" max="200" step="1" value="{{ seats }}" onChange="{{ setSeats }}" aria-label="Сколько учеников" style="flex: 1 1 240px; min-width: 0; height: 28px; accent-color: #0C0C0A; cursor: pointer">
+      <div style="flex: 1 1 260px; font-size: 14px; line-height: 1.45; color: #3D4746">{{ recText }}</div>
+    </div>
+
+    <div data-m="tariffs" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 12px">
+      <sc-for list="{{ tariffCards }}" as="t" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; padding: 24px 22px 22px; border-radius: 26px; background: {{ t.bg }}; color: {{ t.fg }}; box-shadow: {{ t.ring }}; transition: background .3s ease, color .3s ease, box-shadow .3s ease">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px">
+            <div style="display: flex; align-items: baseline; gap: 6px">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 40px; font-weight: 700; letter-spacing: -.04em; line-height: 1">{{ t.limit }}</span>
+              <span style="font-size: 13px; opacity: .65">мест</span>
+            </div>
+            <sc-if value="{{ t.rec }}" hint-placeholder-val="{{ false }}">
+              <span style="padding: 5px 10px; border-radius: 999px; background: #00FDFF; color: #0C0C0A; font-size: 11px; font-weight: 700; white-space: nowrap">подходит вам</span>
+            </sc-if>
+          </div>
+          <div style="font-size: 21px; font-weight: 800; letter-spacing: -.03em; margin-top: 18px">{{ t.name }}</div>
+          <div style="font-size: 13.5px; line-height: 1.45; opacity: .7; margin-top: 4px; min-height: 40px">{{ t.pitch }}</div>
+          <div style="margin-top: auto; padding-top: 18px">
+            <div style="display: flex; align-items: center; gap: 8px">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-decoration: line-through; text-decoration-thickness: 2px; opacity: .5">{{ t.list }}</span>
+              <span style="padding: 2px 6px; border-radius: 6px; background: #D7F205; color: #0C0C0A; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700">{{ t.off }}</span>
+            </div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 32px; font-weight: 700; letter-spacing: -.03em; line-height: 1; margin-top: 6px">{{ t.price }}</div>
+            <div style="font-size: 12px; opacity: .6; margin-top: 6px">{{ t.perSeat }} за место, до 30 июня</div>
+            <div style="font-size: 12px; font-weight: 600; margin-top: 2px">≈ {{ t.month }} ₽ в месяц за ученика</div>
+            <a href="{{ t.href }}" style="display: flex; align-items: center; justify-content: center; gap: 6px; height: 50px; margin-top: 16px; border-radius: 999px; background: {{ t.btnBg }}; color: {{ t.btnFg }}; font-size: 15px; font-weight: 700" style-hover="opacity: .88; color: {{ t.btnFg }}">Оплатить {{ t.price }}</a>
+            <sc-if value="{{ t.featured }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size: 11.5px; font-weight: 600; text-align: center; margin-top: 8px; opacity: .7">Чаще всего выбирают репетиторы</div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div data-m="tariffs3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px">
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 22px; border-radius: 22px; background: {{ freeBg }}; box-shadow: 0 0 0 1px rgba(12,12,10,.08); transition: background .3s ease">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+          <span style="font-size: 17px; font-weight: 800; letter-spacing: -.02em">Бесплатно</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700">3 места</span>
+        </div>
+        <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #4F5A59">Все функции без ограничений — чтобы попробовать инструмент на нескольких учениках.</p>
+        <a href="{{ appUrl }}" style="margin-top: auto; padding-top: 8px; font-size: 14px; font-weight: 700; text-decoration: underline; text-decoration-color: #00FDFF; text-decoration-thickness: 2px; text-underline-offset: 4px">Начать бесплатно →</a>
+        <a href="{{ demoUrl }}" style="font-size: 13px; font-weight: 600; color: #4F5A59" style-hover="color: #0C0C0A">или посмотреть демо-класс</a>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 22px; border-radius: 22px; background: {{ bigBg }}; box-shadow: 0 0 0 1px rgba(12,12,10,.08); transition: background .3s ease">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+          <span style="font-size: 17px; font-weight: 800; letter-spacing: -.02em">Школа+</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700">от 300 мест</span>
+        </div>
+        <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #4F5A59">Крупная школа. Нужно больше 150 мест — условия обсуждаем отдельно.</p>
+        <a href="#zayavka" style="margin-top: auto; padding-top: 8px; font-size: 14px; font-weight: 700; text-decoration: underline; text-decoration-color: #00FDFF; text-decoration-thickness: 2px; text-underline-offset: 4px">Обсудить условия →</a>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 22px; border-radius: 22px; background: #FFFFFF; box-shadow: 0 0 0 1px rgba(12,12,10,.08)">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+          <span style="font-size: 17px; font-weight: 800; letter-spacing: -.02em">Не хватило пары мест</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700">149 ₽</span>
+        </div>
+        <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #4F5A59">Докупите от 1 до 5 мест к текущему пакету прямо в кабинете. Действуют до 30 июня, как и пакет.</p>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 18px; font-size: 13px; line-height: 1.5; color: #4F5A59">
+      <span style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: #F5F7F8; font-weight: 600; color: #0C0C0A"><span style="width: 7px; height: 7px; border-radius: 50%; background: #1FB36A"></span>Оплата картой · ЮMoney</span>
+      <span style="flex: 1 1 320px">Кнопка ведёт в кабинет и сразу открывает защищённую форму оплаты. Тариф включается автоматически, обычно в течение минуты.</span>
+    </div>
+    <p style="margin: 10px 0 0; font-size: 12.5px; line-height: 1.5; color: #7B8A8F">Нажимая «Оплатить», вы принимаете условия <a href="#" style="color: #0C0C0A; text-decoration: underline; text-decoration-color: #00FDFF; text-decoration-thickness: 2px; text-underline-offset: 3px">публичной оферты</a>. [Текст и ссылка — заглушка, согласуем]</p>
   </div>
 
   <!-- FAQ -->
@@ -1063,7 +1158,7 @@
               <span style="display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; font-size: 14px; flex-shrink: 0; transition: transform .25s ease; transform: {{ f.rot }}">+</span>
             </button>
             <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
-              <p style="margin: 0; padding: 0 60px 20px 22px; font-size: 14.5px; line-height: 1.6; color: #3D4746; text-wrap: pretty">{{ f.a }}</p>
+              <p style="margin: 0; padding: 0 60px 20px 22px; font-size: 14.5px; line-height: 1.6; color: #3D4746; text-wrap: pretty; font-style: normal">{{ f.a }}</p>
             </sc-if>
           </div>
         </sc-for>
@@ -1074,8 +1169,8 @@
   <!-- ЗАЯВКА -->
   <div id="zayavka" style="padding: 84px 40px 74px">
     <div style="text-align: center; margin-bottom: 34px">
-      <h2 style="margin: 0 auto; font-size: 46px; line-height: 1.02; font-weight: 800; letter-spacing: -.04em; max-width: 620px">Оставьте контакты — откроем доступ</h2>
-      <p style="margin: 16px auto 0; font-size: 16px; line-height: 1.5; color: #4F5A59; max-width: 480px">Бета-версия открывается вручную: мы отвечаем в течение дня, помогаем создать первый класс и внести пробник.</p>
+      <h2 style="margin: 0 auto; font-size: 44px; line-height: 1.02; font-weight: 800; letter-spacing: -.04em; max-width: 620px; width: 625px; height: 150px">Приложение уже доступно.<br>Остались вопросы? <br>Напиши нам!&nbsp;</h2>
+      <p style="margin: 16px auto 0; font-size: 16px; line-height: 1.5; color: #4F5A59; max-width: 480px">Регистрация — прямо в приложении, самостоятельно. Форма ниже — для вопросов по тарифам и классам.</p>
     </div>
 
     <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .62fr); gap: 16px; align-items: stretch">
@@ -1091,8 +1186,20 @@
               <select style="width: 100%; min-width: 0; height: 48px; padding: 0 14px; border-radius: 14px; border: 1.5px solid rgba(12,12,10,.12); background: #FFFFFF; font-size: 14.5px">
                 <option>Русский язык · ЕГЭ</option>
                 <option>Русский язык · ОГЭ</option>
-                <option>Русский язык · ЕГЭ и ОГЭ</option>
                 <option>Литература · ЕГЭ</option>
+                <option>Литература · ОГЭ</option>
+                <option>Математика · ЕГЭ</option>
+                <option>Математика · ОГЭ</option>
+                <option>Биология · ЕГЭ</option>
+                <option>Биология · ОГЭ</option>
+                <option>География · ЕГЭ</option>
+                <option>География · ОГЭ</option>
+                <option>Физика · ЕГЭ</option>
+                <option>Физика · ОГЭ</option>
+                <option>Химия · ЕГЭ</option>
+                <option>Химия · ОГЭ</option>
+                <option>Информатика · ЕГЭ</option>
+                <option>Информатика · ОГЭ</option>
               </select>
             </label>
             <label style="display: flex; flex-direction: column; gap: 7px; min-width: 0">
@@ -1102,10 +1209,12 @@
             <label style="display: flex; flex-direction: column; gap: 7px; min-width: 0">
               <span style="font-size: 12.5px; font-weight: 600; color: #40514F">Сколько учеников</span>
               <select style="width: 100%; min-width: 0; height: 48px; padding: 0 14px; border-radius: 14px; border: 1.5px solid rgba(12,12,10,.12); background: #FFFFFF; font-size: 14.5px">
-                <option>До 3 — индивидуально</option>
-                <option>Один класс</option>
-                <option>Два класса и больше</option>
-                <option>Вся параллель</option>
+                <option>Бесплатно — до 3</option>
+                <option>Старт — до 10</option>
+                <option>Стандарт — до 30</option>
+                <option>Класс+ — до 60</option>
+                <option>Школа — до 150</option>
+                <option>Школа+ — больше 150</option>
               </select>
             </label>
           </div>
@@ -1118,11 +1227,11 @@
 
           <label style="display: flex; align-items: flex-start; gap: 10px; margin-top: 20px; cursor: pointer">
             <input type="checkbox" checked="checked" style="width: 18px; height: 18px; margin: 1px 0 0; accent-color: #0C0C0A; flex-shrink: 0">
-            <span style="font-size: 12.5px; line-height: 1.5; color: #4F5A59">Согласен на обработку указанных контактных данных для связи по вопросу доступа к приложению.</span>
+            <span style="font-size: 12.5px; line-height: 1.5; color: #4F5A59">Согласен на обработку указанных контактных данных для связи по вопросу тарифов и классов.</span>
           </label>
 
           <button onClick="{{ send }}" style="display: inline-flex; align-items: center; gap: 12px; height: 54px; padding: 0 24px 0 28px; margin-top: 22px; border: none; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 15.5px; font-weight: 600; cursor: pointer" style-hover="background: #2C2C24">
-            Отправить заявку
+            Отправить сообщение
             <span style="display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #00FDFF; color: #0C0C0A; font-size: 14px">→</span>
           </button>
         </sc-if>
@@ -1130,22 +1239,22 @@
         <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
           <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 40px 0 44px">
             <div style="display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: #00FDFF; font-size: 22px">✓</div>
-            <div style="font-size: 26px; font-weight: 800; letter-spacing: -.03em">Заявка отправлена</div>
-            <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #4F5A59; max-width: 380px">Ответим в течение дня и пришлём доступ. Пока можно посмотреть приложение на демо-данных.</p>
-            <a href="app.html" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; height: 46px; padding: 0 22px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 14.5px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">Открыть приложение</a>
+            <div style="font-size: 26px; font-weight: 800; letter-spacing: -.03em">Сообщение отправлено</div>
+            <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #4F5A59; max-width: 380px">Ответим в течение дня. Регистрация не нужна — доступ уже открыт в приложении.</p>
+            <a href="{{ appUrl }}" style="display: inline-flex; align-items: center; height: 46px; padding: 0 22px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 14.5px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">Открыть приложение</a>
           </div>
         </sc-if>
       </div>
 
       <div style="border-radius: 30px; background: #00FDFF; padding: 32px 30px 30px; display: flex; flex-direction: column">
-        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(12,12,10,.6)">связаться напрямую</div>
-        <div style="font-size: 26px; font-weight: 800; letter-spacing: -.03em; margin-top: 12px; line-height: 1.08">Приложение уже открыто с демо-данными</div>
-        <p style="margin: 12px 0 0; font-size: 14.5px; line-height: 1.55; color: rgba(12,12,10,.72)">Два класса, одиннадцать кодов и три пробника — можно нажимать что угодно, ничего не сломается.</p>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(12,12,10,.6)"><br></div>
+        <div style="font-size: 26px; font-weight: 800; letter-spacing: -.03em; margin-top: 12px; line-height: 1.08">Приложение уже доступно&nbsp;</div>
+        <p style="margin: 12px 0 0; font-size: 14.5px; line-height: 1.55; color: rgba(12,12,10,.72)">3 ученика бесплатно, регистрируйтесь, вносите первые данные и уже решайте, подходит ли вам наш инструмент.</p>
         <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 22px">
           <a href="https://t.me/ege_map" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-radius: 16px; background: rgba(255,255,255,.75); font-size: 14px; font-weight: 600" style-hover="background: #FFFFFF; color: #0C0C0A">Telegram <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; font-weight: 500">@ege_map</span></a>
           <a href="mailto:hello@ege-map.ru" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-radius: 16px; background: rgba(255,255,255,.75); font-size: 14px; font-weight: 600" style-hover="background: #FFFFFF; color: #0C0C0A">Эл. почта <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; font-weight: 500">hello@ege-map.ru</span></a>
         </div>
-        <a href="app.html" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; height: 52px; margin-top: auto; padding: 0 24px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 15.5px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">Открыть приложение</a>
+        <a href="{{ appUrl }}" style="display: inline-flex; align-items: center; justify-content: center; height: 52px; margin-top: auto; padding: 0 24px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 15.5px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">Открыть приложение</a>
       </div>
     </div>
   </div>
@@ -1155,9 +1264,9 @@
     <div style="display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(0, .8fr)) minmax(0, 1.1fr); gap: 30px">
       <div>
         <div style="display: flex; align-items: center; gap: 4px; font-size: 20px; font-weight: 800; letter-spacing: -.035em">
-          ЕГЭ_Мар <span style="width: 9px; height: 9px; border-radius: 50%; background: #00FDFF; margin-top: 6px"></span>
+          ЕГЭ_Map <span style="width: 9px; height: 9px; border-radius: 50%; background: #00FDFF; margin-top: 6px"></span>
         </div>
-        <p style="margin: 14px 0 0; font-size: 13px; line-height: 1.55; color: rgba(255,255,255,.5); max-width: 250px">Аналитика пробников ЕГЭ и ОГЭ для учителей русского языка и литературы.</p>
+        <p style="margin: 14px 0 0; font-size: 13px; line-height: 1.55; color: rgba(255,255,255,.5); max-width: 250px">Аналитика пробников ЕГЭ и ОГЭ для учителей-предметников — от русского языка до информатики.</p>
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 3px">Продукт</div>
@@ -1165,11 +1274,14 @@
         <a href="#klass" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Статистика класса</a>
         <a href="#probnik" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Ввести пробник</a>
         <a href="#otchet" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Отчёты родителям</a>
+        <a href="#bot" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Telegram-бот</a>
+        <a href="./parents.html" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Родителям</a>
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 3px">Доступ</div>
-        <a href="#zayavka" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Оставить заявку</a>
-        <a href="app.html" target="_blank" rel="noopener" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Открыть приложение</a>
+        <a href="#tarify" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Тарифы</a>
+        <a href="#zayavka" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Написать нам</a>
+        <a href="{{ appUrl }}" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Открыть приложение</a>
         <a href="#faq" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">FAQ</a>
         <a href="#privatnost" style="color: rgba(255,255,255,.72)" style-hover="color: #00FDFF">Приватность</a>
       </div>
@@ -1183,25 +1295,32 @@
       </div>
     </div>
     <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 36px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.1); font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.35)">
-      <span>© 2026 ЕГЭ_Мар · Кирилл Минкин</span>
-      <span>ЕГЭ — официальная шкала перевода, ОГЭ — федеральная шкала отметок</span>
+      <span>© 2026 ЕГЭ_Map · Кирилл Минкин</span>
+      <span><br></span>
     </div>
   </div>
 
 </div>
 </div>
 
+<!-- ЛИПКАЯ ПАНЕЛЬ НА ТЕЛЕФОНЕ -->
+<div data-m="mbar" style="position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 50; display: flex; gap: 8px; padding: 7px; border-radius: 999px; background: rgba(255,255,255,.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 18px 40px -18px rgba(0,40,42,.55), 0 0 0 1px rgba(12,12,10,.08); transition: transform .35s ease, opacity .35s ease; transform: {{ barTr }}; opacity: {{ barO }}; pointer-events: {{ barPE }}">
+  <a href="{{ appUrl }}" style="flex: 1 1 0; display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 14.5px; font-weight: 700; white-space: nowrap" style-hover="color: #FFFFFF">Попробовать бесплатно</a>
+  <a href="#tarify" style="flex: 0 0 auto; display: flex; align-items: center; justify-content: center; height: 48px; padding: 0 22px; border-radius: 999px; background: #00FDFF; color: #0C0C0A; font-size: 14.5px; font-weight: 700" style-hover="color: #0C0C0A">Тарифы</a>
+</div>
+
 <!-- МОДАЛЬНАЯ КАРТОЧКА УЧЕНИКА -->
 <sc-if value="{{ hasOpen }}" hint-placeholder-val="{{ false }}">
-  <div style="position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-start; justify-content: center; padding: 40px 24px; overflow: auto; background: rgba(12,12,10,.55); backdrop-filter: blur(12px) saturate(130%); -webkit-backdrop-filter: blur(12px) saturate(130%); animation: fadeIn .3s ease both">
+  <button onClick="{{ closeStudent }}" style="position: fixed; left: 50%; bottom: 16px; z-index: 61; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; height: 50px; padding: 0 26px; border: none; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 16px 34px -14px rgba(0,0,0,.6); animation: fadeIn .3s ease both; height: 56px; padding: 0 28px 0 12px; gap: 12px" style-hover="background: #2C2C24"><span style="display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #00FDFF; color: #0C0C0A; font-size: 18px">←</span>Назад</button>
+  <div onClick="{{ overlayClick }}" style="position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-start; justify-content: center; padding: 40px 24px 90px; overflow: auto; background: rgba(12,12,10,.55); backdrop-filter: blur(12px) saturate(130%); -webkit-backdrop-filter: blur(12px) saturate(130%); animation: fadeIn .3s ease both">
     <div style="width: 100%; max-width: 1060px; border-radius: 30px; background: #F5F7F8; box-shadow: 0 50px 100px -40px rgba(0,20,22,.8); overflow: hidden; animation: popIn .45s cubic-bezier(.2,.8,.3,1) both">
 
       <div style="display: flex; align-items: center; gap: 14px; padding: 14px 20px; background: #FFFFFF; border-bottom: 1px solid #ECEFF1">
         <div style="display: flex; align-items: center; gap: 3px; font-size: 15px; font-weight: 800; letter-spacing: -.035em">
-          ЕГЭ_Мар<span style="width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; background-color: #D7F205"></span>
+          ЕГЭ_Map<span style="width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; background-color: #D7F205"></span>
         </div>
         <div style="font-size: 10.5px; color: #7B8A8F; padding-left: 12px; border-left: 1px solid #ECEFF1; line-height: 1.35">Карточка ученика · русский язык, ЕГЭ<br>11А · 3 пробника</div>
-        <button onClick="{{ closeStudent }}" style="margin-left: auto; display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border: 1.5px solid #E4E9EA; border-radius: 12px; background: #FFFFFF; font-size: 13.5px; font-weight: 600; cursor: pointer" style-hover="border-color: #0C0C0A">✕ Закрыть</button>
+        <button onClick="{{ closeStudent }}" style="margin-left: auto; display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border: 1.5px solid #E4E9EA; border-radius: 12px; background: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer; height: 44px; padding: 0 18px 0 8px; gap: 10px" style-hover="border-color: #0C0C0A"><span style="display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #0C0C0A; color: #FFFFFF; font-size: 15px">←</span>Назад</button>
       </div>
 
       <div style="padding: 26px 26px 30px">
@@ -1278,7 +1397,7 @@
 </sc-if>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;appUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://ege-map.ru&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ссылки&quot;},&quot;examDate&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;2027-06-05&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Данные&quot;},&quot;heroAutoplay&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Главный экран&quot;},&quot;heroInterval&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:4,&quot;min&quot;:2,&quot;max&quot;:10,&quot;step&quot;:1,&quot;unit&quot;:&quot;с&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Главный экран&quot;},&quot;typeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:12,&quot;min&quot;:4,&quot;max&quot;:40,&quot;step&quot;:2,&quot;unit&quot;:&quot;мс&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Карточка ученика&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;appUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;app.html&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ссылки&quot;},&quot;examDate&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;2027-06-05&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Данные&quot;},&quot;heroAutoplay&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Главный экран&quot;},&quot;heroInterval&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:4,&quot;min&quot;:2,&quot;max&quot;:10,&quot;step&quot;:1,&quot;unit&quot;:&quot;с&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Главный экран&quot;},&quot;typeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:12,&quot;min&quot;:4,&quot;max&quot;:40,&quot;step&quot;:2,&quot;unit&quot;:&quot;мс&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Карточка ученика&quot;}}">
 const EGE_SCALE = [0,3,5,8,10,12,15,17,20,22,24,27,29,32,34,36,37,39,40,42,43,45,46,48,49,51,52,54,55,57,58,60,61,63,64,66,67,69,70,72,73,75,78,81,83,86,89,91,94,97,100];
 
 const EGE_TASKS = [
@@ -1335,22 +1454,38 @@ const HERO_PLAN = [["№ 2 · Лексический анализ",18],["№ 24 
 const HERO_CELLS = [1,1,0,1,1,0,1,2,1,1,0,1,1,1,0,1,1,1];
 
 const STEPS = [
-  ["01","Создайте класс","30 секунд","Выберите формат — Рус · ЕГЭ, Лит · ЕГЭ или Рус · ОГЭ — и назовите группу: 11А, 9В, поток 2027.",["формат задаёт задания и шкалу","классы живут в одном кабинете","переименовать можно в любой момент"],"#0C0C0A","#FFFFFF","#00FDFF"],
-  ["02","Добавьте коды","1 минута","Сгенерируйте коды по префиксу (11А-01 … 11А-25) или вставьте свой список. Фамилии не нужны.",["генератор по префиксу","подпись для себя — видна только вам","до 60 мест на тарифе «Годовой»"],"#E4FDFE","#0C0C0A","#0C0C0A"],
-  ["03","Внесите пробник","2 минуты на класс","Задания с кратким ответом и критерии развёрнутых — с клавиатуры. Цифра сама переводит курсор дальше.",["автопереход между полями","итог и тестовый балл на лету","официальная шкала перевода внутри"],"#00FDFF","#0C0C0A","#0C0C0A"],
-  ["04","Разберите и отправьте","одно нажатие","План занятия по слабым заданиям, зоны развития по ученику и отчёт для родителей — одной страницей PDF.",["пять слабейших заданий класса","карточка ученика с зонами развития","PDF без фамилий"],"#D7F205","#0C0C0A","#0C0C0A"]
+  ["01","Создайте класс","30 секунд","Выберите ОГЭ или ЕГЭ и свой предмет. Создайте свой класс",["формат задаёт задания и шкалу","классы живут в одном кабинете","переименовать можно в любой момент"],"#0C0C0A","#FFFFFF","#00FDFF"],
+  ["02","Добавьте коды","1 минута","Сгенерируйте коды в приложении для учеников автоматически или вручную. Фамилии и имена не нужны, так вы не храните персональные данные учеников. ",["генератор по префиксу","подпись для себя — видна только вам","до 60 мест на тарифе «Класс+»"],"#E4FDFE","#0C0C0A","#0C0C0A"],
+  ["03","Внесите пробник","2 минуты на класс","Баллы за задания  вносятся легко с клавиатуры или телефона. Цифра сама перемещает курсор дальше, а балл считается и переводится в тестовый автоматически по шкале Рособрнадзора. ",["автопереход между полями","итог и тестовый балл на лету","официальная шкала перевода внутри"],"#00FDFF","#0C0C0A","#0C0C0A"],
+  ["04","Разберите и отправьте","одно нажатие","Приложение намечает план занятия по слабым заданиям, зоны развития по ученику и отчёт для родителей — одной страницей в HTML или PDF.",["пять слабейших заданий класса","карточка ученика с зонами развития","PDF без фамилий"],"#D7F205","#0C0C0A","#0C0C0A"]
 ];
 
 const FAQ = [
-  ["Это бесплатно?","Базовый доступ бесплатный: до трёх учеников — этого хватает репетитору и для знакомства с логикой подсчёта. Работа с классами открывается по тарифу, например «Годовой · два класса»."],
-  ["Нужна ли регистрация","Нет. Приложение открывается по ссылке и работает сразу в браузере — классы, коды и пробники сохраняются на вашем устройстве."],
-  ["Какие экзамены поддерживаются","Русский язык · ЕГЭ (27 заданий, 50 первичных баллов), Литература · ЕГЭ (48 первичных баллов) и Русский язык · ОГЭ (37 первичных баллов с переводом в отметку)."],
-  ["Откуда берутся таблицы перевода баллов","ЕГЭ считается по официальной шкале перевода в тестовые баллы, ОГЭ — по федеральной шкале отметок Рособрнадзора; в регионах границы могут отличаться, и приложение об этом предупреждает."],
-  ["Можно ли работать с несколькими классами","Да: ученики делятся на классы с отдельной статистикой, а форматы можно смешивать — 11А на ЕГЭ по русскому, 11Б на литературе, 9В на ОГЭ."],
-  ["Подойдёт ли репетитору / родителю","Да. Репетитору удобны карточка ученика, зоны развития и прогноз с диапазоном, родителю — отчёт по блокам заданий вместо общих слов о результате."],
-  ["Работает ли на телефоне","Да, приложение открывается в браузере телефона и планшета — баллы можно вносить прямо на уроке, сразу после проверки работы."],
-  ["Что делать, если критерии ФИПИ изменились","Критерии и шкалы заданы конфигурацией, поэтому новая версия появляется без переустановки, а прежние пробники пересчитываются по новым правилам."],
-  ["Можно ли выгрузить данные","Да: отчёт по ученику — страница PDF, по классу — статистика с баллами по каждому заданию. В файлах только коды, без фамилий."]
+  ["Это бесплатно?","Бесплатный кабинет — до 3 учеников, далее — платные тарифы.  "],
+  ["Нужна ли регистрация?","Учителю — да, но для этого вам понадобится только электронная почта. Ученикам регистрация не нужна: приложение открывается для них по ссылке, которую присылает учитель, и работает сразу в браузере."],
+  ["Какие экзамены поддерживаются?","Поддерживаются\nРусский язык\n\nМатематика ОГЭ + базовая математика ЕГЭ \n\nЛитература\n\nГеография\n\nБиология\n\nХимия \n\nФизика\n\nИнформатика\nНа данный момент приложение поддерживает в формате ОГЭ и ЕГЭ все предметы, которые не претерпели изменений в количестве баллов в 2027 году. Поскольку на данный момент нет официальной шкалы перевода тестовых баллов, мы решили не включить эти предметы (профильная математика и история), чтобы исключить неточность перевода.  \n"],
+  ["Откуда берутся таблицы перевода баллов?","ЕГЭ считается по официальной шкале Рособрнадзора, ОГЭ — по федеральной шкале отметок Рособрнадзора; в регионах границы могут отличаться, и приложение об этом предупреждает."],
+  ["Можно ли работать с несколькими классами?","Да: ученики делятся на классы с отдельной статистикой, а форматы можно смешивать — 11А на ЕГЭ по русскому, 11Б на литературе, 9В на ОГЭ.\n\nСтоит понимать, покупая тариф 30 учеников, вы можете распределить их по разным классам, например, 5 на ЕГЭ по русскому языку и 25 на ЕГЭ по литературе"],
+  ["Подойдёт ли репетитору / родителю?","Да. Репетитору удобны карточка ученика, зоны развития и прогноз с диапазоном, родителю — отчёт по блокам заданий вместо общих слов о результате."],
+  ["Работает ли на телефоне?","Да, приложение открывается в браузере телефона и планшета — баллы можно вносить прямо на уроке, сразу после проверки работы."],
+  ["Что делать, если критерии ФИПИ изменились?","Критерии и шкалы заданы конфигурацией, поэтому новая версия появляется без переустановки, а прежние пробники пересчитываются по новым правилам."],
+  ["Можно ли выгрузить данные?","Да: отчёт по ученику — страница HTML или текст, аналогично и по классу — статистика с баллами по каждому заданию. В файлах только коды, без фамилий."],
+  ["Как оплатить?","Выберите пакет в разделе «Тарифы» и нажмите «Оплатить» — откроется защищённая форма ЮMoney, оплата банковской картой. Тариф включается автоматически сразу после оплаты, обычно в течение минуты."],
+  ["Что будет после 30 июня?","Пакет действует до 30 июня текущего учебного года, независимо от даты покупки. Купленное с 1 июня действует до конца следующего учебного года. После этой даты доступ вернётся к бесплатному тарифу, все внесённые данные сохранятся."],
+  ["Как подключить Telegram-бота?","На личной странице ученика есть кнопка «Подключить бота». Ученик или родитель нажимает её сам и подтверждает в Telegram — после этого бот присылает карточку после каждого нового пробника. Отписаться можно командой /stop."]
+];
+
+const TARIFFS = [
+  ["start","Старт",10,"1 290 ₽","990 ₽","99 ₽","Репетитор, 1–2 группы"],
+  ["standard","Стандарт",30,"3 290 ₽","2 490 ₽","83 ₽","Репетитор с полной загрузкой или 1 класс"],
+  ["class_plus","Класс+",60,"5 190 ₽","3 990 ₽","67 ₽","2 класса"],
+  ["school","Школа",150,"8 990 ₽","6 990 ₽","47 ₽","Завуч, несколько классов"]
+];
+const BOT_POINTS = [
+  "Подписку включает сам ученик или родитель — одной кнопкой",
+  "Бот знает только код ученика, не имя",
+  "Ваш комментарий к пробнику приходит вместе с баллом",
+  "Отписаться можно командой /stop прямо в боте"
 ];
 
 const ESSAY_NAMES = [["Все критерии",22],["Содержание",6],["Речевое оформление",4],["Грамотность",12]];
@@ -1361,12 +1496,14 @@ class Component extends DCLogic {
     curtain: 54, tilt: null, vis: {},
     rep: { head: true, blocks: true, essay: true, rec: true },
     tasks: {}, crit: {}, entryCode: "11А-07", saved: false,
-    faq: 0, method: "tg", sent: false
+    faq: 0, method: "tg", sent: false, seats: 25
   };
 
   componentDidMount() {
     this.startHero();
     this.onScroll = () => {
+      const bar = window.scrollY > 640;
+      if (bar !== !!this.state.bar) this.setState({ bar: bar });
       if (!this.cards || !this.cards.length) return;
       const mid = window.innerHeight * 0.42;
       let best = 0, bestD = Infinity;
@@ -1392,18 +1529,36 @@ class Component extends DCLogic {
 
     this.onUp = () => { this.dragging = false; };
     window.addEventListener("pointerup", this.onUp);
+    this.onPop = () => { if (this.state.open) this.closeStudent(true); };
+    this.onKey = e => { if (e.key === "Escape" && this.state.open) this.closeStudent(); };
+    window.addEventListener("popstate", this.onPop);
+    this.onResize = () => this.fitReport();
+    window.addEventListener("resize", this.onResize);
+    setTimeout(() => this.fitReport(), 300);
+    window.addEventListener("keydown", this.onKey);
   }
   componentWillUnmount() {
     clearInterval(this.heroT); clearInterval(this.twT); clearTimeout(this.saveT);
     window.removeEventListener("scroll", this.onScroll);
     window.removeEventListener("pointerup", this.onUp);
+    window.removeEventListener("popstate", this.onPop);
+    window.removeEventListener("keydown", this.onKey);
     if (this.io) this.io.disconnect();
+    if (this.ro) this.ro.disconnect();
+    window.removeEventListener("resize", this.onResize);
   }
   startHero() {
     clearInterval(this.heroT);
     if (this.props.heroAutoplay === false) return;
     const ms = Math.max(1500, (this.props.heroInterval || 4) * 1000);
     this.heroT = setInterval(() => this.setState(s => ({ hero: (s.hero + 1) % 3 })), ms);
+  }
+  fitReport() {
+    const el = this.repBox;
+    if (!el) return;
+    const w = el.clientWidth || (el.parentElement && el.parentElement.clientWidth - 32) || 0;
+    const s = w / 860;
+    if (s > 0 && Math.abs(s - (this.state.repScale || 0)) > .004) this.setState({ repScale: s });
   }
   pickHero(i) { this.setState({ hero: i }); this.startHero(); }
   nextHero() { this.setState(s => ({ hero: (s.hero + 1) % 3 })); this.startHero(); }
@@ -1427,6 +1582,7 @@ class Component extends DCLogic {
   }
 
   openStudent(code) {
+    if (!this.state.open) { try { history.pushState({ egeCard: 1 }, ""); } catch (e) {} }
     this.setState({ open: code, tw: 0 });
     clearInterval(this.twT);
     const speed = Math.max(4, this.props.typeSpeed || 12);
@@ -1436,7 +1592,10 @@ class Component extends DCLogic {
       return { tw: n };
     }), speed);
   }
-  closeStudent() { clearInterval(this.twT); this.setState({ open: null, tw: 0 }); }
+  closeStudent(fromPop) {
+    clearInterval(this.twT); this.setState({ open: null, tw: 0 });
+    if (!fromPop && history.state && history.state.egeCard) { try { history.back(); } catch (e) {} }
+  }
 
   num(v, max) { const n = parseInt(v, 10); if (isNaN(n)) return 0; return Math.max(0, Math.min(max, n)); }
   scoreOf(p) { return String(EGE_SCALE[Math.max(0, Math.min(50, p))]); }
@@ -1663,9 +1822,38 @@ class Component extends DCLogic {
     const d = new Date(this.props.examDate || "2027-06-05");
     const days = Math.max(0, Math.ceil((d - new Date()) / 86400000));
 
+    const seats = st.seats;
+    const recId = seats <= 3 ? "free" : seats <= 10 ? "start" : seats <= 30 ? "standard" : seats <= 60 ? "class_plus" : seats <= 150 ? "school" : "school_plus";
+    const appBase = this.props.appUrl || "app.html";
+    const buyUrl = id => appBase + (appBase.indexOf("?") >= 0 ? "&" : "?") + "buy=" + id;
+    const pct = (a, b) => "−" + Math.round((1 - parseInt(b.replace(/\D/g, ""), 10) / parseInt(a.replace(/\D/g, ""), 10)) * 100) + "%";
+    const tariffCards = TARIFFS.map(p => {
+      const rec = p[0] === recId;
+      return {
+        id: p[0], name: p[1], limit: p[2], list: p[3], price: p[4], perSeat: p[5], pitch: p[6],
+        month: Math.round(parseInt(p[5], 10) / 10),
+        off: pct(p[3], p[4]), rec: rec, featured: p[0] === "standard", href: buyUrl(p[0]),
+        bg: rec ? "#0C0C0A" : "#F5F7F8", fg: rec ? "#FFFFFF" : "#0C0C0A",
+        ring: rec ? "0 30px 60px -34px rgba(0,40,42,.7)" : "0 0 0 1px rgba(12,12,10,.06)",
+        btnBg: rec ? "#00FDFF" : "#0C0C0A", btnFg: rec ? "#0C0C0A" : "#FFFFFF"
+      };
+    });
+    const n10 = seats % 10, n100 = seats % 100;
+    const word = n10 === 1 && n100 !== 11 ? "ученик" : n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14) ? "ученика" : "учеников";
+    const recP = TARIFFS.filter(p => p[0] === recId)[0];
+    const recText = recId === "free" ? "Хватит бесплатного доступа: 3 места и все функции."
+      : recId === "school_plus" ? "Больше 150 мест — напишите нам, подберём условия «Школы+»."
+      : "Подойдёт «" + recP[1] + "» — " + recP[4] + " до 30 июня, " + recP[5] + " за место.";
+
     return {
       days: days,
-      appUrl: this.props.appUrl || "https://ege-map.ru",
+      seats: seats, seatsLabel: (seats >= 200 ? "200+ " : seats + " ") + word, recText: recText,
+      setSeats: e => this.setState({ seats: parseInt(e.target.value, 10) || 1 }),
+      tariffCards: tariffCards,
+      freeBg: recId === "free" ? "#E4FDFE" : "#FFFFFF",
+      bigBg: recId === "school_plus" ? "#E4FDFE" : "#FFFFFF",
+      botPoints: BOT_POINTS.map(t => ({ t: t })),
+      appUrl: this.props.appUrl || "app.html",
 
       hp0: heroPanes[0], hp1: heroPanes[1], hp2: heroPanes[2],
       hintX: heroHint.x, hintY: heroHint.y, hintText: heroHint.t,
@@ -1703,6 +1891,19 @@ class Component extends DCLogic {
       cards: STUDENTS.map(card),
       hasOpen: !!openS,
       closeStudent: () => this.closeStudent(),
+      repBoxRef: el => {
+        if (!el || el === this.repBox) return;
+        this.repBox = el;
+        if (window.ResizeObserver) { if (this.ro) this.ro.disconnect(); this.ro = new ResizeObserver(() => this.fitReport()); this.ro.observe(el); }
+        requestAnimationFrame(() => this.fitReport());
+      },
+      repScale: (st.repScale || .58).toFixed(3),
+      repH: Math.round(516 / (st.repScale || .58)) + "px",
+      overlayClick: e => { if (e.target === e.currentTarget) this.closeStudent(); },
+      barTr: st.bar && !st.open ? "translateY(0)" : "translateY(120%)",
+      barO: st.bar && !st.open ? 1 : 0,
+      barPE: st.bar && !st.open ? "auto" : "none",
+      demoUrl: appBase + (appBase.indexOf("?") >= 0 ? "&" : "?") + "demo=1",
       openCode: openS ? openS[0] : "", openTest: openS ? openS[1] : "",
       openAvg: openS ? openS[2] : "", openPrim: openS ? openS[3] : "",
       openTag: openS ? openS[5] : "", openNote: openS ? openS[9] : "",
@@ -1739,7 +1940,7 @@ class Component extends DCLogic {
 
       steps: steps, stepCards: stepCards,
 
-      artToggle: () => this.setState(s => ({ art: !s.art })),
+      artToggle: () => { this.setState(s => ({ art: !s.art })); requestAnimationFrame(() => this.fitReport()); },
       artLabel: st.art ? "Скрыть отчёт" : "Показать отчёт",
       artArrow: st.art ? "rotate(180deg)" : "rotate(0deg)",
       artO: st.art ? 1 : 0,
