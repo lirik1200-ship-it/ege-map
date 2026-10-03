@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ЕГЭ_Map · ОГЭ и ЕГЭ по всем предметам. Результаты. Аналитика</title>
+<title>ЕГЭ_Map · Аналитика пробных экзаменов в одном месте</title>
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 251 251'%3E%3CclipPath id='c'%3E%3Crect width='251' height='251' rx='50.4'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23c)'%3E%3Crect width='251' height='251' fill='%230C0C0A'/%3E%3Cpath fill='none' stroke='%23FFFCFC' stroke-width='25' d='M-14.65 229.42C25.21 112.09 46.57 78.81 58.33 81.1C73.4 84.04 70.16 144.93 85.08 146.89C105.78 149.61 133.95 35.22 147.86 38.06C158.02 40.13 148.1 102.24 161.27 105.69C173.04 108.77 195.85 63.03 217.06 20.49C228.29 -2.03 236.69 -20.91 242.07 -33.44'/%3E%3Cpath fill='%23D7F205' transform='translate(96.79 217.04) scale(.0936 -.0936)' d='M-5 0L279 708L463 708L744 0L549 0L514 100L225 100L189 0ZM282 263L457 263L371 506ZM806 0L806 708L1103 708Q1186 708 1249 684.5Q1312 661 1348 606.5Q1384 552 1384 457Q1384 370 1346 312.5Q1308 255 1243 227Q1178 199 1096 199L987 199L987 0ZM987 360L1096 360Q1148 360 1177 385Q1206 410 1206 456Q1206 498 1180.5 519Q1155 540 1095 540L987 540Z'/%3E%3Cpath fill='%2300FDFF' d='M-7.55 231.84L-21.75 227.01C-3.07 172.02 12.91 131.62 25.72 106.95C38.89 81.59 49.08 71.66 59.76 73.74C72.3 76.19 75.62 94.05 79.13 112.97C80.61 120.97 83.3 135.43 86.2 139.13C87.66 138.14 91.59 134.51 98.18 121.49C103.91 110.15 109.72 95.71 115.34 81.75C130.27 44.63 137.39 28.32 149.32 30.7C159.45 32.71 162.57 46.04 161.65 83.5C161.16 87.39 157.75 90.28 153.88 90.13C150.09 89.99 146.95 86.97 146.66 83.14C146.97 76.64 146.9 69.59 146.58 62.03C146.36 56.69 145.99 52.9 145.58 50.21C140.76 58.76 134.07 75.39 129.26 87.34C112.65 128.63 101.44 154.45 85.98 154.45C85.36 154.45 84.73 154.41 84.1 154.33C71.23 152.64 68.06 135.52 64.38 115.71C62.82 107.32 59.98 92.01 56.86 88.67C55.12 89.54 48.72 94.21 36.64 118.59C24.59 142.89 9.73 180.99 -7.55 231.84Z'/%3E%3C/g%3E%3C/svg%3E">
 
@@ -114,7 +114,7 @@
         <svg viewBox="-22 0 273 251" class="w-9 h-9 shrink-0" aria-hidden="true"><use href="#egm"></use></svg>
         <div>
           <div class="font-display font-extrabold leading-tight tracking-tight">ЕГЭ_Map</div>
-          <div class="text-xs text-ink-500 leading-tight">ОГЭ и ЕГЭ по всем предметам. Разбор пробников и прогноз.</div>
+          <div class="text-xs text-ink-500 leading-tight">Аналитика пробных экзаменов в одном месте</div>
         </div>
       </button>
       <div id="subject-switch" class="hidden relative"></div>
@@ -203,8 +203,10 @@ const LANDING_VIDEO = { youtube:"", vk:"", file:"", poster:"" };
 const AUTHOR = {
   brand: "ЕГЭ_Map",
   name: "Кирилл Минкин",
-  tagline: "ОГЭ и ЕГЭ по всем предметам. Разбор пробников и прогноз.",
-  telegram: "https://t.me/ege_minkin",
+  tagline: "Аналитика пробных экзаменов в одном месте",
+  bio: "Создатель ЕГЭ_Map и учитель словесности. Разработка собственных образовательных продуктов, подготовка к ЕГЭ и истории из жизни.",
+  channel: "https://t.me/egeminkin",   // Telegram-канал автора
+  telegram: "https://t.me/ege_minkin",   // личный контакт для связи
   vk: "https://vk.ru/egeminkin",
   email: "[укажите почту для обращений]",
   photo: "author.jpg",   // положите квадратное фото рядом с этим файлом; пусто — останутся буквы
@@ -247,11 +249,13 @@ const PLANS = {
 const PLAN_FEATURES = [
   "Восемь предметов ОГЭ и ЕГЭ в одном кабинете",
   "Разбор по всем заданиям спецификации ФИПИ",
-  "Сочинение по критериям К1–К10 в каждой работе",
+  "Развёрнутые ответы разложены по критериям: видно, на каком именно критерии теряются баллы",
   "Прогноз итогового балла с диапазоном",
   "Разделение учеников на классы с отдельной статистикой",
-  "Экран класса, план занятия и провальные темы",
+  "Экран класса и зоны роста: задания, где теряется больше всего баллов",
   "Личная ссылка с результатами для каждого ученика",
+  "Telegram-бот: после каждого пробника ученик и родители получают балл, прогноз и темы для повторения",
+  "Сокращённые пробники: можно вносить набор заданий, а не весь вариант",
   "Импорт результатов из таблицы и отчёты по ученику и классу"
 ];
 const DEFAULT_PLAN = "free";
@@ -1534,6 +1538,26 @@ function criterionZeroReason(key,essay){
   }
   return null;
 }
+// Подсказка с примером для экрана ввода: какой критерий обнуляет другие. Пример берётся
+// из правил выбранного экзамена, поэтому для разных предметов он разный.
+function zeroingHint(){
+  // Берём правило «главный критерий = 0», которое обнуляет больше всего других критериев
+  const groups={};
+  CRITERIA_KEYS.forEach(k=>{
+    const z=ESSAY_CRITERIA[k].zeroTrigger;
+    if(!z) return;
+    (z.any||[z]).filter(r=>r.key).forEach(r=>{
+      const id=r.key+"|"+r.max;
+      (groups[id]=groups[id]||{rule:r,deps:[]}).deps.push(k);
+    });
+  });
+  const best=Object.values(groups).sort((a,b)=>(a.rule.max-b.rule.max)||(b.deps.length-a.deps.length))[0];
+  if(!best) return null;
+  const {rule,deps}=best;
+  const cond=rule.max===0 ? "поставить 0" : `поставить ${rule.max} или меньше`;
+  const names=deps.length>3 ? `${deps.slice(0,3).join(", ")} и ещё ${deps.length-3}` : deps.join(", ");
+  return {trigger:rule.key, title:ESSAY_CRITERIA[rule.key].title, cond, names, one:deps.length===1};
+}
 const toSecondary = (p,essay,scores) => EXAMS[state.exam].score(p,essay||{},scores||{}).value;
 
 /* =========================================================================
@@ -1709,6 +1733,17 @@ function tabsMarkup(active){
 /* =========================================================================
    6. МОДЕЛЬ ДАННЫХ
    ========================================================================= */
+// Метка «набор заданий» хранится прямо в results (jsonb): ключ без цифр
+// buildExam пропускает как номер задания, а кабинет ученика получает её без
+// изменений схемы и RPC.
+const SET_MARK="_set";
+// Полные (стандартные) варианты — только они дают тестовый балл, прогноз и динамику
+const fullExams=st=>st.exams.filter(e=>!e.isSet);
+// Часть работы (тест, группа заданий) засчитывается по набору, только если в нём есть все её задания
+const partCovered=(exam,tasks)=>exam.isSet
+  ? tasks.every(t=>exam.scores[t]!==undefined)
+  : tasks.some(t=>exam.scores[t]!==undefined);
+
 function buildExam(raw){
   const profile=EXAMS[state.exam]||EXAMS.ege;
   const date=parseDate(raw.date||raw.exam_date);
@@ -1736,14 +1771,42 @@ function buildExam(raw){
   const essaySum=CRITERIA_KEYS.reduce((s,k)=>s+(essay[k]||0),0);
 
   // задания, которые складываются из критериев (сочинение, изложение)
+  // В наборе заданий сочинение считается заданием, только если проверены все его
+  // критерии, — иначе неполная сумма выглядела бы как потеря баллов.
+  const isSet=Boolean(raw.results && raw.results[SET_MARK]);
   KNOWN_TASKS.filter(t=>EGE_TOPICS[t].derived).forEach(t=>{
     const keys=CRITERIA_KEYS.filter(k=>ESSAY_CRITERIA[k].task===t);
-    if(keys.some(k=>essay[k]!==undefined)) scores[t]=keys.reduce((s,k)=>s+(essay[k]||0),0);
+    const ok=isSet ? keys.length && keys.every(k=>essay[k]!==undefined) : keys.some(k=>essay[k]!==undefined);
+    if(ok) scores[t]=keys.reduce((s,k)=>s+(essay[k]||0),0);
   });
 
   if(!Object.keys(scores).length && !hasEssay) return null;
 
   const primary=Math.round(directSum+essaySum);
+
+  // Набор заданий (сокращённый пробник): баллы идут в разбор по заданиям,
+  // но в тестовый балл, прогноз и динамику не попадают — сумма по неполной
+  // работе несравнима с полным вариантом.
+  if(isSet){
+    const setMax=Object.keys(scores).filter(t=>!EGE_TOPICS[t].derived).reduce((s,t)=>s+maxScoreFor(+t),0)
+      +CRITERIA_KEYS.filter(k=>essay[k]!==undefined).reduce((s,k)=>s+ESSAY_CRITERIA[k].max,0);
+    // сочинение/изложение — одно задание, даже если проверены не все критерии
+    const essayTasks=KNOWN_TASKS.filter(t=>EGE_TOPICS[t].derived&&CRITERIA_KEYS.some(k=>ESSAY_CRITERIA[k].task===t&&essay[k]!==undefined)).length;
+    const taskCount=Object.keys(scores).filter(t=>!EGE_TOPICS[t].derived).length+(essayTasks||(hasEssay?1:0));
+    return {
+      date, key: date?isoDate(date):String(raw.date||"nodate"),
+      label: date?formatDate(date):"Набор",
+      fullLabel: (date?formatDate(date,true)+" · ":"")+"набор заданий",
+      scores, essay, hasEssay, comment: raw.comment||"",
+      isSet:true, setMax, taskCount,
+      primary,
+      secondary:null,
+      scoreText:`${primary} из ${setMax}`,
+      percent: setMax?Math.round(primary/setMax*100):0,
+      passed:null, chart:null, grammar:null, scoreNote:null
+    };
+  }
+
   const sc=profile.score(primary,essay,scores);
   return {
     date, key: date?isoDate(date):String(raw.date||"nodate"),
@@ -1860,7 +1923,8 @@ const api = {
     const {error}=await db.from("students").delete().eq("id",id);
     if(error) throw new Error(error.message);
   },
-  async saveExam(studentId,date,results,essay,comment){
+  async saveExam(studentId,date,results,essay,comment,isSet){
+    if(isSet) results={...results,[SET_MARK]:1};
     const {error}=await db.from("exams")
       .upsert({student_id:studentId,exam_date:date,results,essay,comment:comment||null},{onConflict:"student_id,exam_date"});
     if(error) throw new Error(error.message);
@@ -1900,7 +1964,8 @@ function allExamKeys(students){
     .map(([key,ex])=>({key,label:ex.label,fullLabel:ex.fullLabel}));
 }
 function summarize(student){
-  const e=student.exams;
+  const e=fullExams(student);
+  if(!e.length) return null;
   const last=e[e.length-1], prev=e.length>1?e[e.length-2]:null;
   return {last,prev,
     best:e.reduce((a,x)=>x.secondary>a.secondary?x:a,e[0]),
@@ -1943,7 +2008,9 @@ function essayReport(student){
 
   // Предметы без критериев (математика) разбираются по группам заданий,
   // поэтому берём все пробники, а не только те, где заполнена творческая часть.
-  const exams = hasCriteria ? student.exams.filter(e=>e.hasEssay) : student.exams;
+  // Наборы без творческой части и наборы у предметов без критериев здесь не нужны:
+  // итоги по частям у них неполные.
+  const exams = hasCriteria ? student.exams.filter(e=>e.hasEssay) : fullExams(student);
   if(!exams.length) return null;
   if(!hasCriteria && !taskParts) return null;
   const rows=CRITERIA_KEYS.map(key=>{
@@ -1958,17 +2025,20 @@ function essayReport(student){
     : exams.map(ex=>ex.primary);
 
   // Каждая часть работы считается отдельно
+  // null — часть не входила в набор заданий: в таблице прочерк, в средних не участвует
   const partFrom=(title,values,max)=>{
-    const last=values[values.length-1];
-    const scored=values.reduce((a,c)=>a+c,0);
+    const nums=values.filter(v=>v!==null);
+    if(!nums.length) return null;
+    const last=nums[nums.length-1];
+    const scored=nums.reduce((a,c)=>a+c,0);
     return {block:title, keys:[], max, values, last,
-      avg:Math.round(scored/values.length*10)/10,
-      delta: values.length>1 ? last-values[values.length-2] : null,
-      rate: values.length*max ? scored/(values.length*max) : 0,
+      avg:Math.round(scored/nums.length*10)/10,
+      delta: nums.length>1 ? last-nums[nums.length-2] : null,
+      rate: nums.length*max ? scored/(nums.length*max) : 0,
       lastRate: max ? last/max : 0, isTest:true};
   };
   const testPart = TEST_BLOCK ? partFrom(TEST_BLOCK.title,
-      exams.map(ex=>TEST_BLOCK.tasks.reduce((s,t)=>s+(ex.scores[t]||0),0)),
+      exams.map(ex=>partCovered(ex,TEST_BLOCK.tasks)||!ex.isSet?TEST_BLOCK.tasks.reduce((s,t)=>s+(ex.scores[t]||0),0):null),
       TEST_BLOCK.tasks.reduce((s,t)=>s+maxScoreFor(t),0)) : null;
 
   // Группы заданий: у математики это алгебра, геометрия, части и темы
@@ -2000,7 +2070,8 @@ function essayReport(student){
     count:exams.length};
 }
 function forecast(student,report){
-  const e=student.exams, n=e.length, last=e[n-1];
+  const e=fullExams(student), n=e.length, last=e[n-1];
+  if(!n) return null;
   const ref=last.essay||{};   // грамотность последней работы — база для отметки ОГЭ
   const refScores=last.scores||{}; // баллы по заданиям — база для условия по геометрии
   const ys=e.map(x=>x.primary);
@@ -2079,13 +2150,32 @@ async function notifyTelegram(student,dateKey){
     const s=summarize(student);
     const report=weaknessReport(student,state.taskNumbers);
     const fc=forecast(student,report);
-    const weak=topWeakTasks(report,3).map(r=>{
+    const weakTopics=()=>topWeakTasks(report,3).map(r=>{
       const topic=EGE_TOPICS[r.task];
       return `• №${r.task}${topic?.title?" — "+topic.title:""}`;
     });
-    const delta=s.deltaSecondary;
-    const deltaText=delta===null||delta===0?"":delta>0?` (↑${delta})`:` (↓${Math.abs(delta)})`;
     const dashLink=shareLink(student.shareToken);
+    // Набор заданий: без тестового балла и прогноза, только сумма по набору
+    if(ex.isSet){
+      const lines=[
+        `📊 <b>${escHtml(P.subject)} ${escHtml(P.label)}</b>`,
+        `Набор заданий ${escHtml(ex.label)}`,
+        "",
+        `Баллы — ${ex.primary} из ${ex.setMax} (${ex.taskCount} ${plural(ex.taskCount,"задание","задания","заданий")})`,
+      ];
+      if(fc) lines.push(`Прогноз по полным пробникам — ${fc.lowSecondary}–${fc.highSecondary}`);
+      const weak=weakTopics();
+      if(weak.length){ lines.push("","📌 Темы для повторения:",...weak); }
+      if(ex.comment) lines.push("",`💬 ${escHtml(ex.comment)}`);
+      lines.push("",`Ознакомиться с баллами по всем заданиям можно в <a href="${escAttr(dashLink)}">личном кабинете</a>.`);
+      lines.push("",`<a href="${escAttr(SITE_URL)}">${escHtml(AUTHOR.brand)}</a> · <a href="${escAttr(AUTHOR.channel)}">Telegram-канал</a>`);
+      await db.functions.invoke("telegram-notify",{body:{studentId:student.id,text:lines.join("\n")}});
+      return;
+    }
+    const weak=weakTopics();
+    // дельта — только если сохранённый пробник и есть последний полный
+    const delta=s.last===ex?s.deltaSecondary:null;
+    const deltaText=delta===null||delta===0?"":delta>0?` (↑${delta})`:` (↓${Math.abs(delta)})`;
     const lines=[
       `📊 <b>${escHtml(P.subject)} ${escHtml(P.label)}</b>`,
       `Пробник ${escHtml(ex.fullLabel)}`,
@@ -2097,14 +2187,16 @@ async function notifyTelegram(student,dateKey){
     if(weak.length){ lines.push("","📌 Темы для повторения:",...weak); }
     if(ex.comment) lines.push("",`💬 ${escHtml(ex.comment)}`);
     lines.push("",`Ознакомиться с баллами по всем заданиям можно в <a href="${escAttr(dashLink)}">личном кабинете</a>.`);
-    lines.push("",`<a href="${escAttr(SITE_URL)}">${escHtml(AUTHOR.brand)}</a> · <a href="${escAttr(AUTHOR.telegram)}">Telegram-канал</a>`);
+    lines.push("",`<a href="${escAttr(SITE_URL)}">${escHtml(AUTHOR.brand)}</a> · <a href="${escAttr(AUTHOR.channel)}">Telegram-канал</a>`);
     await db.functions.invoke("telegram-notify",{body:{studentId:student.id,text:lines.join("\n")}});
   }catch(e){ console.warn("Telegram-уведомление не отправлено:",e.message); }
 }
 
 function groupReport(students,taskNumbers,examKey){
   const entries=students.map(st=>({student:st,exam:snapshotExam(st,examKey)})).filter(x=>x.exam);
-  const secondaries=entries.map(x=>x.exam.secondary);
+  // Наборы заданий идут в разбор по заданиям, но не в тестовые баллы класса
+  const scoredEntries=entries.filter(x=>!x.exam.isSet);
+  const secondaries=scoredEntries.map(x=>x.exam.secondary);
   const rows=taskNumbers.map(task=>{
     let possible=0,scored=0;
     const fails=[],partial=[],byStudent={};
@@ -2134,7 +2226,7 @@ function groupReport(students,taskNumbers,examKey){
     const max=TEST_BLOCK.tasks.reduce((s,t)=>s+maxScoreFor(t),0);
     const values=[];
     entries.forEach(({student,exam})=>{
-      if(!TEST_BLOCK.tasks.some(t=>exam.scores[t]!==undefined)) return;
+      if(!partCovered(exam,TEST_BLOCK.tasks)) return;
       values.push({code:student.code, value:TEST_BLOCK.tasks.reduce((s,t)=>s+(exam.scores[t]||0),0)});
     });
     if(!values.length) return null;
@@ -2153,7 +2245,7 @@ function groupReport(students,taskNumbers,examKey){
     const max=part.tasks.reduce((s,t)=>s+maxScoreFor(t),0);
     const values=[];
     entries.forEach(({student,exam})=>{
-      if(!part.tasks.some(t=>exam.scores[t]!==undefined)) return;
+      if(!partCovered(exam,part.tasks)) return;
       values.push({code:student.code, value:part.tasks.reduce((s,t)=>s+(exam.scores[t]||0),0)});
     });
     if(!values.length) return null;
@@ -2201,25 +2293,25 @@ function groupReport(students,taskNumbers,examKey){
   if(groupPartsGroup.length) essayParts.unshift(...groupPartsGroup);
 
   const dynamics=allExamKeys(students).map(({key,label,fullLabel})=>{
-    const vals=students.map(st=>st.exams.find(e=>e.key===key)).filter(Boolean).map(e=>e.secondary);
+    const vals=students.map(st=>st.exams.find(e=>e.key===key)).filter(e=>e&&!e.isSet).map(e=>e.secondary);
     return vals.length?{label,fullLabel,avg:Math.round(vals.reduce((a,b)=>a+b,0)/vals.length),
       min:Math.min(...vals),max:Math.max(...vals),count:vals.length}:null;
   }).filter(Boolean);
 
-  const movers=students.filter(st=>st.exams.length>1).map(st=>({
+  const movers=students.map(st=>({st,e:fullExams(st)})).filter(x=>x.e.length>1).map(({st,e})=>({
     code:st.code,id:st.id,
-    delta:st.exams[st.exams.length-1].secondary-st.exams[0].secondary,
-    last:st.exams[st.exams.length-1].secondary
+    delta:e[e.length-1].secondary-e[0].secondary,
+    last:e[e.length-1].secondary
   })).sort((a,b)=>b.delta-a.delta);
 
   const buckets=EXAMS[state.exam].buckets.map(b=>({...b,count:secondaries.filter(b.test).length}));
 
-  return {entries,rows,essayRows,essayParts,dynamics,movers,buckets,
+  return {entries,scoredEntries,rows,essayRows,essayParts,dynamics,movers,buckets,
     avgSecondary:secondaries.length?Math.round(secondaries.reduce((a,b)=>a+b,0)/secondaries.length):0,
     median:median(secondaries),
     min:secondaries.length?Math.min(...secondaries):0,
     max:secondaries.length?Math.max(...secondaries):0,
-    belowPass:entries.filter(x=>!x.exam.passed).length,
+    belowPass:scoredEntries.filter(x=>!x.exam.passed).length,
     weakest:[...rows].sort((a,b)=>a.rate-b.rate).slice(0,5)};
 }
 
@@ -2531,8 +2623,8 @@ async function checkReturnFromPayment(){
 const FAQ=[
   {q:"Что считается одним учеником?",
    a:"Один код в системе. Когда ученик выпускается, код можно удалить и освободить место под нового."},
-  {q:"Данные учеников попадают в систему?",
-   a:"Нет. Хранятся только обезличенные коды вроде 11А-07 и баллы за задания. Фамилии и имена вводить нельзя технически, соответствие кода и ученика вы держите у себя."},
+  {q:"Какие данные об учениках хранятся в системе?",
+   a:"Только код вида 11А-07 и баллы за задания: так требует закон о персональных данных. Чтобы не путаться, впишите фамилию в поле «подпись для себя» в карточке ученика. Эту подпись видите только вы: она хранится на вашем компьютере и в систему не отправляется."},
   {q:"Что будет после окончания оплаченного периода?",
    a:`Пакет действует до ${SEASON_END_LABEL} текущего учебного года, независимо от даты покупки — это не «365 дней с момента оплаты». Купленное с 1 июня действует до конца следующего учебного года.
       После этой даты доступ вернётся к бесплатному тарифу, все внесённые данные сохранятся, ограничится только добавление новых учеников.`},
@@ -2547,9 +2639,9 @@ const FAQ=[
   {q:"Видит ли ученик результаты других?",
    a:"Нет. По ссылке доступны только его собственные баллы и рекомендации. Сравнение с классом видит лишь преподаватель."},
   {q:"Что делать, если ссылка ученика попала не тому человеку?",
-   a:"Напишите мне, и я перевыпущу токен. Старая ссылка перестанет работать сразу."},
+   a:"Напишите мне, и я сделаю для ученика новую ссылку. Старая перестанет открываться сразу."},
   {q:"Как устроены классы?",
-   a:"Сначала создаёте класс, затем добавляете в него учеников. Класс существует и без учеников, поэтому его можно завести заранее. Статистика, план занятия и отчёт считаются по выбранному классу отдельно."},
+   a:"Сначала создаёте класс, затем добавляете в него учеников. Класс существует и без учеников, поэтому его можно завести заранее. Статистика, зоны роста и отчёт считаются по выбранному классу отдельно."},
   {q:"Можно перенести ученика в другой класс или изменить его код?",
    a:"Да. Нажмите на многоточие в карточке ученика: там меняется и код, и класс. Все внесённые пробники сохраняются, ссылка для ученика продолжает работать."},
   {q:"Что будет с учениками, если удалить класс?",
@@ -2557,21 +2649,21 @@ const FAQ=[
   {q:"Лимит тарифа считается по каждому классу или по всем сразу?",
    a:"По всем сразу. На базовом тарифе доступно три ученика во всех классах вместе, а не три в каждом."},
   {q:"Можно ли загрузить результаты таблицей?",
-   a:"Да. На экране ввода есть импорт из таблицы, там же скачивается шаблон с готовыми столбцами. Перед сохранением показывается разбор построчно с ошибками, если они есть."},
-  {q:"В какой кодировке сохранять файл для импорта?",
-   a:"Подойдёт и UTF-8, и Windows-1251, приложение определяет кодировку само. Разделитель тоже определяется автоматически: точка с запятой, табуляция или запятая."},
+   a:"Да. На экране «Ввести пробник» нажмите «Импорт из таблицы». Там же можно скачать готовый шаблон: откройте его в Excel, впишите баллы и сохраните как CSV («Файл → Сохранить как → CSV»). Перед сохранением в приложении вы увидите, какие строки приняты, а где есть ошибки."},
+  {q:"Как сохранить файл для импорта, чтобы не было ошибок?",
+   a:"Ничего настраивать не нужно: приложение само разберётся с кодировкой и разделителями. Достаточно скачать наш шаблон, внести данные в Excel и сохранить файл в формате CSV."},
   {q:"Приложение работает с телефона?",
    a:"Да, интерфейс адаптирован. Но вводить баллы за пробник удобнее с компьютера, там работает переход между полями с клавиатуры."},
   {q:"Сколько времени занимает ввод одного пробника?",
    a:"Около минуты. Цифра автоматически переводит курсор на следующее поле, итог и результат (тестовый балл или отметка — зависит от предмета) считаются на лету."},
   {q:"Можно исправить уже внесённый пробник?",
-   a:"Да. Внесите его заново на ту же дату для того же кода, и запись перезапишется."},
-  {q:"Что если ученик пропустил задание и оно не проверялось?",
-   a:"Оставьте поле пустым. Такое задание не попадёт в статистику и будет отмечено серой ячейкой."},
+   a:"Да. Внесите его заново: выберите тот же код и ту же дату, и старая запись заменится новой."},
+  {q:"Что делать, если ученик писал не весь вариант, а только часть заданий?",
+   a:"На экране «Ввести пробник» выберите «Набор заданий» и заполните только те задания, которые были в работе. Остальные не попадут в статистику и будут отмечены серой ячейкой. Баллы набора войдут в разбор по заданиям и в зоны роста, но тестовый балл и прогноз по нему не считаются: сумма за часть работы несравнима с полным вариантом. В режиме «Стандартный вариант» пустое поле считается нулём."},
   {q:"Насколько точен прогноз?",
-   a:"Это диапазон по взвешенному тренду с поправкой на разброс результатов, а не гарантия балла. При двух пробниках или нестабильных результатах приложение честно пишет, что тренда нет."},
+   a:"Это диапазон, а не обещание балла. Он строится по тому, как менялись результаты ученика, причём последние пробники важнее первых. Если пробников меньше трёх или результаты скачут, приложение так и пишет: «тренда нет»."},
   {q:"Какие предметы поддерживаются?",
-   a:"Русский язык — ЕГЭ и ОГЭ, литература — ЕГЭ, математика — ЕГЭ базового уровня и ОГЭ. Предмет выбирается при входе, и кабинет открывается только по нему: классы и ученики разных предметов хранятся отдельно. Внутри предмета ЕГЭ и ОГЭ переключаются в шапке."},
+   a:"ОГЭ и ЕГЭ по русскому языку, литературе, математике, биологии, географии, физике, химии и информатике. Предмет выбирается при входе, а потом переключается в шапке: классы и ученики разных предметов хранятся отдельно. Профильной математики пока нет."},
   {q:"Как считается математика?",
    a:"ОГЭ — 25 заданий, максимум 31 балл, отметка по федеральной шкале. ЕГЭ базового уровня — 21 задание по одному баллу, отметка от 7 баллов за «3» до 17 за «5». Тестового балла у этих экзаменов нет, только отметка."},
   {q:"Почему по математике ОГЭ отметка ниже, чем ожидалось?",
@@ -2590,9 +2682,15 @@ const FAQ=[
    a:"Приложение использует федеральные рекомендации Рособрнадзора 2026 года. Регион вправе установить свои границы, поэтому итоговая отметка в школе может отличаться — об этом написано рядом с прогнозом."},
   {q:"Обновляется ли приложение под новую спецификацию?",
    a:"Да. Разбалловка, темы и шкала перевода вынесены в настройки и обновляются при изменениях ФИПИ."},
-  {q:"Добавите ли другие предметы кроме русского языка, литературы и математики?",
-   a:"Пока нет, но архитектура кабинета это позволяет — напишите, если вам нужен конкретный предмет, и я оценю сроки."},
-  {q:"Что будет с данными, если я перестану пользоваться?",
+  {q:"Нужен предмет, которого нет в списке. Можно ли добавить?",
+   a:"Напишите мне, какой предмет вам нужен, и я оценю сроки."},
+  {q:"Что значит, что некоторые критерии «обнуляются сами»?",
+   a:"По правилам ФИПИ часть критериев обнуляется, если за главный критерий поставлен 0 (или слишком мало баллов). Приложение следит за этим само: как только вы ставите такой балл, зависимые поля становятся серыми и в них автоматически стоит 0. Пример для сочинения ЕГЭ по русскому языку: за К1 «Позиция автора» поставили 0, и К2 «Комментарий» и К3 «Собственное отношение» тоже становятся 0, даже если ученик что-то написал. В литературе 0 за критерий «Раскрытие темы» обнуляет остальные критерии сочинения. Наведите на серую клетку, чтобы увидеть причину."},
+{q:"Что такое «зоны роста»?",
+   a:"Это задания, на которых ученик (или весь класс) теряет больше всего баллов. Приложение само находит их по внесённым пробникам и подсказывает, что повторить. Смотреть зоны роста можно в карточке ученика и на вкладке «Класс»."},
+{q:"Как работает Telegram-бот?",
+   a:"На странице ученика есть кнопка «Подключить бота». Ученик или родитель нажимает её и подтверждает подписку в Telegram. После каждого нового пробника бот присылает короткое сообщение: балл, что изменилось с прошлого раза, прогноз и темы для повторения. Бот знает только код ученика, а не имя. Отписаться можно в любой момент командой /stop."},
+{q:"Что будет с данными, если я перестану пользоваться?",
    a:"Данные останутся в вашем аккаунте. По запросу я их полностью удалю."}
 ];
 
@@ -2612,7 +2710,7 @@ function renderPricing(){
         ? (p.limit<=curBase
             ? `<div class="px-4 py-3 rounded-xl bg-paper text-ink-500 text-sm font-medium text-center">Меньше вашего пакета</div>`
             : `<button data-buy="${escAttr(p.id)}" class="buy-btn px-4 py-3 rounded-xl text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-route-600 ${featured?"bg-accent-500 hover:bg-accent-600 text-ink-900":"bg-white border-2 border-ink-900 hover:bg-ink-900 hover:text-white text-ink-900"}">Оплатить ${escHtml(p.price)}</button>`)
-        : `<a href="${escAttr(AUTHOR.telegram)}" target="_blank" rel="noopener" class="px-4 py-3 rounded-xl bg-white border-2 border-ink-900 text-sm font-bold text-center">Оформить</a>`;
+                : `<button type="button" data-go-signup class="px-4 py-3 rounded-xl ${featured?"bg-accent-500 hover:bg-accent-600 text-ink-900":"bg-white border-2 border-ink-900 hover:bg-ink-900 hover:text-white"} text-sm font-bold text-center transition">Зарегистрироваться</button>`;
     return `
     <div class="relative pt-8">
       <div class="absolute left-1/2 -translate-x-1/2 top-0 z-10 w-14 h-14 rounded-full grid place-items-center font-mono font-bold text-base
@@ -2636,8 +2734,10 @@ function renderPricing(){
     </div>`;
   };
 
+  const guest=state.mode!=="teacher"&&state.mode!=="demo";
   $("#screen-pricing").innerHTML=`
     <div class="max-w-5xl mx-auto">
+      ${guest?`<button type="button" id="pricing-back" class="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-ink-900 mb-5 transition"><span class="text-base leading-none">←</span> Ко входу</button>`:""}
       ${PROMO&&maxOff>0?`
       <div class="flex flex-wrap items-center gap-3 rounded-2xl bg-ink-900 text-white px-5 py-3.5 mb-8">
         <span class="font-mono font-bold text-route-500 text-lg leading-none">−${maxOff}%</span>
@@ -2685,6 +2785,10 @@ function renderPricing(){
     </div>`;
 
   $("#screen-pricing").querySelectorAll(".buy-btn").forEach(b=>b.onclick=()=>startPayment(b.dataset.buy,1,b));
+  // До входа в аккаунт оплатить нельзя: сначала регистрация, потом выбор пакета в кабинете
+  $("#screen-pricing").querySelectorAll("[data-go-signup]").forEach(b=>b.onclick=()=>{ authMode="signup"; route("screen-auth"); });
+  const pricingBack=$("#pricing-back");
+  if(pricingBack) pricingBack.onclick=()=>route("screen-auth");
   const qtySel=$("#topup-qty"), topBtn=$("#topup-buy");
   if(qtySel&&topBtn){
     qtySel.onchange=()=>{ topBtn.textContent="Оплатить "+(TOPUP_PRICE*qtySel.value).toLocaleString("ru-RU")+" ₽"; };
@@ -2725,7 +2829,7 @@ function renderAccount(){
         </div>`:""}
         <div class="flex flex-wrap gap-2 mt-4">
           <button id="acc-to-pricing" class="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Сравнить тарифы</button>
-          <a href="${escAttr(AUTHOR.telegram)}" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">Продлить / сменить тариф</a>
+          <a href="${escAttr(AUTHOR.channel)}" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">Продлить / сменить тариф</a>
         </div>
       </div>
 
@@ -2739,9 +2843,9 @@ function renderAccount(){
       <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
         <h2 class="font-display font-bold text-lg mb-1">Расшифровка кодов</h2>
         <p class="text-sm text-ink-500 leading-relaxed mb-4">
-          Подписи вида «11А-07 — Иванов», которые вы сами добавляете к кодам, хранятся только в этом браузере и никогда
-          не попадают на сервер — это часть того, что ученики в системе анонимны. Из-за этого при смене браузера
-          или компьютера подписи не переносятся сами. Сохраните их в файл и загрузите на новом устройстве.
+          Подписи вида «11А-07 — Иванов», которые вы добавляете к кодам, хранятся только на этом компьютере (в этом браузере)
+          и никуда не отправляются: так мы соблюдаем закон о персональных данных. Поэтому на другом компьютере или в другом
+          браузере подписей не будет. Нажмите «Сохранить расшифровку», чтобы получить файл, а на новом месте загрузите его кнопкой «Загрузить расшифровку».
         </p>
         <div class="flex flex-wrap gap-2 items-center">
           <button id="codebook-export" class="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Сохранить расшифровку</button>
@@ -2797,7 +2901,7 @@ function renderAccount(){
         msg.textContent=`Загружено — записей в расшифровке теперь: ${Object.keys(merged).length}.`;
       }catch(err){
         msg.className="text-xs text-rose-600";
-        msg.textContent="Не получилось прочитать файл — это должен быть json, сохранённый той же кнопкой «Сохранить расшифровку».";
+        msg.textContent="Не получилось прочитать файл. Выберите файл, который вы раньше сохранили кнопкой «Сохранить расшифровку».";
       }
     };
     reader.readAsText(file);
@@ -2808,7 +2912,7 @@ function renderAccount(){
     const btn=$("#acc-change-pass"), msg=$("#acc-pass-msg");
     const p1=$("#acc-pass1").value, p2=$("#acc-pass2").value;
     msg.className="text-xs ml-2 text-rose-600";
-    if(!p1||p1.length<6){ msg.textContent="Минимум 6 символов"; return; }
+    if(!p1||p1.length<8){ msg.textContent="Минимум 8 символов"; return; }
     if(p1!==p2){ msg.textContent="Пароли не совпадают"; return; }
     btn.disabled=true; btn.textContent="Меняем…";
     try{
@@ -2824,8 +2928,7 @@ function renderAccount(){
     const box=$("#acc-payments");
     if(!box) return;
     if(!rows.length){
-      box.innerHTML=`<p class="text-sm text-ink-500">Платежей пока нет. Оплата и продление тарифа обрабатываются вручную —
-        напишите в <a href="${escAttr(AUTHOR.telegram)}" target="_blank" rel="noopener" class="font-semibold text-ink-900 hover:text-route-700">Telegram</a>.</p>`;
+      box.innerHTML=`<p class="text-sm text-ink-500">Платежей пока нет. После оплаты тарифа запись появится здесь, обычно в течение минуты.</p>`;
       return;
     }
     const statusLabel={paid:"Оплачено",pending:"В обработке",failed:"Не прошёл"};
@@ -2866,8 +2969,8 @@ const HELP_STEPS=[
   {icon:"2", title:"Добавьте учеников",
    body:`Кнопка «Добавить учеников» на экране «Ученики». Быстрее всего — выбрать класс, указать количество и нажать «Добавить»:
          коды вида 11А-01, 11А-02 составятся сами по номеру. Нужны свои коды (например, по журналу) — ссылка «Ввести свои коды»
-         под кнопкой открывает поле для ручного списка. Имя и фамилию ввести технически нельзя — только код, который вы сами
-         сопоставляете с учеником у себя на бумаге или в своей таблице.`,
+         под кнопкой открывает поле для ручного списка. Фамилии в приложение не вносятся — этого требует закон о персональных данных. Чтобы не путаться, впишите
+         фамилию в поле «подпись для себя» в карточке ученика: её видите только вы, она хранится на вашем компьютере.`,
    action:{label:"Открыть «Добавить учеников» →", screen:"screen-list", sel:"#add-students"},
    done:()=>state.students.length>0,
    visual:`<div class="mt-3 flex flex-wrap gap-1.5 items-center">
@@ -2879,8 +2982,16 @@ const HELP_STEPS=[
     </div>`},
   {icon:"3", title:"Внесите первый пробник",
    body:`Кнопка «Ввести пробник» в шапке. Выберите код ученика и дату, дальше баллы проставляются по каждому заданию
-         (для сочинения/изложения — по критериям К1–К12). Итоговый первичный и переводной балл считаются на лету,
-         справа сразу видно результат. Если баллов много и они уже в таблице — на этом же экране есть кнопка «Импорт из
+         (для сочинения, изложения и других развёрнутых ответов — по критериям). Итоговый первичный и переводной балл
+         считаются на лету, справа сразу видно результат.
+         Если в работе есть критерий, который по правилам обнуляет другие, ничего считать не нужно: поставьте за него баллы,
+         и приложение само проставит нули в зависимых критериях и заблокирует их (клетки станут серыми, при наведении видна причина).
+         Пример для сочинения ЕГЭ по русскому языку: за К1 «Позиция автора» поставили 0 — значит, К2 и К3 автоматически тоже 0.
+         В литературе 0 за первый критерий сочинения («Раскрытие темы») обнуляет остальные критерии этого сочинения.
+         Перед вводом выберите, что писал ученик. «Стандартный вариант» — все задания экзамена; если какие-то клетки пусты,
+         приложение спросит, засчитать ли их нулём. «Набор заданий» — сокращённый пробник: заполните только те задания,
+         что были в работе, а остальные оставьте пустыми — они не попадут в статистику. Тестовый балл и прогноз по набору
+         не считаются, зато баллы идут в разбор по заданиям и в зоны роста. Если баллов много и они уже в таблице — на этом же экране есть кнопка «Импорт из
          таблицы» с готовым шаблоном: не придётся вбивать по одному.`,
    action:{label:"Открыть «Ввести пробник» →", screen:"screen-entry"},
    done:()=>state.students.some(st=>st.exams&&st.exams.length>0),
@@ -2890,18 +3001,21 @@ const HELP_STEPS=[
       <span class="px-2.5 py-1.5 rounded-lg bg-brand-50 text-brand-700 font-mono font-bold text-xs">2 / 4</span>
     </div>`},
   {icon:"4", title:"Смотрите разбор",
-   body:`На карточке ученика (клик по коду в списке «Ученики») — прогноз балла к экзамену, сильные и слабые задания,
-         готовый план на ближайшее занятие. На вкладке «Класс» — то же самое по всей группе: средний балл, разброс,
+   body:`На карточке ученика (клик по коду в списке «Ученики») — прогноз балла к экзамену, сильные и слабые задания
+         и зоны роста — три задания, где ученик теряет больше всего баллов, и что по ним повторить. На вкладке «Класс» — то же самое по всей группе: средний балл, разброс,
          сводная таблица по каждому заданию и по каждому ученику, чтобы сразу видеть, кому что подтянуть.`,
    action:{label:"Открыть вкладку «Класс» →", screen:"screen-group"}},
   {icon:"5", title:"Скачайте отчёт для родителей",
-   body:`На карточке ученика — кнопка «Скачать отчёт»: PDF или HTML, оформлен как документ (шапка, знак, ваши контакты
-         внизу), с прогнозом и планом занятия — можно сразу переслать. У класса целиком — та же пара кнопок на вкладке
-         «Класс», один файл сразу на всех учеников. Отчёт всегда можно и просто скопировать текстом, без скачивания.`,
+   body:`На карточке ученика — кнопка «Скачать отчёт». Отчёт оформлен как документ (шапка, знак, ваши контакты
+         внизу), с прогнозом и зонами роста — его можно сразу переслать родителям.
+         Какой файл выбрать: <b>PDF</b> — готовый документ, он одинаково открывается на любом компьютере и телефоне, его удобно
+         печатать и пересылать. <b>HTML</b> — та же страница, но она открывается в браузере, как сайт (дважды щёлкните по файлу).
+         Если не уверены, выбирайте PDF. У класса целиком — такая же пара кнопок на вкладке «Класс», один файл сразу на всех.
+         Отчёт можно и просто скопировать текстом, без скачивания.`,
    action:{label:"Открыть карточку первого ученика →", screen:"screen-list", sel:".student-card"},
    visual:`<div class="mt-3 flex items-center gap-2 text-xs">
       <span class="px-3 py-1.5 rounded-full bg-accent-500 text-ink-900 font-bold">Скачать PDF</span>
-      <span class="px-3 py-1.5 rounded-full bg-route-500 text-ink-900 font-bold">Скачать HTML</span>
+      <span class="px-3 py-1.5 rounded-full bg-route-500 text-ink-900 font-bold">Скачать HTML (страница)</span>
     </div>`},
   {icon:"6", title:"Отправьте ученику ссылку",
    body:`В карточке ученика — кнопка «Ссылка ученику». По ней открываются только его собственные баллы: без входа,
@@ -2918,7 +3032,7 @@ const HELP_STEPS=[
       <span class="px-2 py-0.5 rounded-md bg-route-tint text-route-700 font-semibold">только этот ученик</span>
     </div>`},
   {icon:"7", title:"Переключайте предмет и класс",
-   body:`Название предмета рядом с логотипом в шапке — это выпадающее табло со всеми вашими предметами сразу.
+   body:`Название предмета рядом с логотипом в шапке — это список, который раскрывается по нажатию: в нём все ваши предметы.
          Рядом переключатель ЕГЭ/ОГЭ, если у предмета есть обе версии. Данные разных предметов и уровней хранятся
          отдельно — переключение не путает баллы между ними.`,
    action:{label:"Показать переключатель →", screen:"screen-list", sel:"[data-subject-toggle]"},
@@ -3060,9 +3174,9 @@ function renderAuth(){
   if(!authStage) authStage=EXAM_FAMILY[state.exam]||"ege";
 
   const steps=[
-    ["Заведите класс и учеников","Коды вида 11А-07, без фамилий и лишних данных"],
+    ["Заведите класс","Создайте класс и добавьте в него учеников"],
     ["Вносите баллы за пробник","Вручную за минуту или сразу файлом из таблицы"],
-    ["Получайте разбор и план","По каждому заданию — и на класс целиком"]
+    ["Смотрите зоны роста","Приложение покажет, какие задания проседают у каждого ученика и у класса, и что повторить"]
   ];
 
   $("#screen-auth").innerHTML=`
@@ -3094,11 +3208,6 @@ function renderAuth(){
                 </div>
               </div>`).join("")}
           </div>
-
-          <div class="relative flex items-start gap-2.5 text-xs text-white/55 leading-relaxed border-t border-white/10 pt-5">
-            <span class="w-4 h-4 rounded-full bg-route-500/15 text-route-500 grid place-items-center shrink-0 mt-0.5 text-[10px] font-bold">i</span>
-            <span>Фамилии учеников в систему не вносятся — только обезличенные коды.</span>
-          </div>
         </div>
 
         <div class="bg-white p-7 sm:p-9">
@@ -3129,7 +3238,7 @@ function renderAuth(){
             <button type="button" data-auth-mode="signup"
               class="auth-tab px-3 py-2 rounded-xl text-[13px] font-bold transition ${authMode==="signup"?"bg-paper text-ink-900 shadow-sm":"text-ink-500 hover:text-ink-900"}">Регистрация</button>
           </div>
-          ${authMode==="signup"?`<p class="text-[12px] text-ink-700 bg-accent-50 border border-accent-200 rounded-xl px-3 py-2.5 mb-4 leading-relaxed">Бесплатный доступ на <b>3 учеников</b> сразу после подтверждения почты. Имена учеников в сервис не вносятся — только обезличенные коды.</p>`:""}
+          ${authMode==="signup"?`<p class="text-[12px] text-ink-700 bg-accent-50 border border-accent-200 rounded-xl px-3 py-2.5 mb-4 leading-relaxed">Бесплатный доступ на <b>3 учеников</b> сразу после подтверждения почты.</p>`:""}
 
           <label class="block mb-3">
             <span class="text-xs uppercase tracking-wide text-ink-500">Почта</span>
@@ -3164,7 +3273,7 @@ function renderAuth(){
           <p id="auth-msg" class="text-xs text-rose-600 mt-3"></p>
           ${authMode==="signup"?`<p class="text-[11px] text-ink-500 mt-3 leading-relaxed">Минимальная длина пароля — 8 символов. После регистрации придёт письмо со ссылкой подтверждения, без неё вход не сработает.</p>`:`<button type="button" id="auth-forgot" class="mt-3 text-xs text-ink-500 hover:text-ink-900 underline">Забыли пароль?</button>`}
           <div class="mt-5 pt-5 border-t border-gray-100 text-xs text-ink-500 leading-relaxed">
-            Вопросы по доступу и тарифам — напишите <a href="${escAttr(AUTHOR.telegram)}" target="_blank" rel="noopener" class="font-semibold text-ink-900 hover:text-route-700">в Telegram</a>, выдам учётную запись.
+            Вопросы по доступам и тарифам — <button type="button" id="auth-to-pricing" class="font-semibold text-ink-900 hover:text-route-700 underline">смотрите страницу с тарифами</button>.
           </div>
         </div>
 
@@ -3236,6 +3345,9 @@ function renderAuth(){
     msg.textContent=""; boot();
   };
   btn.onclick=submit;
+
+  const toPricing=$("#auth-to-pricing");
+  if(toPricing) toPricing.onclick=()=>route("screen-pricing");
 
   const forgot=$("#auth-forgot");
   if(forgot) forgot.onclick=async()=>{
@@ -3313,11 +3425,11 @@ function authorCardMarkup(){
     ${avatarMarkup("w-11 h-11","text-sm")}
     <div class="flex-1 min-w-[200px]">
       <div class="font-display font-bold">${escHtml(AUTHOR.name)}</div>
-      <div class="text-xs text-ink-500">${escHtml(AUTHOR.brand)} · ${escHtml(AUTHOR.tagline)} Разборы, материалы и расписание занятий — в моих каналах.</div>
+      <div class="text-xs text-ink-500 leading-relaxed">${escHtml(AUTHOR.bio)}</div>
     </div>
     <div class="flex gap-2">
-      <a href="${escAttr(AUTHOR.telegram)}" target="_blank" rel="noopener"
-        class="px-4 py-2 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">Telegram</a>
+      <a href="${escAttr(AUTHOR.channel)}" target="_blank" rel="noopener"
+        class="px-4 py-2 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">Telegram @egeminkin</a>
       <a href="${escAttr(AUTHOR.vk)}" target="_blank" rel="noopener"
         class="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">ВКонтакте</a>
     </div>
@@ -3358,7 +3470,7 @@ function renderStudentList(){
         <h1 class="font-display font-extrabold text-xl mb-2">Создайте первый класс</h1>
         <p class="text-sm text-ink-500 leading-relaxed mb-6">
           Работа начинается с класса или группы: 11А, поток 2027, группа Пн-Ср. Внутри класса вы заводите
-          учеников обезличенными кодами, а статистика считается по каждому классу отдельно.
+          учеников по кодам вида 11А-07, а статистика считается по каждому классу отдельно.
         </p>
         <button id="first-class" class="px-5 py-2.5 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">Создать класс</button>
           <button id="show-demo" class="px-5 py-2.5 rounded-full bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Посмотреть на примере</button>
@@ -3415,9 +3527,10 @@ function renderStudentList(){
               </div>
               <div class="text-xs text-ink-500 mt-1 truncate">${note?escHtml(note)+" · ":""}${c} ${plural(c,"пробник","пробника","пробников")}</div>
             </div>
-            <div class="shrink-0">${trendMarkup(s.deltaSecondary)}</div>
+            <div class="shrink-0">${s?trendMarkup(s.deltaSecondary):""}</div>
           </div>
           <button data-student="${escAttr(st.id)}" class="student-card text-left w-full">
+            ${!s?`<div class="text-sm text-ink-500 leading-relaxed">Пока только наборы заданий — они разобраны по заданиям, а ${escHtml(SCORE_WORD)} появится после стандартного варианта.</div>`:`
             <div class="flex items-end gap-6">
               <div><div class="font-mono font-bold text-3xl tnum leading-none">${escHtml(s.last.scoreText)}</div><div class="text-[11px] uppercase tracking-wide text-ink-500 mt-1.5">${escHtml(SCORE_WORD)}</div></div>
               <div><div class="font-mono font-bold text-xl tnum leading-none text-ink-700">${s.avgSecondary}</div><div class="text-[11px] uppercase tracking-wide text-ink-500 mt-1.5">средний</div></div>
@@ -3425,7 +3538,7 @@ function renderStudentList(){
             </div>
             <div class="mt-4 h-1.5 rounded-full bg-gray-100 overflow-hidden">
               <div class="h-full rounded-full ${s.last.passed?"bg-brand-500":"bg-amber-400"}" style="width:${s.last.percent}%"></div>
-            </div>
+            </div>`}
           </button>
           ${canEdit?`
           <div class="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center gap-2">
@@ -3854,7 +3967,7 @@ function openAddStudents(){
     <div class="bg-white rounded-2xl shadow-lift max-w-md w-full p-6">
       <h2 class="font-display font-extrabold text-xl mb-1">Добавить учеников</h2>
       <p class="text-sm text-ink-500 mb-5 leading-relaxed">
-        Ученик — это обезличенный код вида <span class="font-mono">11А-07</span>, без имени и фамилии.
+        Ученик добавляется по коду вида <span class="font-mono">11А-07</span>. Фамилию можно вписать потом в поле «подпись для себя» в карточке ученика: её увидите только вы.
         Свободно ${free} ${plural(free,"место","места","мест")}.
       </p>
 
@@ -4059,18 +4172,18 @@ function renderGroup(){
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
       <div class="bg-white rounded-2xl shadow-soft p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift">
         <div class="text-xs uppercase tracking-wide text-ink-500 mb-3">Средний</div>
-        <div class="font-mono font-bold text-3xl tnum">${g.avgSecondary}</div>
-        <div class="mt-3 text-xs text-ink-500">медиана <span class="font-mono tnum">${g.median}</span></div>
+        <div class="font-mono font-bold text-3xl tnum">${g.scoredEntries.length?g.avgSecondary:"—"}</div>
+        <div class="mt-3 text-xs text-ink-500">${g.scoredEntries.length?`медиана <span class="font-mono tnum">${g.median}</span>`:"в выборке только наборы заданий"}</div>
       </div>
       <div class="bg-white rounded-2xl shadow-soft p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift">
         <div class="text-xs uppercase tracking-wide text-ink-500 mb-3">Разброс</div>
-        <div class="font-mono font-bold text-3xl tnum">${g.min}–${g.max}</div>
+        <div class="font-mono font-bold text-3xl tnum">${g.scoredEntries.length?`${g.min}–${g.max}`:"—"}</div>
         <div class="mt-3 text-xs text-ink-500">от слабейшей к сильнейшей работе</div>
       </div>
       <div class="bg-white rounded-2xl shadow-soft p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift">
         <div class="text-xs uppercase tracking-wide text-ink-500 mb-3">Ниже порога</div>
         <div class="font-mono font-bold text-3xl tnum ${g.belowPass?"text-amber-600":"text-emerald-600"}">${g.belowPass}</div>
-        <div class="mt-3 text-xs text-ink-500">${plural(g.belowPass,"ученик","ученика","учеников")} из ${g.entries.length} · ${escHtml(EXAMS[state.exam].passNote)}</div>
+        <div class="mt-3 text-xs text-ink-500">${plural(g.belowPass,"ученик","ученика","учеников")} из ${g.scoredEntries.length} · ${escHtml(EXAMS[state.exam].passNote)}</div>
       </div>
       <div class="bg-white rounded-2xl shadow-soft p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift">
         <div class="text-xs uppercase tracking-wide text-ink-500 mb-3">Задание с самым низким процентом</div>
@@ -4093,7 +4206,7 @@ function renderGroup(){
     <div class="grid gap-4 lg:grid-cols-2 mb-6">
       <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift">
         <div class="flex items-baseline justify-between gap-3 mb-4">
-          <h2 class="font-display font-bold text-lg">План занятия</h2>
+          <h2 class="font-display font-bold text-lg">Зоны роста класса</h2>
           <button id="copy-plan" class="text-xs font-semibold text-brand-600 hover:text-brand-700">Скопировать</button>
         </div>
         <div class="space-y-3">
@@ -4235,12 +4348,12 @@ function renderGroup(){
   });
 
   $("#copy-plan").onclick=async()=>{
-    const text=["План занятия — темы с худшим результатом по классу",""]
+    const text=["Зоны роста класса — задания, где теряется больше всего баллов",""]
       .concat(g.weakest.map((r,i)=>{
         const t=EGE_TOPICS[r.task]||{title:"Задание "+r.task,review:""};
         return `${i+1}. Задание ${r.task} — ${t.title}. Успешность ${Math.round(r.rate*100)}%. ${t.review}`;
       }))
-      .concat(["",`${AUTHOR.name} · ${AUTHOR.brand} · ${AUTHOR.telegram}`]).join("\n");
+      .concat(["",`${AUTHOR.name} · ${AUTHOR.brand} · ${AUTHOR.channel}`]).join("\n");
     const ok=await copyText(text);
     $("#plan-msg").textContent=ok?"План скопирован":"Скопировать не удалось";
     setTimeout(()=>{$("#plan-msg").textContent="";},2200);
@@ -4296,12 +4409,12 @@ function groupReportText(g,examLabel,groupName){
       lines.push(`  ${part.block} — ${Math.round(part.rate*100)}% (средний ${part.avg} из ${part.max}, разброс ${part.min}–${part.max_value}).${w?` Слабее всего ${w.key} — ${w.title}.`:""}`);
     });
   }
-  lines.push(``,`———`,`${AUTHOR.name} · ${AUTHOR.brand}`,`Telegram: ${AUTHOR.telegram}`,`ВКонтакте: ${AUTHOR.vk}`);
+  lines.push(``,`———`,`${AUTHOR.name} · ${AUTHOR.brand}`,`Telegram: ${AUTHOR.channel}`,`ВКонтакте: ${AUTHOR.vk}`);
   return lines.join("\n");
 }
 
 function groupReportDocument(g,examLabel,images,groupName){
-  const sorted=[...g.entries].sort((a,b)=>b.exam.secondary-a.exam.secondary);
+  const sorted=[...g.scoredEntries].sort((a,b)=>b.exam.secondary-a.exam.secondary);
   const rowsByTask=[...g.rows].sort((a,b)=>a.task-b.task);
   return `<!DOCTYPE html>
 <html lang="ru"><head><meta charset="UTF-8"><title>${escHtml(AUTHOR.brand)} · отчёт по классу</title>
@@ -4425,7 +4538,7 @@ ${g.essayParts.map(part=>{
 
 <div class="author">
   <b>${escHtml(AUTHOR.name)}</b> — подготовка к ${escHtml(EXAMS[state.exam].fullName)}. ${escHtml(AUTHOR.brand)}<br>
-  <a href="${escAttr(AUTHOR.telegram)}">Telegram</a> · <a href="${escAttr(AUTHOR.vk)}">ВКонтакте</a>
+  <a href="${escAttr(AUTHOR.channel)}">Telegram</a> · <a href="${escAttr(AUTHOR.vk)}">ВКонтакте</a>
 </div>
 <p class="note">В отчёте используются обезличенные коды учеников. ${escHtml(EXAMS[state.exam].passNote)}.${(state.exam==="oge"||state.exam==="mathoge")?" Отметка выставлена по федеральной шкале Рособрнадзора, регион вправе установить свои границы.":""}</p>
 </body></html>`;
@@ -4520,7 +4633,7 @@ function renderDashboard(student,readOnly,demo){
         <p class="text-sm text-ink-500 mt-1">${demo?"Пример ученика · "+escHtml(EXAMS[state.exam].label)+" · вымышленные данные":readOnly?"Твоя страница результатов · "+escHtml(EXAMS[state.exam].label)+" · "+escHtml(AUTHOR.brand):(note?escHtml(note)+" · ":"")+escHtml(group)+" · "+escHtml(EXAMS[state.exam].label)+", разбор по спецификации ФИПИ"}</p>
       </div>
       <div class="flex gap-2">
-        <button id="report-btn" class="px-4 py-2 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">${(readOnly&&!demo)?"Скачать отчёт":"Отчёт для родителей"}</button>
+        ${s?`<button id="report-btn" class="px-4 py-2 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">${(readOnly&&!demo)?"Скачать отчёт":"Отчёт для родителей"}</button>`:""}
         ${(!readOnly&&canEdit)?`<button id="entry-for-btn" class="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Внести пробник</button>`:""}
       </div>
     </div>
@@ -4547,13 +4660,17 @@ function renderDashboard(student,readOnly,demo){
         <p class="text-sm text-route-900 leading-relaxed">${escHtml(last.comment)}</p>
       </div>
     </div>`:""; })()}
-    ${summaryCardsMarkup(s,student.exams.length)}
-    ${forecastMarkup(fc)}
-    ${scoreChartMarkup(fc)}
+    ${s?summaryCardsMarkup(s,student.exams.length):`
+    <div class="mb-6 bg-white rounded-2xl shadow-soft p-5 text-sm text-ink-500 leading-relaxed">
+      Пока внесены только наборы заданий (${student.exams.length}). Они учтены в разборе по заданиям ниже,
+      а ${escHtml(SCORE_WORD)}, прогноз и график появятся после первого стандартного варианта.
+    </div>`}
+    ${fc?forecastMarkup(fc):""}
+    ${fc?scoreChartMarkup(fc):""}
 
     <div class="mb-6">
       <div class="flex flex-wrap items-baseline justify-between gap-2 mb-4">
-        <h2 class="font-display font-bold text-lg">Зоны развития</h2>
+        <h2 class="font-display font-bold text-lg">Зоны роста</h2>
         <span class="text-xs text-ink-500">три задания, где потеряно больше всего баллов</span>
       </div>
       <div class="grid gap-4 sm:grid-cols-3">${weakCardsMarkup(weakest,readOnly,classKey)}</div>
@@ -4568,9 +4685,9 @@ function renderDashboard(student,readOnly,demo){
     const entryBtn=$("#entry-for-btn");
     if(entryBtn) entryBtn.onclick=()=>{destroyCharts();renderEntry(student.id);showScreen("screen-entry");window.scrollTo({top:0});};
   }
-  $("#report-btn").onclick=()=>openReport(student,s,fc,weakest,essay);
+  if(s) $("#report-btn").onclick=()=>openReport(student,s,fc,weakest,essay);
 
-  drawStudentChart(student.exams,fc);
+  if(fc) drawStudentChart(fullExams(student),fc);
   bindTooltips($("#screen-student"));
 }
 
@@ -4772,7 +4889,7 @@ function essayMarkup(essay){
           <tr>
             <th class="sticky left-0 z-30 bg-white px-4 py-2 text-left text-[11px] font-semibold text-ink-500">${essay.hasCriteria?"Критерий":"Часть работы"}</th>
             <th class="px-3 py-2 text-right text-[11px] font-semibold text-ink-500">Успех</th>
-            ${essay.exams.map(e=>`<th class="px-1.5 py-2 text-center text-[11px] font-semibold text-ink-500 whitespace-nowrap">${escHtml(e.label)}</th>`).join("")}
+            ${essay.exams.map(e=>`<th class="px-1.5 py-2 text-center text-[11px] font-semibold text-ink-500 whitespace-nowrap">${escHtml(e.label)}${setTag(e)}</th>`).join("")}
           </tr>
         </thead>
         <tbody>
@@ -4783,7 +4900,7 @@ function essayMarkup(essay){
             <tr class="bg-paper">
               <th class="sticky left-0 z-10 bg-paper px-4 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-ink-700">${escHtml(b.block)} · максимум ${b.max}</th>
               <td class="px-3 py-2 text-right font-mono text-[11px] tnum font-bold ${b.rate<0.5?"text-rose-600":"text-ink-700"}">${Math.round(b.rate*100)}%</td>
-              ${b.values.map(v=>`<td class="px-1.5 py-2 text-center font-mono text-[11px] tnum font-bold text-ink-700">${v}</td>`).join("")}
+              ${b.values.map(v=>`<td class="px-1.5 py-2 text-center font-mono text-[11px] tnum font-bold ${v===null?"text-ink-300":"text-ink-700"}">${v===null?"—":v}</td>`).join("")}
             </tr>
             ${rows.map(r=>{
               const pc=Math.round(r.rate*100);
@@ -4805,6 +4922,9 @@ function essayMarkup(essay){
     </div>
   </div>`;
 }
+
+// Подпись под датой у набора заданий в шапке таблиц
+const setTag=e=>e.isSet?`<span class="block text-[10px] font-normal text-route-700" title="Набор заданий: ${escAttr(e.scoreText)} баллов">набор</span>`:"";
 
 function historyMarkup(student,report,readOnly,classKey){
   const group=classKeyTitle(classKey);
@@ -4829,7 +4949,7 @@ function historyMarkup(student,report,readOnly,classKey){
           <tr>
             <th class="sticky left-0 z-30 bg-white px-4 py-2 text-left text-[11px] font-semibold text-ink-500">Задание</th>
             <th class="px-3 py-2 text-right text-[11px] font-semibold text-ink-500">Успех</th>
-            ${exams.map(e=>`<th class="px-1.5 py-2 text-center text-[11px] font-semibold text-ink-500 whitespace-nowrap">${escHtml(e.label)}</th>`).join("")}
+            ${exams.map(e=>`<th class="px-1.5 py-2 text-center text-[11px] font-semibold text-ink-500 whitespace-nowrap">${escHtml(e.label)}${setTag(e)}</th>`).join("")}
           </tr>
         </thead>
         <tbody>
@@ -5005,9 +5125,11 @@ function reportText(student,s,fc,weakest,essay){
     s.deltaSecondary===null?`Это первый пробник в статистике.`:
       s.deltaSecondary>0?`Рост к предыдущему пробнику: +${s.deltaSecondary} балла.`:
       s.deltaSecondary<0?`Снижение к предыдущему пробнику: ${s.deltaSecondary} балла.`:`Результат повторяет предыдущий пробник.`,
-    `Средний балл за ${student.exams.length} ${plural(student.exams.length,"пробник","пробника","пробников")}: ${s.avgSecondary}.`,``,
+    `Средний балл за ${fullExams(student).length} ${plural(fullExams(student).length,"пробник","пробника","пробников")}: ${s.avgSecondary}.`,``,
     `Все пробники:`,
-    ...student.exams.map(ex=>`  ${ex.fullLabel} — ${ex.primary} из ${MAX_PRIMARY} первичных, ${SCORE_WORD} ${ex.scoreText}`),
+    ...student.exams.map(ex=>ex.isSet
+      ? `  ${ex.fullLabel} — ${ex.primary} из ${ex.setMax} баллов (${ex.taskCount} ${plural(ex.taskCount,"задание","задания","заданий")})`
+      : `  ${ex.fullLabel} — ${ex.primary} из ${MAX_PRIMARY} первичных, ${SCORE_WORD} ${ex.scoreText}`),
     ``,
     isMark
       ? `Прогноз к экзамену: ${lowP}–${highP} первичных (это ${SCORE_WORD} ${fc.lowSecondary===fc.highSecondary?fc.lowSecondary:fc.lowSecondary+"–"+fc.highSecondary}), базовый сценарий ${fc.basePrimary} первичных (${SCORE_WORD} ${fc.baseSecondary}). При системной работе над темами ниже — до ${fc.potentialPrimary} первичных (${SCORE_WORD} ${fc.potentialSecondary}).`
@@ -5029,7 +5151,7 @@ function reportText(student,s,fc,weakest,essay){
     ``,`———`,
     `${AUTHOR.name} · ${AUTHOR.brand}`,
     `${AUTHOR.tagline}`,
-    `Telegram: ${AUTHOR.telegram}`,
+    `Telegram: ${AUTHOR.channel}`,
     `ВКонтакте: ${AUTHOR.vk}`);
   return lines.join("\n");
 }
@@ -5095,11 +5217,19 @@ function reportDocument(student,s,fc,weakest,essay,images){
 </div>
 ${images.score?`<img src="${images.score}" alt="Динамика баллов">`:""}
 <h2>Все пробники</h2>
+${exams.some(e=>e.isSet)?`<p class="hint">«Набор заданий» — сокращённый пробник: баллы учтены в разборе по заданиям, но ${escHtml(SCORE_WORD)} и прогноз по нему не считаются.</p>`:""}
 <table class="grid">
   <thead><tr><th>Дата</th><th class="num">Первичный</th><th class="num">${escHtml(SCORE_WORD)}</th><th class="num">Изменение</th></tr></thead>
   <tbody>
     ${exams.map((ex,i)=>{
-      const prev=i>0?exams[i-1].secondary:null;
+      if(ex.isSet) return `<tr>
+        <td>${escHtml(ex.fullLabel)}</td>
+        <td class="num">${ex.primary} / ${ex.setMax}</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+      </tr>`;
+      const prevEx=exams.slice(0,i).filter(x=>!x.isSet).pop();
+      const prev=prevEx?prevEx.secondary:null;
       const d=prev===null?"—":(ex.secondary-prev>0?`+${ex.secondary-prev}`:String(ex.secondary-prev));
       return `<tr>
         <td>${escHtml(ex.fullLabel)}</td>
@@ -5186,7 +5316,7 @@ ${essay.rows.length?`<table class="grid">
 ${worst?`<p style="font-size:14px"><b>${worst.key} — ${escHtml(worst.meta.title)}</b> · ${Math.round(worst.rate*100)}% от возможного.<br>${escHtml(worst.meta.review)}</p>`:""}`:""}
 <div class="author">
   <b>${escHtml(AUTHOR.name)}</b> — подготовка к ${escHtml(EXAMS[state.exam].fullName)}. ${escHtml(AUTHOR.brand)}<br>
-  <a href="${escAttr(AUTHOR.telegram)}">Telegram</a> ·
+  <a href="${escAttr(AUTHOR.channel)}">Telegram</a> ·
   <a href="${escAttr(AUTHOR.vk)}">ВКонтакте</a>
 </div>
 <p class="note">${escHtml(EXAMS[state.exam].passNote)}. Прогноз рассчитан по взвешенному тренду и не является гарантией результата.${(state.exam==="oge"||state.exam==="mathoge")?" Отметка выставлена по федеральной шкале Рособрнадзора, регион вправе установить свои границы.":""}</p>
@@ -5315,6 +5445,19 @@ function renderEntry(preselectId){
     <div id="entry-draft-note"></div>
     <div class="grid gap-4 lg:grid-cols-[1fr_260px] items-start">
       <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
+        <div class="mb-6">
+          <div class="text-xs uppercase tracking-wide text-ink-500 mb-2">Что писал ученик</div>
+          <div class="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Вид пробника">
+            <button type="button" role="radio" data-entry-mode="full" class="entry-mode text-left px-4 py-3 rounded-xl border transition">
+              <span class="block text-sm font-semibold">Стандартный вариант</span>
+              <span class="block text-xs text-ink-500 mt-0.5 leading-snug">Все задания экзамена. Пустая клетка при сохранении станет нулём</span>
+            </button>
+            <button type="button" role="radio" data-entry-mode="set" class="entry-mode text-left px-4 py-3 rounded-xl border transition">
+              <span class="block text-sm font-semibold">Набор заданий</span>
+              <span class="block text-xs text-ink-500 mt-0.5 leading-snug">Сокращённый пробник. Заполните только задания из набора, пустые в разбор не попадут</span>
+            </button>
+          </div>
+        </div>
         <div class="grid gap-4 sm:grid-cols-2 mb-6">
           <label class="block">
             <span class="text-xs uppercase tracking-wide text-ink-500">Код ученика</span>
@@ -5344,6 +5487,13 @@ function renderEntry(preselectId){
         </div>`:""}
         ${CRITERIA_KEYS.length?`
         <div class="text-xs uppercase tracking-wide text-ink-500 mb-3">Критерии развёрнутых ответов · ${escHtml(CRITERIA_KEYS[0])}–${escHtml(CRITERIA_KEYS[CRITERIA_KEYS.length-1])}</div>
+        ${(()=>{ const z=zeroingHint(); return z?`
+        <div class="bg-route-tint text-route-900 rounded-xl p-3.5 text-xs leading-relaxed mb-4">
+          <b>Обнуляющие критерии.</b> По правилам оценивания некоторые критерии обнуляют другие. Вам ничего считать не нужно:
+          приложение само поставит нули и заблокирует эти поля (серые клетки).
+          Например, если за ${escHtml(z.trigger)} «${escHtml(z.title)}» ${z.cond}, то ${escHtml(z.names)} автоматически ${z.one?"станет":"станут"} 0.
+          Наведите на серую клетку — увидите причину.
+        </div>`:""; })()}
         <div class="grid grid-cols-[repeat(auto-fill,minmax(66px,1fr))] gap-2">
           ${CRITERIA_KEYS.map(k=>`
             <label class="block" data-crit-wrap="${k}" data-label="Критерий ${escAttr(k)}" data-title="${escAttr(ESSAY_CRITERIA[k].title)}" data-rule="${escAttr(ESSAY_CRITERIA[k].block)}" tabindex="0">
@@ -5358,9 +5508,9 @@ function renderEntry(preselectId){
         <div class="text-xs uppercase tracking-wide text-ink-500 mb-3">Итог</div>
         <div class="flex items-baseline gap-1.5 mb-1">
           <span id="entry-primary" class="font-mono font-bold text-3xl tnum">0</span>
-          <span class="text-ink-300 font-mono text-lg tnum">/ ${MAX_PRIMARY}</span>
+          <span id="entry-max" class="text-ink-300 font-mono text-lg tnum">/ ${MAX_PRIMARY}</span>
         </div>
-        <div class="text-sm text-ink-500 mb-2">${escHtml(SCORE_WORD)} <span id="entry-secondary" class="font-mono font-bold text-ink-900 tnum">—</span></div>
+        <div id="entry-secondary-row" class="text-sm text-ink-500 mb-2">${escHtml(SCORE_WORD)} <span id="entry-secondary" class="font-mono font-bold text-ink-900 tnum">—</span></div>
         ${CRITERIA_KEYS.length?`<div class="text-xs text-ink-500 mb-2">критерии <span id="entry-essay" class="font-mono tnum">0</span> / ${ESSAY_MAX}</div>`:""}
         <div id="entry-note" class="text-[11px] text-amber-700 mb-4 leading-relaxed"></div>
         <button type="button" id="comment-toggle" class="w-full text-left text-xs font-semibold text-route-700 hover:text-route-900 transition mb-2">+ Добавить комментарий к пробнику</button>
@@ -5379,17 +5529,20 @@ function renderEntry(preselectId){
 
   const readDraft=()=>{ try{ const d=JSON.parse(localStorage.getItem(ENTRY_DRAFT_KEY)||"null"); return d&&d.exam===state.exam?d:null; }catch(e){ return null; } };
   const clearDraft=()=>{ try{ localStorage.removeItem(ENTRY_DRAFT_KEY); }catch(e){} $("#entry-draft-note").innerHTML=""; window.onbeforeunload=null; };
+  // Вид пробника не сбрасывается после сохранения: обычно подряд вносят один и тот же набор
+  let entryMode="full";
   const isDirty=()=>studentSel.value||dateInp.value!==today||inputs.some(i=>i.value!=="");
   const saveDraft=()=>{
     if(!isDirty()){ clearDraft(); return; }
     const values={};
     inputs.forEach(i=>{ if(i.value!=="") values[i.dataset.task?"t"+i.dataset.task:"c"+i.dataset.criterion]=i.value; });
-    try{ localStorage.setItem(ENTRY_DRAFT_KEY,JSON.stringify({exam:state.exam,studentId:studentSel.value,date:dateInp.value,values,savedAt:Date.now()})); }catch(e){}
+    try{ localStorage.setItem(ENTRY_DRAFT_KEY,JSON.stringify({exam:state.exam,mode:entryMode,studentId:studentSel.value,date:dateInp.value,values,savedAt:Date.now()})); }catch(e){}
     window.onbeforeunload=()=>"Пробник не сохранён — введённые баллы пропадут, если закрыть страницу.";
   };
 
   const draft=readDraft();
   if(draft){
+    if(draft.mode==="set") entryMode="set";
     if(draft.studentId) studentSel.value=draft.studentId;
     if(draft.date) dateInp.value=draft.date;
     inputs.forEach(i=>{
@@ -5441,13 +5594,37 @@ function renderEntry(preselectId){
   };
   const refresh=()=>{
     const d=collect();
-    const sc=EXAMS[state.exam].score(d.primary,d.essay,d.results);
     $("#entry-primary").textContent=d.primary;
-    $("#entry-secondary").textContent=sc.text;
     const essayEl=$("#entry-essay"); if(essayEl) essayEl.textContent=d.essayTotal;
     const note=$("#entry-note");
+    if(entryMode==="set"){
+      // максимум набора — только по заполненным клеткам, как и при сохранении
+      const setMax=Object.keys(d.results).reduce((s,t)=>s+maxScoreFor(+t),0)
+        +Object.keys(d.essay).reduce((s,k)=>s+ESSAY_CRITERIA[k].max,0);
+      $("#entry-max").textContent="/ "+setMax;
+      $("#entry-secondary-row").classList.add("hidden");
+      if(note) note.textContent=`Набор заданий: ${SCORE_WORD} и прогноз по нему не считаются, баллы пойдут в разбор по заданиям.`;
+      return;
+    }
+    const sc=EXAMS[state.exam].score(d.primary,d.essay,d.results);
+    $("#entry-max").textContent="/ "+MAX_PRIMARY;
+    $("#entry-secondary-row").classList.remove("hidden");
+    $("#entry-secondary").textContent=sc.text;
     if(note) note.textContent=sc.note||"";
   };
+  const modeButtons=[...$("#screen-entry").querySelectorAll("[data-entry-mode]")];
+  const applyMode=()=>{
+    modeButtons.forEach(b=>{
+      const on=b.dataset.entryMode===entryMode;
+      b.setAttribute("aria-checked",on?"true":"false");
+      b.classList.toggle("border-brand-500",on); b.classList.toggle("bg-brand-50",on);
+      b.classList.toggle("border-gray-200",!on); b.classList.toggle("bg-white",!on);
+    });
+    // прочерк в пустой клетке набора — «задания не было», а не ноль
+    inputs.forEach(i=>{ if(entryMode==="set") i.placeholder="—"; else i.removeAttribute("placeholder"); });
+    refresh();
+  };
+  modeButtons.forEach(b=>b.onclick=()=>{ entryMode=b.dataset.entryMode; applyMode(); saveDraft(); });
 
   inputs.forEach((inp,i)=>{
     inp.addEventListener("input",()=>{
@@ -5492,24 +5669,34 @@ function renderEntry(preselectId){
     if(!Object.keys(d.results).length&&!Object.keys(d.essay).length){
       msg.innerHTML=`<span class="text-rose-600">Заполните хотя бы одно задание</span>`; return;
     }
+    const isSet=entryMode==="set";
+    if(!isSet){
+      // Стандартный вариант: пустая клетка — задание не решено, засчитываем 0
+      const empty=inputs.filter(i=>i.value===""&&!i.disabled);
+      if(empty.length){
+        const ok=confirm(`Не заполнено ${empty.length} ${plural(empty.length,"поле","поля","полей")}. В стандартном варианте они будут засчитаны как 0 баллов.\n\nЕсли ученик писал не все задания, нажмите «Отмена» и выберите «Набор заданий».`);
+        if(!ok) return;
+        empty.forEach(i=>{ if(i.dataset.task) d.results[i.dataset.task]=0; else d.essay[i.dataset.criterion]=0; });
+      }
+    }
     const comment=$("#entry-comment").value.trim();
     btn.textContent="Сохраняем…";
     try{
-      await api.saveExam(studentId,date,d.results,d.essay,comment);
+      await api.saveExam(studentId,date,d.results,d.essay,comment,isSet);
       await reloadData();
       const st=state.students.find(x=>x.id===studentId);
       const ex=st?st.exams.find(x=>x.key===date):null;
-      msg.innerHTML=ex
-        ? `<span class="text-emerald-600">Сохранено — ${escHtml(st.code)}, ${escHtml(ex.fullLabel)}, ${ex.primary} первичных, ${escHtml(SCORE_WORD)} ${escHtml(ex.scoreText)}.</span>`
-        : `<span class="text-emerald-600">Сохранено.</span>`;
+      msg.innerHTML=!ex ? `<span class="text-emerald-600">Сохранено.</span>`
+        : ex.isSet ? `<span class="text-emerald-600">Сохранено — ${escHtml(st.code)}, ${escHtml(ex.fullLabel)}, ${ex.primary} из ${ex.setMax} баллов.</span>`
+        : `<span class="text-emerald-600">Сохранено — ${escHtml(st.code)}, ${escHtml(ex.fullLabel)}, ${ex.primary} первичных, ${escHtml(SCORE_WORD)} ${escHtml(ex.scoreText)}.</span>`;
       if(st&&ex) notifyTelegram(st,date);
-      inputs.forEach(i=>i.value=""); refresh(); clearDraft();
+      inputs.forEach(i=>{i.value="";i.classList.remove("cell-filled","cell-glow");}); refresh(); applyEssayLocks(); clearDraft();
       $("#entry-comment").value=""; $("#comment-wrap").classList.add("hidden"); $("#comment-toggle").textContent="+ Добавить комментарий к пробнику";
     }catch(err){ msg.innerHTML=`<span class="text-rose-600">${escHtml(err.message)}</span>`; }
     btn.textContent="Сохранить пробник";
   };
 
-  refresh();
+  applyMode();
 }
 
 /* =========================================================================
@@ -6011,7 +6198,7 @@ function installBackNavigation(){
    ========================================================================= */
 const DEMO_STUDENTS=(function(){
   // Демо-класс: 14 учеников с разными профилями. Общие для класса слабые места —
-  // задания 4, 8, 12, 21 и критерий К2, чтобы статистика и план занятия были наглядны.
+  // задания 4, 8, 12, 21 и критерий К2, чтобы статистика и зоны роста были наглядны.
   const dates=["2025-09-20","2025-10-18","2025-11-22","2025-12-20","2026-01-24","2026-02-21"];
   const tasks=KNOWN_TASKS.filter(t=>t!==27);
   let seed=20260214;
