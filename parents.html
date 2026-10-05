@@ -3,6 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Родителям — ЕГЭ_Map</title>
+<meta name="description" content="Как читать результаты пробника ЕГЭ и ОГЭ: страница ученика, прогноз, темы для повторения и уведомления ВКонтакте. Памятка ЕГЭ_Map для родителей.">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ЕГЭ_Map">
+<meta property="og:title" content="Как читать результаты пробника — памятка для родителей">
+<meta property="og:description" content="Как читать результаты пробника ЕГЭ и ОГЭ: страница ученика, прогноз, темы для повторения и уведомления ВКонтакте. Памятка ЕГЭ_Map для родителей.">
+<meta property="og:image" content="https://ege-map.ru/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -38,10 +48,10 @@
         <span style="width: 7px; height: 7px; border-radius: 50%; background: #0C0C0A"></span>Памятка для родителей
       </div>
       <h1 style="margin: 22px 0 0; font-size: clamp(32px, 5.4vw, 56px); line-height: .98; font-weight: 800; letter-spacing: -.04em; max-width: 720px; text-wrap: balance">Как читать результаты пробника вашего ребёнка</h1>
-      <p style="margin: 20px 0 0; font-size: clamp(15.5px, 1.6vw, 17.5px); line-height: 1.5; font-weight: 500; color: rgba(12,12,10,.74); max-width: 560px; text-wrap: pretty">Учитель ведёт подготовку в ЕГЭ_Map и присылает вам ссылку на страницу с результатами ребёнка. Здесь — коротко, что на этой странице и как получать баллы в Telegram.</p>
+      <p style="margin: 20px 0 0; font-size: clamp(15.5px, 1.6vw, 17.5px); line-height: 1.5; font-weight: 500; color: rgba(12,12,10,.74); max-width: 560px; text-wrap: pretty">Учитель ведёт подготовку в ЕГЭ_Map и присылает вам ссылку на страницу с результатами ребёнка. Здесь вы найдете короткую справку, как работать с полученными результатами.&nbsp;</p>
       <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px">
         <a href="#stranica" style="display: inline-flex; align-items: center; height: 52px; padding: 0 24px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 15px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">Что на странице</a>
-        <a href="#bot" style="display: inline-flex; align-items: center; height: 52px; padding: 0 24px; border-radius: 999px; background: #FFFFFF; font-size: 15px; font-weight: 600" style-hover="color: #0C0C0A; background: #E4FDFE">Подключить Telegram-бота</a>
+        <a href="#bot" style="display: inline-flex; align-items: center; height: 52px; padding: 0 24px; border-radius: 999px; background: #FFFFFF; font-size: 15px; font-weight: 600" style-hover="color: #0C0C0A; background: #E4FDFE">ВК-бот</a>
       </div>
     </div>
   </div>
@@ -87,9 +97,9 @@
 
   <div id="bot" style="padding: clamp(52px, 7vw, 78px) clamp(18px, 3.6vw, 40px) 0">
     <div style="border-radius: 30px; background: #0C0C0A; color: #FFFFFF; padding: clamp(24px, 4vw, 44px)">
-      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.5)">telegram-бот</div>
-      <h2 style="margin: 12px 0 0; font-size: clamp(26px, 3.6vw, 38px); line-height: 1.04; font-weight: 800; letter-spacing: -.035em; max-width: 560px">Баллы после каждого пробника — в Telegram</h2>
-      <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.7); max-width: 560px">Балл, изменение к прошлому разу, прогноз, темы на повторение и комментарий учителя. Подписка не включается сама — только после вашего подтверждения.</p>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.5)">бот ВКонтакте</div>
+      <h2 style="margin: 12px 0 0; font-size: clamp(26px, 3.6vw, 38px); line-height: 1.04; font-weight: 800; letter-spacing: -.035em; max-width: 560px">Баллы после каждого пробника в ВК-боте</h2>
+      <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.7); max-width: 560px">Балл, изменение к прошлому баллу, прогноз, темы для повторения и комментарий учителя – все это может присылать Вам ВК-бот сразу после его подключения. Учитель внес результаты – Вы получили подробную аналитику.</p>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 26px">
         <sc-for list="{{ botSteps }}" as="s" hint-placeholder-count="3">
           <div style="display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: 20px; background: rgba(255,255,255,.07); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1)">
@@ -99,7 +109,7 @@
           </div>
         </sc-for>
       </div>
-      <p style="margin: 18px 0 0; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: rgba(255,255,255,.55)">/stop — отписаться в любой момент</p>
+      <p style="margin: 18px 0 0; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: rgba(255,255,255,.55)">«Стоп» в диалоге с сообществом — отписаться в любой момент</p>
     </div>
   </div>
 
@@ -108,7 +118,7 @@
       <span style="display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 12px; background: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 700; letter-spacing: -.02em">11А-07</span>
       <div style="flex: 1 1 320px">
         <div style="font-size: 19px; font-weight: 800; letter-spacing: -.02em">Ни имени, ни фамилии</div>
-        <p style="margin: 6px 0 0; font-size: 14.5px; line-height: 1.55; color: #3D4746; text-wrap: pretty">В системе хранится только код ученика и баллы за задания. Какой код у вашего ребёнка, знает только учитель. Бот тоже видит только код.</p>
+        <p style="margin: 6px 0 0; font-size: 14.5px; line-height: 1.55; color: #3D4746; text-wrap: pretty">В системе хранится только код ученика и баллы за задания. Какой код у вашего ребёнка, знает только учитель, сам ребенок и вы. Бот тоже видит только код.</p>
       </div>
     </div>
   </div>
@@ -131,7 +141,7 @@
   </div>
 
   <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-top: clamp(52px, 7vw, 78px); padding: 28px clamp(18px, 3.6vw, 40px); background: #0C0C0A; color: #FFFFFF">
-    <span style="font-size: 14px; color: rgba(255,255,255,.6)">Вы учитель или репетитор?</span>
+    
     <a href="./index.html" style="display: inline-flex; align-items: center; height: 46px; padding: 0 22px; border-radius: 999px; background: #00FDFF; color: #0C0C0A; font-size: 14.5px; font-weight: 700" style-hover="background: #6EF7F9; color: #0C0C0A">Узнать о ЕГЭ_Map →</a>
   </div>
 
@@ -141,20 +151,20 @@
 <script type="text/x-dc" data-dc-script>
 const BLOCKS = [
   ["01", "Балл и динамика", "Тестовый балл за последний пробник, изменение к прошлому разу и прогноз на экзамен.", "#0C0C0A", "#FFFFFF"],
-  ["02", "Задания по блокам", "Какие темы уже получаются, а где ребёнок теряет баллы — по каждому заданию экзамена.", "#E4FDFE", "#0C0C0A"],
-  ["03", "Сочинение по критериям", "Баллы за каждый критерий отдельно: видно, что тянет вниз — содержание или грамотность.", "#00FDFF", "#0C0C0A"],
+  ["02", "Задания по блокам", "Какие темы получаются лучше, а где ребёнок теряет баллы, все расписано по каждому заданию экзамена.", "#E4FDFE", "#0C0C0A"],
+  ["03", "Развернутые ответы по критериям", "Баллы за каждый критерий отдельно, что позволяет понять, что именно проседает в развернутых ответах", "#00FDFF", "#0C0C0A"],
   ["04", "Что повторить", "Темы на повторение и комментарий учителя к последнему пробнику.", "#D7F205", "#0C0C0A"]
 ];
 const BOT_STEPS = [
   ["1", "Откройте ссылку", "Ту, что прислал учитель, — страницу с результатами ребёнка.", "#00FDFF"],
-  ["2", "Нажмите «Подключить бота»", "Кнопка — на этой же странице, отдельная ссылка не нужна.", "#D7F205"],
-  ["3", "Подтвердите в Telegram", "После этого бот пришлёт карточку после каждого нового пробника.", "#FFFFFF"]
+  ["2", "Нажмите «Подключить ВКонтакте»", "Кнопка находится на этой же странице, отдельная ссылка не нужна.", "#D7F205"],
+  ["3", "Подтвердите в ВК", "После этого бот начнет присылать информацию после внесения результатов", "#FFFFFF"]
 ];
 const FAQ = [
   ["Нужно ли регистрироваться?", "Нет. Страница открывается по ссылке от учителя — без логина и пароля."],
   ["Видно ли результаты других учеников?", "Нет. По ссылке — только баллы и рекомендации вашего ребёнка. Сравнение с классом видит только учитель."],
   ["Ссылка попала не тому человеку?", "Напишите учителю — он выпустит новую ссылку, а старая сразу перестанет работать."],
-  ["Как отписаться от бота?", "Отправьте боту команду /stop — уведомления прекратятся сразу."]
+  ["Как отписаться от бота?", "Напишите «Стоп» в диалоге с сообществом ЕГЭ_Map во ВКонтакте — уведомления прекратятся сразу."]
 ];
 
 class Component extends DCLogic {

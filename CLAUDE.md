@@ -7,7 +7,7 @@
 - Лендинг (статический, без сборки; правки лендинга и приложения — раздельно):
   - `index.html` — для учителей и репетиторов; `parents.html` — «Родителям» (пример отчёта, бот, приватность); `report-sample.html` — пример отчёта (iframe в лендинге).
   - `support.js` — рантайм для `index.html`/`parents.html`, **сгенерирован, не редактировать**; `image-slot.js` — веб-компонент `<image-slot>`.
-  - Графика: `logo-lockup.svg`, `author.jpg`, `screenshots/*.png`.
+  - Графика: `logo-lockup.svg`, `logo-lockup-dark.svg`, `author.jpg` (аватар в приложении), `author-web.jpg` (лендинг), `og-image.png`, `favicon.svg`, `favicon-32.png`, `apple-touch-icon.png`, `max-icon.png`. Папки `screenshots/` больше нет.
 - `supabase/functions/*` — Edge Functions (Deno): `create-payment`, `yoomoney-webhook` (verify_jwt=false, проверка подписи HMAC-SHA256), `vk-webhook` (verify_jwt=false, проверка секретного ключа), `vk-notify`, `telegram-notify`/`telegram-webhook` (на паузе: включаются `app_secrets.telegram_enabled='true'`). Настройка ВК: `docs/vk-setup.md`; правовые тексты и чек-лист: `docs/legal-checklist.md`.
 - `supabase/schema_snapshot.sql` — справочный снимок схемы и функций. Правда — в живой базе (проект `ritcwzuelbffwmooxbbp`).
 - `docs/tarify.md`, `docs/TODO.md` — тарифы, список дел.
@@ -23,7 +23,7 @@
 ## Ссылки между лендингом и приложением
 - Демо: `app.html?demo=1` (демо-режим без базы, 14 учеников). Тарифы: `app.html?buy=start|standard|class_plus|school|school_plus` — выбор ждёт в sessionStorage до входа, затем открывается оплата (`resumeBuyFromLanding`).
 - `SITE_URL = "https://ege-map.ru"` в app.html — куда ведёт «Назад на сайт» из демо без referrer.
-- Бот `https://t.me/ege_map_bot`. Контакты-заглушки (заменить): `t.me/ege_map`, `hello@ege-map.ru`.
+- Бот ВКонтакте: `https://vk.me/ege_map`. Контакты берутся из `AUTHOR` в app.html; формы заявки на лендинге нет.
 
 ## Бренд
 - Шрифты: Onest (текст), IBM Plex Mono (метки, цифры). Цвета: `#00FDFF`, фон `#E4FDFE`, лайм `#D7F205`, текст `#0C0C0A`, вторичный `#4F5A59` / `#6F7B7A`.
