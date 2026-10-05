@@ -22,6 +22,12 @@ Deno.serve(async (req) => {
   const { studentId, text } = body ?? {};
   if (!studentId || !text) return new Response(JSON.stringify({ ok: false, error: "missing_fields" }), { status: 400, headers: CORS });
 
+  // Пауза: отправка в Telegram выключена, пока в app_secrets нет telegram_enabled = 'true'.
+  // Вернуть бота: insert into app_secrets (key, value) values ('telegram_enabled','true') on conflict (key) do update set value = 'true';
+  const service = createClient(SUPABASE_URL, SERVICE_KEY);
+  const { data: flag } = await service.from("app_secrets").select("value").eq("key", "telegram_enabled").maybeSingle();
+  if (flag?.value !== "true") return new Response(JSON.stringify({ ok: true, skipped: "paused" }), { headers: CORS });
+
   const { data: student, error } = await asCaller
     .from("students")
     .select("id, telegram_chat_id")
@@ -31,7 +37,6 @@ Deno.serve(async (req) => {
   if (error || !student) return new Response(JSON.stringify({ ok: false, error: "not_found_or_forbidden" }), { status: 403, headers: CORS });
   if (!student.telegram_chat_id) return new Response(JSON.stringify({ ok: true, skipped: "not_subscribed" }), { headers: CORS });
 
-  const service = createClient(SUPABASE_URL, SERVICE_KEY);
   const { data: secret } = await service.from("app_secrets").select("value").eq("key", "telegram_bot_token").single();
   if (!secret) return new Response(JSON.stringify({ ok: false, error: "no_bot_token" }), { status: 500, headers: CORS });
 

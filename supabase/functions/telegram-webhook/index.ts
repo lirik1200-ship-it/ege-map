@@ -45,7 +45,15 @@ Deno.serve(async (req) => {
   const chatId = msg?.chat?.id;
   if (!text || !chatId) return new Response("ok");
 
+  // Пауза: новые подписки не принимаем, пока в app_secrets нет telegram_enabled = 'true'. /stop работает всегда.
+  const { data: flag } = await service.from("app_secrets").select("value").eq("key", "telegram_enabled").maybeSingle();
+  const paused = flag?.value !== "true";
+
   if (text.startsWith("/start")) {
+    if (paused) {
+      await tg("sendMessage", { chat_id: chatId, text: "Уведомления в Telegram временно недоступны. Результаты можно смотреть по личной ссылке от учителя." });
+      return new Response("ok");
+    }
     const token = text.split(" ")[1]?.trim();
     if (!token) {
       await tg("sendMessage", { chat_id: chatId, parse_mode: "HTML", text: WELCOME_NO_TOKEN });

@@ -1,6 +1,6 @@
 # ЕГЭ_Map — контекст для Claude Code
 
-Веб-приложение для учителей: учёт пробников ЕГЭ/ОГЭ по заданиям, прогноз, отчёты родителям, кабинет ученика по ссылке, Telegram-бот. Сайт https://ege-map.ru (GitHub Pages, CNAME). Язык интерфейса и общения — русский.
+Веб-приложение для учителей: учёт пробников ЕГЭ/ОГЭ по заданиям, прогноз, отчёты родителям, кабинет ученика по ссылке, уведомления ВКонтакте (Telegram-бот на паузе). Сайт https://ege-map.ru (GitHub Pages, CNAME). Язык интерфейса и общения — русский.
 
 ## Структура репозитория
 - `app.html` — всё приложение в одном файле (vanilla JS, Tailwind CDN, Chart.js, supabase-js, html2pdf.js). Не разбивать на модули без запроса.
@@ -8,7 +8,7 @@
   - `index.html` — для учителей и репетиторов; `parents.html` — «Родителям» (пример отчёта, бот, приватность); `report-sample.html` — пример отчёта (iframe в лендинге).
   - `support.js` — рантайм для `index.html`/`parents.html`, **сгенерирован, не редактировать**; `image-slot.js` — веб-компонент `<image-slot>`.
   - Графика: `logo-lockup.svg`, `author.jpg`, `screenshots/*.png`.
-- `supabase/functions/*` — Edge Functions (Deno): `create-payment`, `yoomoney-webhook` (verify_jwt=false, проверка подписи HMAC-SHA256), `telegram-notify`, `telegram-webhook` (verify_jwt=false).
+- `supabase/functions/*` — Edge Functions (Deno): `create-payment`, `yoomoney-webhook` (verify_jwt=false, проверка подписи HMAC-SHA256), `vk-webhook` (verify_jwt=false, проверка секретного ключа), `vk-notify`, `telegram-notify`/`telegram-webhook` (на паузе: включаются `app_secrets.telegram_enabled='true'`). Настройка ВК: `docs/vk-setup.md`; правовые тексты и чек-лист: `docs/legal-checklist.md`.
 - `supabase/schema_snapshot.sql` — справочный снимок схемы и функций. Правда — в живой базе (проект `ritcwzuelbffwmooxbbp`).
 - `docs/tarify.md`, `docs/TODO.md` — тарифы, список дел.
 - `tests/harness*.py` — прогон приложения в headless Playwright с подменой CDN-библиотек и Supabase (запуск: `python3 tests/harness.py`; harness2 — оплата/auth/лимит/share/отчёт; harness3 — демо-класс; harness4 — пустой кабинет ученика).
@@ -32,7 +32,7 @@
 ## Ключевые решения
 - Ученики анонимны: только коды (11А-01); расшифровка хранится локально в браузере учителя. Не добавлять сбор ФИО.
 - Тарифы «платишь за места»; лимит = `plan_base_limit + plan_topup_count`, срок до 30 июня. Цены: таблица `plans` + `PLANS` в app.html (сверять оба).
-- Оплата: ЮMoney Quickpay → HTTP-уведомление → `apply_payment()` (идемпотентна, проверка суммы). Секреты только в `app_secrets` (telegram_bot_token, yoomoney_wallet, yoomoney_notification_secret) — НИКОГДА не класть в репозиторий и в код.
+- Оплата: ЮMoney Quickpay → HTTP-уведомление → `apply_payment()` (идемпотентна, проверка суммы). Секреты только в `app_secrets` (telegram_bot_token, vk_group_token, vk_secret, vk_confirmation, vk_group_id, yoomoney_wallet, yoomoney_notification_secret) — НИКОГДА не класть в репозиторий и в код.
 - Профиль: клиенту разрешён UPDATE только колонки `enabled_subjects`. Не расширять GRANT.
 - Демо-класс (15 вымышленных учеников) — только на клиенте, в БД не пишется, в лимит не входит.
 - Кабинет ученика по ссылке `?s=<share_token>` работает сразу после создания ученика; без пробников показывает «Пробников пока нет» + кнопку подключения бота (`BOT_LINK`).
