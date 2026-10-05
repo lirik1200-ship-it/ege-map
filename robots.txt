@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ege-map.ru/sitemap.xml

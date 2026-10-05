@@ -9,6 +9,10 @@
   - `support.js` — рантайм для `index.html`/`parents.html`, **сгенерирован, не редактировать**; `image-slot.js` — веб-компонент `<image-slot>`.
   - Графика: `logo-lockup.svg`, `logo-lockup-dark.svg`, `author.jpg` (аватар в приложении), `author-web.jpg` (лендинг), `og-image.png`, `favicon.svg`, `favicon-32.png`, `apple-touch-icon.png`, `max-icon.png`. Папки `screenshots/` больше нет.
 - `supabase/functions/*` — Edge Functions (Deno): `create-payment`, `yoomoney-webhook` (verify_jwt=false, проверка подписи HMAC-SHA256), `vk-webhook` (verify_jwt=false, проверка секретного ключа), `vk-notify`, `telegram-notify`/`telegram-webhook` (на паузе: включаются `app_secrets.telegram_enabled='true'`). Настройка ВК: `docs/vk-setup.md`; правовые тексты и чек-лист: `docs/legal-checklist.md`.
+- `vendor/` и `fonts/` — библиотеки (Tailwind Play 3.4.17, Chart.js 4.4.1, supabase-js 2.117.2, html2pdf 0.10.1, React 18.3.1, Babel 7.29.0) и шрифты Onest/IBM Plex Mono лежат на нашем сайте, к CDN и Google страницы не обращаются (152-ФЗ, IP посетителей). В `support.js` три адреса unpkg заменены на `./vendor/…` (хэши SRI те же): после пересборки рантайма повторить. Обновлять библиотеки вручную.
+- `robots.txt`, `sitemap.xml` — при добавлении страниц дописывать в sitemap. `og-image.png` подключён как `og-image.png?v=2` (при смене картинки поднимать версию).
+- `docs/` лежит только локально и в публичный репозиторий не пушится (`.gitignore`): там юридический чек-лист, тарифы, открытые вопросы.
+- `supabase/purge_inactive_accounts.sql` — автоудаление аккаунтов без входа 6 месяцев (pg_cron, ежедневно 03:00 UTC, уже применено в базе). Кнопка «Удалить аккаунт» — в «Личном кабинете» (`delete_my_account`).
 - `supabase/schema_snapshot.sql` — справочный снимок схемы и функций. Правда — в живой базе (проект `ritcwzuelbffwmooxbbp`).
 - `docs/tarify.md`, `docs/TODO.md` — тарифы, список дел.
 - `tests/harness*.py` — прогон приложения в headless Playwright с подменой CDN-библиотек и Supabase (запуск: `python3 tests/harness.py`; harness2 — оплата/auth/лимит/share/отчёт; harness3 — демо-класс; harness4 — пустой кабинет ученика).

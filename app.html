@@ -14,24 +14,23 @@
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="ЕГЭ_Map — аналитика пробных экзаменов">
 <meta property="og:description" content="Аналитика пробных экзаменов ЕГЭ и ОГЭ: результаты по заданиям, прогноз и зоны роста для каждого ученика.">
-<meta property="og:image" content="https://ege-map.ru/og-image.png">
+<meta property="og:image" content="https://ege-map.ru/og-image.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ЕГЭ_Map — аналитика пробных экзаменов">
 <meta name="twitter:description" content="Аналитика пробных экзаменов ЕГЭ и ОГЭ: результаты по заданиям, прогноз и зоны роста для каждого ученика.">
-<meta name="twitter:image" content="https://ege-map.ru/og-image.png">
+<meta name="twitter:image" content="https://ege-map.ru/og-image.png?v=2">
 <style>#ege-splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#FFFFFF;transition:opacity .45s ease}#ege-splash img{height:46px;width:auto;animation:egeSplash 1.2s ease-in-out infinite alternate}@keyframes egeSplash{from{opacity:.55;transform:scale(.97)}to{opacity:1;transform:none}}@media (prefers-color-scheme: dark){#ege-splash{background:#070B0B}}</style>
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 251 251'%3E%3CclipPath id='c'%3E%3Crect width='251' height='251' rx='50.4'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23c)'%3E%3Crect width='251' height='251' fill='%230C0C0A'/%3E%3Cpath fill='none' stroke='%23FFFCFC' stroke-width='25' d='M-14.65 229.42C25.21 112.09 46.57 78.81 58.33 81.1C73.4 84.04 70.16 144.93 85.08 146.89C105.78 149.61 133.95 35.22 147.86 38.06C158.02 40.13 148.1 102.24 161.27 105.69C173.04 108.77 195.85 63.03 217.06 20.49C228.29 -2.03 236.69 -20.91 242.07 -33.44'/%3E%3Cpath fill='%23D7F205' transform='translate(96.79 217.04) scale(.0936 -.0936)' d='M-5 0L279 708L463 708L744 0L549 0L514 100L225 100L189 0ZM282 263L457 263L371 506ZM806 0L806 708L1103 708Q1186 708 1249 684.5Q1312 661 1348 606.5Q1384 552 1384 457Q1384 370 1346 312.5Q1308 255 1243 227Q1178 199 1096 199L987 199L987 0ZM987 360L1096 360Q1148 360 1177 385Q1206 410 1206 456Q1206 498 1180.5 519Q1155 540 1095 540L987 540Z'/%3E%3Cpath fill='%2300FDFF' d='M-7.55 231.84L-21.75 227.01C-3.07 172.02 12.91 131.62 25.72 106.95C38.89 81.59 49.08 71.66 59.76 73.74C72.3 76.19 75.62 94.05 79.13 112.97C80.61 120.97 83.3 135.43 86.2 139.13C87.66 138.14 91.59 134.51 98.18 121.49C103.91 110.15 109.72 95.71 115.34 81.75C130.27 44.63 137.39 28.32 149.32 30.7C159.45 32.71 162.57 46.04 161.65 83.5C161.16 87.39 157.75 90.28 153.88 90.13C150.09 89.99 146.95 86.97 146.66 83.14C146.97 76.64 146.9 69.59 146.58 62.03C146.36 56.69 145.99 52.9 145.58 50.21C140.76 58.76 134.07 75.39 129.26 87.34C112.65 128.63 101.44 154.45 85.98 154.45C85.36 154.45 84.73 154.41 84.1 154.33C71.23 152.64 68.06 135.52 64.38 115.71C62.82 107.32 59.98 92.01 56.86 88.67C55.12 89.54 48.72 94.21 36.64 118.59C24.59 142.89 9.73 180.99 -7.55 231.84Z'/%3E%3C/g%3E%3C/svg%3E">
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="./vendor/tailwind.js"></script>
+<script src="./vendor/chart.umd.min.js"></script>
+<script src="./vendor/supabase.js"></script>
+<script src="./vendor/html2pdf.bundle.min.js"></script>
+<link rel="preload" href="./fonts/Onest-cyrillic-8faa2f.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts/fonts.css">
 
 <script>
   tailwind.config = { theme: { extend: {
@@ -3070,9 +3069,52 @@ function renderAccount(){
         <button id="acc-change-pass" class="px-4 py-2.5 rounded-full bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Сменить пароль</button>
         <span id="acc-pass-msg" class="text-xs ml-2"></span>
       </div>
+
+      <div id="acc-delete-card" class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
+        <h2 class="font-display font-bold text-lg mb-1">Удаление аккаунта</h2>
+        <p class="text-sm text-ink-500 leading-relaxed mb-4">
+          Будут безвозвратно удалены ваши классы, ученики, пробники, подписки на уведомления и история оплат, доступ к сервису закроется.
+          Возврат за неиспользованный период — по условиям оферты (п. 12), напишите в поддержку: ${socialLinks("support"," · ")}.
+          Расшифровка кодов хранится только в вашем браузере: если она нужна, сохраните её файлом заранее.
+        </p>
+        <button id="acc-delete" type="button" class="px-4 py-2.5 rounded-full bg-white border border-rose-200 hover:border-rose-500 text-rose-600 text-sm font-semibold transition">Удалить аккаунт…</button>
+        <div id="acc-delete-box" class="hidden mt-4 rounded-xl bg-rose-50 p-4">
+          <label class="block text-sm text-rose-800">
+            Чтобы подтвердить, введите слово <b>УДАЛИТЬ</b>
+            <input id="acc-delete-word" type="text" autocomplete="off" class="mt-1.5 w-full sm:w-64 px-4 py-2.5 rounded-xl bg-white border border-rose-200 text-sm focus:border-rose-500 outline-none transition">
+          </label>
+          <div class="flex flex-wrap items-center gap-2 mt-3">
+            <button id="acc-delete-go" type="button" disabled class="px-4 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed">Удалить навсегда</button>
+            <button id="acc-delete-cancel" type="button" class="px-4 py-2.5 rounded-full bg-white border border-gray-200 hover:border-ink-900 text-sm font-semibold transition">Отмена</button>
+            <span id="acc-delete-msg" class="text-xs"></span>
+          </div>
+        </div>
+      </div>
     </div>`;
 
     $("#acc-to-pricing").onclick=()=>route("screen-pricing");
+  const delBox=$("#acc-delete-box"), delWord=$("#acc-delete-word"), delGo=$("#acc-delete-go"), delMsg=$("#acc-delete-msg");
+  $("#acc-delete").onclick=()=>{ delBox.classList.remove("hidden"); delWord.focus(); };
+  $("#acc-delete-cancel").onclick=()=>{ delBox.classList.add("hidden"); delWord.value=""; delGo.disabled=true; delMsg.textContent=""; };
+  delWord.oninput=()=>{ delGo.disabled=delWord.value.trim().toUpperCase()!=="УДАЛИТЬ"; };
+  delGo.onclick=async()=>{
+    if(!db||delWord.value.trim().toUpperCase()!=="УДАЛИТЬ") return;
+    delGo.disabled=true; delMsg.className="text-xs text-ink-500"; delMsg.textContent="Удаляем…";
+    const {error}=await db.rpc("delete_my_account");
+    if(error){
+      delMsg.className="text-xs text-rose-600";
+      delMsg.textContent="Не удалось удалить аккаунт: "+(error.message||"ошибка")+". Напишите в поддержку.";
+      delGo.disabled=false; return;
+    }
+    try{ await db.auth.signOut(); }catch(e){}
+    $("#signout-btn").classList.add("hidden");
+    $("#screen-account").innerHTML=`
+      <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-soft p-8 text-center mt-6">
+        <h1 class="font-display font-extrabold text-xl mb-2">Аккаунт удалён</h1>
+        <p class="text-sm text-ink-500 leading-relaxed mb-6">Все данные аккаунта удалены с сервера. Резервные копии стираются в течение 14 дней. Спасибо, что пользовались сервисом.</p>
+        <a href="${escAttr(SITE_URL)}" class="inline-block px-5 py-2.5 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">На сайт</a>
+      </div>`;
+  };
   $("#screen-account").querySelectorAll("[data-acc-pricing]").forEach(b=>b.onclick=()=>route("screen-pricing"));
 
   $("#codebook-export").onclick=()=>{
