@@ -98,6 +98,37 @@
     *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
   }
   :focus-visible{outline:2px solid #D7F205;outline-offset:2px;border-radius:8px}
+
+  /* Страница входа и бегущая строка в шапке */
+  .logo-full{display:none;height:34px;width:auto}
+  @media (min-width:1200px){ .logo-full{display:block} .logo-sym{display:none} }
+  body.on-auth .logo-full{display:block} body.on-auth .logo-sym{display:none}
+  .auth-ticker{display:none;overflow:hidden;background:#E4FDFE;border-bottom:1px solid rgba(12,12,10,.06);
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+  body.on-auth .auth-ticker{display:block}
+  .auth-ticker-track{display:flex;width:max-content;animation:authTicker 90s linear infinite}
+  .auth-ticker:hover .auth-ticker-track{animation-play-state:paused}
+  .auth-ticker-track span{flex:none;padding:6px 0;font:500 11px/1.4 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.04em;color:#4F5A59;white-space:nowrap}
+  .auth-ticker-track span::after{content:"";display:inline-block;width:5px;height:5px;margin:0 22px;border-radius:50%;background:#D7F205;vertical-align:middle;box-shadow:0 0 0 1px rgba(12,12,10,.15)}
+  @keyframes authTicker{to{transform:translateX(-50%)}}
+  @keyframes authRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes authDraw{to{stroke-dashoffset:0}}
+  @keyframes authPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+  @keyframes authSwap{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes authFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .auth-rise{animation:authRise .6s cubic-bezier(.2,.7,.2,1) both}
+  .auth-swap{animation:authSwap .35s ease both}
+  .auth-draw{stroke-dasharray:var(--len,300);stroke-dashoffset:var(--len,300);animation:authDraw 1.1s ease .1s forwards}
+  .auth-cell{animation:authPop .35s ease both}
+  .auth-tilt{transition:transform .25s ease;will-change:transform}
+  .auth-bar{transition:width linear}
+  .auth-chip{transition:transform .15s ease,background .15s ease}
+  .auth-chip:hover{transform:translateY(-2px)}
+  @media (prefers-reduced-motion:reduce){
+    .auth-ticker-track{animation:none}
+    .auth-rise,.auth-swap,.auth-cell{animation:none}
+    .auth-draw{animation:none;stroke-dashoffset:0}
+  }
 </style>
 </head>
 
@@ -127,9 +158,11 @@
 
 <div class="min-h-screen flex flex-col">
   <header class="sticky top-0 z-30 bg-white/85 backdrop-blur border-b-2 border-route-500">
+    <div class="auth-ticker" aria-hidden="true"><div class="auth-ticker-track"><span>Аналитика пробных экзаменов в одном месте</span><span>ЕГЭ и ОГЭ, 8 предметов</span><span>Баллы за пробник — за пару минут</span><span>Прогноз результата и зоны роста</span><span>Отчёт для родителей в PDF</span><span>Ученики анонимны: только коды</span><span>Результаты приходят во ВКонтакте</span><span>3 ученика — бесплатно</span><span>Аналитика пробных экзаменов в одном месте</span><span>ЕГЭ и ОГЭ, 8 предметов</span><span>Баллы за пробник — за пару минут</span><span>Прогноз результата и зоны роста</span><span>Отчёт для родителей в PDF</span><span>Ученики анонимны: только коды</span><span>Результаты приходят во ВКонтакте</span><span>3 ученика — бесплатно</span></div></div>
     <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
       <button id="logo-btn" class="flex items-center text-left" aria-label="ЕГЭ_Map — на главную" title="ЕГЭ_Map">
-        <svg viewBox="-22 0 273 251" class="w-11 h-11 shrink-0" role="img" aria-label="ЕГЭ_Map"><use href="#egm"></use></svg>
+        <img src="./logo-lockup.svg" alt="ЕГЭ_Map" class="logo-full">
+        <svg viewBox="-22 0 273 251" class="logo-sym w-11 h-11 shrink-0" role="img" aria-label="ЕГЭ_Map"><use href="#egm"></use></svg>
       </button>
       <div id="subject-switch" class="hidden relative"></div>
       <nav id="main-nav" class="hidden md:flex items-center gap-1 text-sm"></nav>
@@ -2502,6 +2535,7 @@ function setMode(mode){ state.mode = MODES[mode] ? mode : "boot"; renderChrome()
 function showScreen(id){
   state.screen = SCREENS.includes(id) ? id : "screen-loading";
   SCREENS.forEach(n=>$("#"+n).classList.toggle("hidden",n!==state.screen));
+  document.body.classList.toggle("on-auth",state.screen==="screen-auth");
   if(["screen-list","screen-group","screen-entry","screen-import","screen-pricing","screen-account","screen-help"].includes(state.screen)) state.view=state.screen;
   renderChrome();
 }
@@ -3374,6 +3408,89 @@ function renderLegal(){
    ========================================================================= */
 let authMode="login";
 let authStage=null;
+let authEmail="";
+let authTimer=null;
+
+// Живой пример на странице входа: три вкладки, сами сменяются, под курсором замирают
+const AUTH_DEMO=[
+  {tab:"Ученик", html:()=>`
+    <div class="auth-swap grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 items-end">
+      <div>
+        <div class="text-[11px] uppercase tracking-wide text-ink-500">прогноз к экзамену</div>
+        <div class="flex items-baseline gap-2 mt-1"><span id="auth-count" class="font-mono font-bold text-5xl tnum leading-none" data-to="74">0</span>
+          <span class="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-600 text-xs font-bold tnum">↑ 6</span></div>
+      </div>
+      <svg viewBox="0 0 220 70" class="w-full h-[70px]" fill="none" aria-hidden="true">
+        <path d="M0 62H220" stroke="#E5E7EB"/><path class="auth-draw" style="--len:260" stroke="#00A9B0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M6 52L48 44L90 48L132 30L174 20L214 10"/>
+        ${[[6,52],[48,44],[90,48],[132,30],[174,20],[214,10]].map((p,i)=>`<circle class="auth-cell" style="animation-delay:${.15*i+.3}s" cx="${p[0]}" cy="${p[1]}" r="${i===5?5:3.5}" fill="${i===5?"#D7F205":"#FFFFFF"}" stroke="#0C0C0A" stroke-width="2"/>`).join("")}
+      </svg>
+      <div class="col-span-2 flex flex-wrap items-center gap-2">
+        <span class="text-xs text-ink-500">Зоны роста:</span>
+        ${["Задание 8","Задание 12","Критерий К2"].map(t=>`<span class="auth-chip px-2.5 py-1 rounded-full bg-accent-500 text-ink-900 text-xs font-bold">${t}</span>`).join("")}
+      </div>
+    </div>`},
+  {tab:"Класс", html:()=>{
+    const v=[88,82,79,41,76,70,84,38,73,66,80,35,77,71,69,64,74,58,81,33];
+    return `<div class="auth-swap">
+      <div class="grid grid-cols-10 gap-1.5">
+        ${v.map((x,i)=>`<div class="auth-cell aspect-square rounded-lg grid place-items-center font-mono text-[11px] font-semibold ${x<45?"bg-amber-200 text-amber-900 ring-1 ring-amber-400":x<70?"bg-accent-500/60 text-ink-900":"bg-route-tint text-route-700"}" style="animation-delay:${i*.025}s" title="Задание ${i+1}: ${x}% верно">${i+1}</div>`).join("")}
+      </div>
+      <p class="mt-3 text-[13px] text-ink-700 leading-relaxed">У класса проседают задания <b>4, 8, 12 и 20</b>: на них стоит потратить следующее занятие.</p>
+    </div>`;}},
+  {tab:"Родителям", html:()=>`
+    <div class="auth-swap space-y-2.5 text-[13px]">
+      <div class="flex items-center justify-between rounded-xl bg-paper px-3.5 py-2.5"><span class="text-ink-500">Последний пробник</span><b class="font-mono tnum">31 из 40</b></div>
+      <div class="flex items-center justify-between rounded-xl bg-paper px-3.5 py-2.5"><span class="text-ink-500">Что повторить</span><b>задания 8 и 12</b></div>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <span class="auth-chip inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink-900 text-white text-xs font-bold">PDF для родителей</span>
+        <span class="auth-chip inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-route-tint text-route-700 text-xs font-bold">Карточка во ВКонтакте</span>
+      </div>
+    </div>`}
+];
+function startAuthDemo(){
+  clearInterval(authTimer);
+  const body=$("#auth-demo-body"), bar=$("#auth-demo-bar"), box=$("#auth-demo");
+  if(!body||!bar||!box) return;
+  const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const DUR=5200;
+  let cur=0, paused=false, started=Date.now(), manual=false;
+  const tabs=[...box.querySelectorAll(".auth-demo-tab")];
+  const count=()=>{
+    const el=$("#auth-count"); if(!el) return;
+    const to=+el.dataset.to; if(reduce){ el.textContent=to; return; }
+    const t0=performance.now();
+    const step=t=>{ const k=Math.min(1,(t-t0)/900); el.textContent=Math.round(to*(1-Math.pow(1-k,3)));
+      if(k<1&&document.body.contains(el)) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  };
+  const show=i=>{
+    cur=(i+AUTH_DEMO.length)%AUTH_DEMO.length; started=Date.now();
+    body.innerHTML=AUTH_DEMO[cur].html();
+    tabs.forEach((t,j)=>{ const on=j===cur; t.setAttribute("aria-selected",on);
+      t.className="auth-demo-tab px-3.5 py-1.5 rounded-full text-[12.5px] font-bold transition "+(on?"bg-ink-900 text-white":"text-ink-500 hover:text-ink-900"); });
+    bar.style.transition="none"; bar.style.width="0";
+    if(!reduce&&!manual){ void bar.offsetWidth; bar.style.transition="width "+DUR+"ms linear"; bar.style.width="100%"; }
+    count();
+  };
+  tabs.forEach((t,j)=>t.onclick=()=>{ manual=true; show(j); bar.style.transition="none"; bar.style.width="100%"; });
+  box.onmouseenter=()=>{ paused=true; bar.style.transition="none"; bar.style.width=Math.min(100,(Date.now()-started)/DUR*100)+"%"; };
+  box.onmouseleave=()=>{ paused=false; if(manual) return; started=Date.now()-(parseFloat(bar.style.width)||0)/100*DUR;
+    void bar.offsetWidth; bar.style.transition="width "+Math.max(100,DUR-(Date.now()-started))+"ms linear"; bar.style.width="100%"; };
+  show(0);
+  if(!reduce) authTimer=setInterval(()=>{
+    if(!document.body.contains(box)){ clearInterval(authTimer); return; }
+    if(paused||manual||document.hidden) return;
+    if(Date.now()-started>=DUR) show(cur+1);
+  },200);
+  // лёгкий наклон карточки за курсором (только мышь)
+  const hero=$("#auth-hero");
+  if(hero&&!reduce&&window.matchMedia("(hover: hover)").matches){
+    hero.onmousemove=e=>{ const r=box.getBoundingClientRect();
+      const x=(e.clientX-(r.left+r.width/2))/r.width, y=(e.clientY-(r.top+r.height/2))/r.height;
+      box.style.transform=`perspective(900px) rotateY(${(x*4).toFixed(2)}deg) rotateX(${(-y*4).toFixed(2)}deg)`; };
+    hero.onmouseleave=()=>{ box.style.transform=""; };
+  }
+}
 function renderAuth(){
   const prev=consentStore.read();
   const preChecked=Boolean(prev && prev.version===CONSENT_VERSION);
@@ -3389,33 +3506,43 @@ function renderAuth(){
   ];
 
   $("#screen-auth").innerHTML=`
-    <div class="max-w-5xl mx-auto mt-4 sm:mt-10 mb-8">
-      <div class="grid lg:grid-cols-[1.05fr_1fr] rounded-3xl overflow-hidden shadow-lift">
+    <div class="max-w-6xl mx-auto mt-2 sm:mt-6 mb-8 grid lg:grid-cols-[1.12fr_1fr] gap-4">
+        <div id="auth-hero" class="auth-rise relative rounded-[34px] bg-route-500 text-ink-900 p-7 sm:p-10 overflow-hidden">
+          <svg viewBox="0 0 400 220" class="absolute -right-10 bottom-0 w-[460px] max-w-none h-auto opacity-30 pointer-events-none" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="auth-draw" style="--len:620" d="M0 190C40 110 70 70 100 78c28 8 22 72 52 76 38 6 72-96 108-90 26 4 6 62 40 70 30 8 62-40 100-110"></path></svg>
 
-        <div class="relative bg-ink-900 text-white p-7 sm:p-10 overflow-hidden">
-          <svg viewBox="-22 18 273 216" class="absolute -right-14 -top-8 w-[420px] max-w-none h-auto opacity-[.07] pointer-events-none" aria-hidden="true"><use href="#egb"></use></svg>
+          <span class="relative inline-flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[.08em] px-3 py-1.5 rounded-full bg-white/60">
+            <span class="w-1.5 h-1.5 rounded-full bg-ink-900"></span>Для учителей всех предметов
+          </span>
+          <h1 class="relative mt-5 font-display font-extrabold text-[30px] sm:text-[42px] leading-[1.02] tracking-[-.035em]" style="text-wrap:balance">
+            Результаты пробных ЕГЭ и ОГЭ под полным контролем
+          </h1>
+          <p class="relative mt-3 text-[15px] leading-relaxed text-ink-900/70 max-w-md">Вносите баллы за пробник, а приложение само покажет, где проседает каждый ученик и весь класс.</p>
 
-          <div class="relative flex items-center mb-9">
-            <svg viewBox="0 0 251 251" class="w-14 h-14 rounded-xl shrink-0" role="img" aria-label="${escAttr(AUTHOR.brand)}"><use href="#egt"></use></svg>
+          <div id="auth-demo" class="auth-tilt relative mt-7 rounded-[26px] bg-white shadow-lift p-4 sm:p-5" aria-label="Пример: как выглядят результаты">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="inline-flex gap-1 p-1 rounded-full bg-paper" role="tablist">
+                ${AUTH_DEMO.map((d,i)=>`<button type="button" role="tab" data-demo-tab="${i}" class="auth-demo-tab px-3.5 py-1.5 rounded-full text-[12.5px] font-bold transition">${d.tab}</button>`).join("")}
+              </div>
+              <span class="font-mono text-[11px] text-ink-500">пример · данные вымышленные</span>
+            </div>
+            <div id="auth-demo-body" class="mt-4 min-h-[168px]"></div>
+            <div class="mt-3 h-1 rounded-full bg-gray-100 overflow-hidden"><div id="auth-demo-bar" class="auth-bar h-full rounded-full bg-accent-500" style="width:0"></div></div>
           </div>
 
-          <h1 class="relative font-display font-black text-[26px] sm:text-[30px] leading-[1.15] tracking-tight mb-9">
-            Все результаты в одном месте
-          </h1>
-
-          <div class="relative space-y-4 mb-9">
-            ${steps.map((s,i)=>`
+          <div class="relative space-y-3.5 mt-7">
+            ${steps.map((s2,i)=>`
               <div class="flex items-start gap-3">
-                <span class="w-6 h-6 rounded-full bg-accent-500 text-ink-900 grid place-items-center text-[11px] font-bold shrink-0 mt-0.5">${i+1}</span>
+                <span class="w-6 h-6 rounded-full bg-ink-900 text-accent-500 grid place-items-center text-[11px] font-bold shrink-0 mt-0.5">${i+1}</span>
                 <div class="min-w-0">
-                  <div class="text-sm font-semibold text-white leading-snug">${escHtml(s[0])}</div>
-                  <div class="text-xs text-white/50 mt-0.5 leading-relaxed">${escHtml(s[1])}</div>
+                  <div class="text-sm font-bold text-ink-900 leading-snug">${escHtml(s2[0])}</div>
+                  <div class="text-xs text-ink-900/60 mt-0.5 leading-relaxed">${escHtml(s2[1])}</div>
                 </div>
               </div>`).join("")}
           </div>
+          <a href="?demo=1" class="relative inline-flex items-center gap-2 mt-7 h-12 px-6 rounded-full bg-ink-900 text-white text-sm font-bold hover:bg-black transition">Посмотреть демо-класс <span aria-hidden="true">→</span></a>
         </div>
 
-        <div class="bg-white p-7 sm:p-9">
+        <div class="auth-rise bg-white rounded-[34px] shadow-lift p-7 sm:p-10" style="animation-delay:.08s">
           <h2 class="font-display font-extrabold text-xl mb-1">Вход для преподавателя</h2>
           <p class="text-sm text-ink-500 mb-6">Ученики открывают свои результаты по личной ссылке, вход им не нужен.</p>
 
@@ -3447,14 +3574,21 @@ function renderAuth(){
 
           <label class="block mb-3">
             <span class="text-xs uppercase tracking-wide text-ink-500">Почта</span>
-            <input id="auth-email" type="email" autocomplete="username"
+            <input id="auth-email" type="email" autocomplete="username" placeholder="name@school.ru" value="${escAttr(authEmail)}"
               class="mt-1.5 w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm focus:border-ink-900 outline-none transition">
           </label>
-          <label class="block mb-5">
-            <span class="text-xs uppercase tracking-wide text-ink-500">Пароль</span>
-            <input id="auth-password" type="password" autocomplete="${authMode==="signup"?"new-password":"current-password"}"
-              class="mt-1.5 w-full px-4 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm focus:border-ink-900 outline-none transition">
-          </label>
+          <div class="mb-5">
+            <label for="auth-password" class="text-xs uppercase tracking-wide text-ink-500">Пароль</label>
+            <div class="relative mt-1.5">
+              <input id="auth-password" type="password" autocomplete="${authMode==="signup"?"new-password":"current-password"}"
+                class="w-full pl-4 pr-12 py-2.5 rounded-xl bg-paper border border-gray-200 text-sm focus:border-ink-900 outline-none transition">
+              <button type="button" id="auth-eye" aria-label="Показать пароль" aria-pressed="false"
+                class="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 grid place-items-center rounded-lg text-ink-500 hover:text-ink-900 hover:bg-white transition">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            ${authMode==="signup"?`<div class="mt-2 flex items-center gap-2"><div class="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden"><div id="auth-pw-bar" class="h-full rounded-full bg-gray-300 transition-all duration-300" style="width:0"></div></div><span id="auth-pw-hint" class="text-[11px] text-ink-500 w-28 text-right">минимум 8 символов</span></div>`:""}
+          </div>
 
           <div class="space-y-3 mb-5">
             <label class="flex items-start gap-2.5 cursor-pointer">
@@ -3483,11 +3617,27 @@ function renderAuth(){
           </div>
         </div>
 
-      </div>
+
     </div>`;
 
   const boxes=[...$("#screen-auth").querySelectorAll(".consent-box")];
   const btn=$("#auth-submit");
+  startAuthDemo();
+  const emailEl=$("#auth-email"), passEl=$("#auth-password");
+  emailEl.oninput=()=>{ authEmail=emailEl.value; };
+  $("#auth-eye").onclick=e=>{
+    const show=passEl.type==="password"; passEl.type=show?"text":"password";
+    e.currentTarget.setAttribute("aria-pressed",show); e.currentTarget.setAttribute("aria-label",show?"Скрыть пароль":"Показать пароль");
+    e.currentTarget.style.color=show?"#0C0C0A":"";
+  };
+  const pwBar=$("#auth-pw-bar");
+  if(pwBar) passEl.addEventListener("input",()=>{
+    const v=passEl.value, n=v.length, ok=n>=8;
+    const score=Math.min(4,(n>=8)+(n>=12)+(/[A-Za-zА-Яа-я]/.test(v)&&/\d/.test(v))+(/[^A-Za-zА-Яа-я0-9]/.test(v)));
+    pwBar.style.width=(n?Math.max(12,score*25):0)+"%";
+    pwBar.className="h-full rounded-full transition-all duration-300 "+(!ok?"bg-rose-400":score>=3?"bg-emerald-500":"bg-accent-600");
+    $("#auth-pw-hint").textContent=!n?"минимум 8 символов":!ok?"ещё "+(8-n):score>=3?"надёжный":"нормальный";
+  });
   const syncBtn=()=>{ btn.disabled=!boxes.every(b=>b.checked); };
   boxes.forEach(b=>b.onchange=syncBtn);
 
