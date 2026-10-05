@@ -13,9 +13,21 @@
 <meta property="og:description" content="Как читать результаты пробника ЕГЭ и ОГЭ: страница ученика, прогноз, темы для повторения и уведомления ВКонтакте. Памятка ЕГЭ_Map для родителей.">
 <meta property="og:image" content="https://ege-map.ru/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://ege-map.ru/parents.html">
+<meta property="og:url" content="https://ege-map.ru/parents.html">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:title" content="Как читать результаты пробника — памятка для родителей">
+<meta name="twitter:description" content="Как читать результаты пробника ЕГЭ и ОГЭ: страница ученика, прогноз, темы для повторения и уведомления ВКонтакте. Памятка ЕГЭ_Map для родителей.">
+<meta name="twitter:image" content="https://ege-map.ru/og-image.png">
+<meta name="theme-color" content="#00FDFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0C1212" media="(prefers-color-scheme: dark)">
+<style>#ege-splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#FFFFFF;transition:opacity .45s ease}#ege-splash img{height:46px;width:auto;animation:egeSplash 1.2s ease-in-out infinite alternate}@keyframes egeSplash{from{opacity:.55;transform:scale(.97)}to{opacity:1;transform:none}}@media (prefers-color-scheme: dark){#ege-splash{background:#070B0B}}</style>
 <script src="./support.js"></script>
 </head>
 <body>
+<div id="ege-splash" aria-hidden="true"><picture><source srcset="./logo-lockup-dark.svg" media="(prefers-color-scheme: dark)"><img src="./logo-lockup.svg" alt=""></picture></div>
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -169,6 +181,10 @@ const FAQ = [
 
 class Component extends DCLogic {
   state = { faq: 0, copied: false };
+  componentDidMount() {
+    const sp = document.getElementById("ege-splash");
+    if (sp) { sp.style.opacity = "0"; sp.style.pointerEvents = "none"; setTimeout(() => sp.remove(), 500); }
+  }
   componentWillUnmount() { clearTimeout(this.t); }
   share() {
     const url = location.href.split("#")[0];

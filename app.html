@@ -4,6 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ЕГЭ_Map · Аналитика пробных экзаменов в одном месте</title>
+<meta name="description" content="Аналитика пробных экзаменов ЕГЭ и ОГЭ: результаты по заданиям, прогноз и зоны роста для каждого ученика.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#00FDFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0C1212" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ЕГЭ_Map">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="ЕГЭ_Map — аналитика пробных экзаменов">
+<meta property="og:description" content="Аналитика пробных экзаменов ЕГЭ и ОГЭ: результаты по заданиям, прогноз и зоны роста для каждого ученика.">
+<meta property="og:image" content="https://ege-map.ru/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ЕГЭ_Map — аналитика пробных экзаменов">
+<meta name="twitter:description" content="Аналитика пробных экзаменов ЕГЭ и ОГЭ: результаты по заданиям, прогноз и зоны роста для каждого ученика.">
+<meta name="twitter:image" content="https://ege-map.ru/og-image.png">
+<style>#ege-splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#FFFFFF;transition:opacity .45s ease}#ege-splash img{height:46px;width:auto;animation:egeSplash 1.2s ease-in-out infinite alternate}@keyframes egeSplash{from{opacity:.55;transform:scale(.97)}to{opacity:1;transform:none}}@media (prefers-color-scheme: dark){#ege-splash{background:#070B0B}}</style>
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 251 251'%3E%3CclipPath id='c'%3E%3Crect width='251' height='251' rx='50.4'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23c)'%3E%3Crect width='251' height='251' fill='%230C0C0A'/%3E%3Cpath fill='none' stroke='%23FFFCFC' stroke-width='25' d='M-14.65 229.42C25.21 112.09 46.57 78.81 58.33 81.1C73.4 84.04 70.16 144.93 85.08 146.89C105.78 149.61 133.95 35.22 147.86 38.06C158.02 40.13 148.1 102.24 161.27 105.69C173.04 108.77 195.85 63.03 217.06 20.49C228.29 -2.03 236.69 -20.91 242.07 -33.44'/%3E%3Cpath fill='%23D7F205' transform='translate(96.79 217.04) scale(.0936 -.0936)' d='M-5 0L279 708L463 708L744 0L549 0L514 100L225 100L189 0ZM282 263L457 263L371 506ZM806 0L806 708L1103 708Q1186 708 1249 684.5Q1312 661 1348 606.5Q1384 552 1384 457Q1384 370 1346 312.5Q1308 255 1243 227Q1178 199 1096 199L987 199L987 0ZM987 360L1096 360Q1148 360 1177 385Q1206 410 1206 456Q1206 498 1180.5 519Q1155 540 1095 540L987 540Z'/%3E%3Cpath fill='%2300FDFF' d='M-7.55 231.84L-21.75 227.01C-3.07 172.02 12.91 131.62 25.72 106.95C38.89 81.59 49.08 71.66 59.76 73.74C72.3 76.19 75.62 94.05 79.13 112.97C80.61 120.97 83.3 135.43 86.2 139.13C87.66 138.14 91.59 134.51 98.18 121.49C103.91 110.15 109.72 95.71 115.34 81.75C130.27 44.63 137.39 28.32 149.32 30.7C159.45 32.71 162.57 46.04 161.65 83.5C161.16 87.39 157.75 90.28 153.88 90.13C150.09 89.99 146.95 86.97 146.66 83.14C146.97 76.64 146.9 69.59 146.58 62.03C146.36 56.69 145.99 52.9 145.58 50.21C140.76 58.76 134.07 75.39 129.26 87.34C112.65 128.63 101.44 154.45 85.98 154.45C85.36 154.45 84.73 154.41 84.1 154.33C71.23 152.64 68.06 135.52 64.38 115.71C62.82 107.32 59.98 92.01 56.86 88.67C55.12 89.54 48.72 94.21 36.64 118.59C24.59 142.89 9.73 180.99 -7.55 231.84Z'/%3E%3C/g%3E%3C/svg%3E">
 
@@ -85,6 +103,7 @@
 </head>
 
 <body class="font-sans text-ink-900 antialiased">
+<div id="ege-splash" aria-hidden="true"><picture><source srcset="./logo-lockup-dark.svg" media="(prefers-color-scheme: dark)"><img src="./logo-lockup.svg" alt=""></picture></div>
 
 <svg width="0" height="0" style="position:absolute;opacity:0;pointer-events:none" aria-hidden="true">
   <symbol id="egm" viewBox="-22 0 273 251">
@@ -2534,6 +2553,7 @@ function renderChrome(){
           applyExam(SUBJECTS[sid].exams[EXAM_FAMILY[state.exam]==="oge"?1:0]);
           state.currentClass="all"; state.groupExam="last"; destroyCharts();
           if(state.mode==="teacher") applyExamScope();
+          applyDemoScope();
         }
         renderChrome();
         if(NAV_SCREENS.includes(state.screen)) route("screen-list");
@@ -2630,6 +2650,19 @@ function applyExamScope(){
      && !state.classes.some(c=>c.id===state.currentClass)) state.currentClass="all";
 }
 
+function applyDemoScope(){
+  // Демо-класс пересобирается под выбранный экзамен: у ОГЭ шкала — отметка, у ЕГЭ — тестовый балл,
+  // поэтому результаты одного экзамена нельзя показывать под другим.
+  if(state.mode!=="demo") return;
+  const cls=EXAM_FAMILY[state.exam]==="oge"?"9А":"11А";
+  const roster=state.exam==="ege"
+    ? DEMO_STUDENTS
+    : buildDemoRoster(14).map((s,i)=>({code:`${cls}-${String(i+1).padStart(2,"0")}`,exams:s.rawExams}));
+  state.classes=[{id:"demo-class",name:cls,exam:state.exam}];
+  state.students=roster.map((s,i)=>({id:"demo"+i,code:s.code,exam:state.exam,classId:"demo-class",className:cls,shareToken:null,
+    exams:s.exams.map(buildExam).filter(Boolean)}));
+  state.taskNumbers=collectTaskNumbers(state.students);
+}
 function switchExam(id){
   if(state.exam===id) return;
   applyExam(id);
@@ -2638,6 +2671,7 @@ function switchExam(id){
   state.demoActive=false; state.demoStudents=[];
   destroyCharts();
   if(state.mode==="teacher") applyExamScope();
+  applyDemoScope();
   renderChrome();
   route(state.screen==="screen-group"?"screen-group":"screen-list");
 }
@@ -2671,10 +2705,7 @@ async function boot(){
     if(!hasBackend() || !db || params.get("demo")){
       setMode("demo");
       applyExam("ege");
-      state.classes=[{id:"demo-class",name:"11А",exam:"ege"}];
-      state.students=DEMO_STUDENTS.map((s,i)=>({id:"demo"+i,code:s.code,exam:"ege",classId:"demo-class",className:"11А",shareToken:null,
-        exams:s.exams.map(buildExam).filter(Boolean)}));
-      state.taskNumbers=collectTaskNumbers(state.students);
+      applyDemoScope();
       renderStudentList(); showScreen("screen-list");
       return;
     }
@@ -6393,7 +6424,10 @@ $("#retry-btn").addEventListener("click",boot);
 window.addEventListener("error",e=>{ console.error("Ошибка приложения:",e.error||e.message); });
 renderChrome();
 installBackNavigation();
-boot();
+// Заставка с логотипом: уходит, когда приложение определило режим и нарисовало первый экран
+function hideSplash(){ const sp=document.getElementById("ege-splash"); if(!sp) return; sp.style.opacity="0"; sp.style.pointerEvents="none"; setTimeout(()=>sp.remove(),500); }
+setTimeout(hideSplash,8000);
+boot().finally(hideSplash);
 </script>
 </body>
 </html>
