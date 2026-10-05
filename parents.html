@@ -110,17 +110,30 @@
   </div>
 
   <div id="kalkulyator" style="padding: clamp(52px, 7vw, 78px) clamp(18px, 3.6vw, 40px) 0">
-    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 28px 48px; padding: clamp(24px, 4vw, 44px); border-radius: clamp(24px, 3vw, 34px); background: #E4FDFE">
-      <div style="flex: 1 1 280px; min-width: 0">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 32px 56px; padding: clamp(24px, 4vw, 48px); border-radius: clamp(24px, 3vw, 34px); background: #E4FDFE">
+      <div style="flex: 1 1 300px; max-width: 440px; min-width: 0">
         <h2 style="margin: 0; font-size: clamp(26px, 3.6vw, 38px); line-height: 1.04; font-weight: 800; letter-spacing: -.035em">Калькулятор баллов</h2>
-        <p style="margin: 12px 0 0; max-width: 380px; font-size: 15px; line-height: 1.55; color: #4F5A59">Переведите первичные баллы пробника в тестовый балл или оценку. Бесплатно, без регистрации.</p>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px">
-          <a href="./kalkulyator-ballov-ege.html" style="display: inline-flex; align-items: center; height: 46px; padding: 0 20px; border-radius: 999px; background: #0C0C0A; color: #FFFFFF; font-size: 14px; font-weight: 600" style-hover="background: #2C2C24; color: #FFFFFF">Калькулятор ЕГЭ</a>
-          <a href="./kalkulyator-ballov-oge.html" style="display: inline-flex; align-items: center; height: 46px; padding: 0 20px; border-radius: 999px; background: #FFFFFF; font-size: 14px; font-weight: 600" style-hover="background: #0C0C0A; color: #FFFFFF">Калькулятор ОГЭ</a>
+        <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 24px">
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <span style="flex: 0 0 auto; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #0C0C0A; color: #D7F205; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700">1</span>
+            <div style="min-width: 0"><div style="font-size: 15px; font-weight: 700; line-height: 1.3">Выберите экзамен и предмет</div><div style="margin-top: 2px; font-size: 13.5px; line-height: 1.45; color: rgba(12,12,10,.66)">ЕГЭ или ОГЭ — вверху, предмет — клавишей внизу.</div></div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <span style="flex: 0 0 auto; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #0C0C0A; color: #D7F205; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700">2</span>
+            <div style="min-width: 0"><div style="font-size: 15px; font-weight: 700; line-height: 1.3">Наберите первичный балл</div><div style="margin-top: 2px; font-size: 13.5px; line-height: 1.45; color: rgba(12,12,10,.66)">Сумма баллов за все задания работы.</div></div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start">
+            <span style="flex: 0 0 auto; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #0C0C0A; color: #D7F205; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700">3</span>
+            <div style="min-width: 0"><div style="font-size: 15px; font-weight: 700; line-height: 1.3">Читайте результат на табло</div><div style="margin-top: 2px; font-size: 13.5px; line-height: 1.45; color: rgba(12,12,10,.66)">ЕГЭ: вторичный (тестовый) балл до 100. ОГЭ: оценка от 2 до 5.</div></div>
+          </div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px">
+          <a href="./kalkulyator-ballov-ege.html" style="display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 999px; font-size: 14px; font-weight: 600; background: #0C0C0A; color: #FFFFFF" style-hover="background: #2C2C24; color: #FFFFFF">Калькулятор ЕГЭ</a>
+          <a href="./kalkulyator-ballov-oge.html" style="display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 999px; font-size: 14px; font-weight: 600; background: #FFFFFF" style-hover="background: #0C0C0A; color: #FFFFFF">Калькулятор ОГЭ</a>
         </div>
       </div>
-      <div style="flex: 0 1 400px; min-width: 0; margin: 0 auto; width: 100%">
-        <iframe src="./widget.html?exam=ege&amp;subj=rus&amp;mode=plain" title="Калькулятор баллов ЕГЭ и ОГЭ" loading="lazy" style="display: block; width: 100%; height: 680px; border: 0; border-radius: 30px"></iframe>
+      <div style="flex: 0 1 400px; min-width: 0; width: 100%">
+        <iframe src="./widget.html?exam=ege&amp;subj=rus&amp;mode=plain" title="Калькулятор баллов ЕГЭ и ОГЭ" loading="lazy" style="display: block; width: 100%; height: 745px; border: 0; border-radius: 30px"></iframe>
       </div>
     </div>
   </div>

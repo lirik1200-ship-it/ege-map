@@ -57,11 +57,8 @@ h2{font-size:clamp(20px,3vw,26px);letter-spacing:-.03em;line-height:1.1;margin:0
 .cta h2{color:#fff;margin:0}.cta p{margin:4px 0 0;color:rgba(255,255,255,.65);font-size:14.5px}
 .cta .acts{display:flex;gap:10px;flex-wrap:wrap}
 section.blk{margin-top:26px}
-.faq details{border-bottom:1px solid var(--line);padding:12px 0}.faq summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
-.faq summary::after{content:"+";font:500 22px/1 'IBM Plex Mono',monospace;color:var(--mut2)}.faq details[open] summary::after{content:"−"}.faq p{margin:8px 0 0;color:var(--mut)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}.chips b{font:500 11px/36px 'IBM Plex Mono',monospace;color:var(--mut2);letter-spacing:.06em;text-transform:uppercase;width:44px}
-.chips a{padding:8px 15px;border-radius:999px;background:#fff;text-decoration:none;font-weight:600;font-size:14px;box-shadow:inset 0 0 0 1.5px var(--line)}.chips a:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}.chips a.on{background:var(--ink);color:#fff;box-shadow:none}
-.embedcard{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.faq details{border-bottom:1px solid var(--line);padding:12px 0}.faq summary::after{content:"+";font:500 22px/1 'IBM Plex Mono',monospace;color:var(--mut2)}.faq details[open] summary::after{content:"−"}.faq p{margin:8px 0 0;color:var(--mut)}
+.fl{display:flex;flex-wrap:wrap;gap:4px 14px;margin-bottom:6px}.fl b{font:500 11px/1.8 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;width:44px}
 footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);border-top:1px solid var(--line)}footer.ft a{text-decoration:none;border-bottom:1px solid var(--line)}
 .sbar{display:none}
 @media(max-width:860px){
@@ -82,14 +79,19 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
 .cw-seg button.on{background:var(--lime);color:var(--ink)}
 .cw-lcd{position:relative;border-radius:16px;padding:12px 14px 12px;color:var(--ink);overflow:hidden;
   background:linear-gradient(180deg,#D4FBFC 0%,#E8FEFE 100%);box-shadow:inset 0 3px 8px rgba(0,60,62,.28),inset 0 0 0 2px rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.12)}
-.cw-lcd .r1{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.2 'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:rgba(12,12,10,.62)}
-.cw-lcd .r2{margin-top:6px;font:600 13px/1.2 'IBM Plex Mono',monospace;color:rgba(12,12,10,.7);display:flex;justify-content:space-between}
-.cw-lcd .r2 b{font-weight:700;color:var(--ink)}
-.cw-res{margin-top:2px;text-align:right;font:800 66px/1.05 'IBM Plex Mono',monospace;letter-spacing:-.04em;min-height:70px}
+.cw-lcd .r1{font:600 11px/1.2 'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:rgba(12,12,10,.6)}
+.cw-lab{font:700 11px/1.2 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:rgba(12,12,10,.82)}
+.cw-inrow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:8px}
+.cw-inrow b{font:800 28px/1 'IBM Plex Mono',monospace;letter-spacing:-.02em}
+.cw-inrow i{font:500 13px 'IBM Plex Mono',monospace;font-style:normal;color:rgba(12,12,10,.55);margin-left:4px}
+.cw-arrow{display:flex;align-items:center;gap:8px;margin:4px 0 4px;color:rgba(12,12,10,.5);font:700 13px/1 'IBM Plex Mono',monospace}
+.cw-arrow::before,.cw-arrow::after{content:"";flex:1;height:1px;background:rgba(12,12,10,.22)}
+.cw-res{margin-top:0;text-align:right;font:800 56px/1.05 'IBM Plex Mono',monospace;letter-spacing:-.04em;min-height:60px}
 .cw-res.dim{color:rgba(12,12,10,.25)}
 .cw-res.pop{animation:cwpop .22s ease}
-.cw-unit{display:flex;justify-content:space-between;gap:8px;font:600 11.5px/1.3 'IBM Plex Mono',monospace;color:rgba(12,12,10,.66);min-height:15px}
-.cw-warn{margin-top:6px;font:600 11px/1.3 'IBM Plex Mono',monospace;color:#7A4A00;min-height:14px}
+.cw-sub{text-align:right;font:600 11.5px/1.3 'IBM Plex Mono',monospace;color:rgba(12,12,10,.66);min-height:15px}
+.cw-warn{margin-top:6px;padding-top:6px;border-top:1px dashed rgba(12,12,10,.25);font:600 11.5px/1.35 'IBM Plex Mono',monospace;color:#7A4A00;min-height:40px}
+.cw-warn:empty{border-top-color:transparent}
 @keyframes cwpop{from{transform:translateY(6px);opacity:.3}to{transform:none;opacity:1}}
 .cw-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
 .cw-k{height:54px;border:0;border-radius:14px;font:700 22px/1 'IBM Plex Mono',monospace;cursor:pointer;color:var(--ink);background:#F2F4F3;
@@ -110,10 +112,10 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
   box-shadow:0 8px 18px -6px rgba(0,0,0,.5),0 0 0 3px #fff;transition:transform .2s}
 .cw-sticker:hover{transform:rotate(-2deg) scale(1.05)}
 .cw-sticker small{display:block;margin-top:3px;font:600 9.5px/1.1 'IBM Plex Mono',monospace;letter-spacing:.04em;text-transform:uppercase;opacity:.7}
-@media (max-width:380px){.cw{padding:14px 12px 16px}.cw-k{height:50px}.cw-res{font-size:58px}.cw-sticker{right:-4px}}
+@media (max-width:380px){.cw{padding:14px 12px 16px}.cw-k{height:50px}.cw-res{font-size:50px}.cw-sticker{right:-4px}}
 @media (prefers-reduced-motion:reduce){.cw-res.pop{animation:none}.cw *{transition:none!important}}
 </style>
-<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ЕГЭ_Map", "item": "https://ege-map.ru/"}, {"@type": "ListItem", "position": 2, "name": "Калькулятор баллов ЕГЭ", "item": "https://ege-map.ru/kalkulyator-ballov-ege.html"}]}, {"@context": "https://schema.org", "@type": "WebApplication", "name": "Калькулятор баллов ЕГЭ", "url": "https://ege-map.ru/kalkulyator-ballov-ege.html", "applicationCategory": "EducationalApplication", "operatingSystem": "Web", "inLanguage": "ru", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RUB"}, "publisher": {"@type": "Organization", "name": "ЕГЭ_Map", "url": "https://ege-map.ru/"}}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Сколько первичных баллов на ЕГЭ по русскому языку?", "acceptedAnswer": {"@type": "Answer", "text": "Максимум — 50 первичных баллов, это 100 тестовых."}}, {"@type": "Question", "name": "Сколько первичных нужно для 60, 70, 80, 90, 100 баллов?", "acceptedAnswer": {"@type": "Answer", "text": "Минимум первичных: 60 — 31, 70 — 38, 80 — 43, 90 — 47, 100 — 50."}}, {"@type": "Question", "name": "Шкала каждый год одинаковая?", "acceptedAnswer": {"@type": "Answer", "text": "Нет, Рособрнадзор утверждает её ежегодно. Здесь шкала 2026 года."}}]}]</script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ЕГЭ_Map", "item": "https://ege-map.ru/"}, {"@type": "ListItem", "position": 2, "name": "Калькулятор баллов ЕГЭ", "item": "https://ege-map.ru/kalkulyator-ballov-ege.html"}]}, {"@context": "https://schema.org", "@type": "WebApplication", "name": "Калькулятор баллов ЕГЭ", "url": "https://ege-map.ru/kalkulyator-ballov-ege.html", "applicationCategory": "EducationalApplication", "operatingSystem": "Web", "inLanguage": "ru", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RUB"}, "publisher": {"@type": "Organization", "name": "ЕГЭ_Map", "url": "https://ege-map.ru/"}}]</script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -128,10 +130,12 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
   <a class="cw-sticker" href="/app.html" aria-label="ЕГЭ_Map: 3 ученика бесплатно">3 ученика<br>бесплатно<small>для учителей ↗</small></a>
   <div class="cw-head"><a class="cw-logo" href="/" aria-label="ЕГЭ_Map"><img src="/logo-lockup-dark.svg" alt="ЕГЭ_Map"></a><div class="cw-seg"><button type="button" data-exam="ege" class="on" aria-pressed="true">ЕГЭ</button><button type="button" data-exam="oge" class="" aria-pressed="false">ОГЭ</button></div></div>
   <div class="cw-lcd" aria-live="polite">
-    <div class="r1"><span id="cwCtx">ЕГЭ · Русский язык</span><span id="cwMax">макс 50</span></div>
-    <div class="r2"><span>первичных</span><b id="cwIn">—</b></div>
+    <div class="r1" id="cwCtx">ЕГЭ · Русский язык</div>
+    <div class="cw-inrow"><span class="cw-lab">Первичный балл</span><span><b id="cwIn">—</b><i id="cwOf">/ 50</i></span></div>
+    <div class="cw-arrow" aria-hidden="true">↓</div>
+    <div class="cw-lab" id="cwUnit">Вторичный (тестовый) балл</div>
     <div class="cw-res dim" id="cwRes">0</div>
-    <div class="cw-unit"><span id="cwUnit">введите первичные баллы</span><span id="cwSub"></span></div>
+    <div class="cw-sub" id="cwSub">наберите первичный балл</div>
     <div class="cw-warn" id="cwWarn"></div>
   </div>
   <div class="cw-keys"><button type="button" class="cw-k " data-k="7" aria-label="7">7</button><button type="button" class="cw-k " data-k="8" aria-label="8">8</button><button type="button" class="cw-k " data-k="9" aria-label="9">9</button><button type="button" class="cw-k clr" data-k="C" aria-label="Сбросить">C</button><button type="button" class="cw-k " data-k="4" aria-label="4">4</button><button type="button" class="cw-k " data-k="5" aria-label="5">5</button><button type="button" class="cw-k " data-k="6" aria-label="6">6</button><button type="button" class="cw-k op" data-k="B" aria-label="Стереть">⌫</button><button type="button" class="cw-k " data-k="1" aria-label="1">1</button><button type="button" class="cw-k " data-k="2" aria-label="2">2</button><button type="button" class="cw-k " data-k="3" aria-label="3">3</button><button type="button" class="cw-k op" data-k="-" aria-label="Минус один">−</button><button type="button" class="cw-k zero" data-k="0" aria-label="0">0</button><button type="button" class="cw-k op" data-k="+" aria-label="Плюс один">+</button></div>
@@ -143,10 +147,7 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
     <section class="cta"><div><h2>Класс на пробниках?</h2><p>ЕГЭ_Map считает это за вас. 3 ученика бесплатно.</p></div>
       <div class="acts"><a class="pill lime" href="/app.html">Попробовать</a><a class="pill ghost" style="background:transparent;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)" href="/app.html?demo=1">Демо-класс</a></div></section>
   </div>
-  <section class="blk card faq"><h2>Вопросы</h2><details><summary>Сколько первичных баллов на ЕГЭ по русскому языку?</summary><p>Максимум — 50 первичных баллов, это 100 тестовых.</p></details><details><summary>Сколько первичных нужно для 60, 70, 80, 90, 100 баллов?</summary><p>Минимум первичных: 60 — 31, 70 — 38, 80 — 43, 90 — 47, 100 — 50.</p></details><details><summary>Шкала каждый год одинаковая?</summary><p>Нет, Рособрнадзор утверждает её ежегодно. Здесь шкала 2026 года.</p></details></section>
-  <section class="blk"><div class="chips"><b>ЕГЭ</b><a href="/perevod-ballov-ege-russkiy-yazyk.html">Русский язык</a><a href="/perevod-ballov-ege-literatura.html">Литература</a><a href="/perevod-ballov-ege-matematika.html">Математика</a><a href="/perevod-ballov-ege-biologiya.html">Биология</a><a href="/perevod-ballov-ege-geografiya.html">География</a><a href="/perevod-ballov-ege-fizika.html">Физика</a><a href="/perevod-ballov-ege-himiya.html">Химия</a><a href="/perevod-ballov-ege-informatika.html">Информатика</a></div><div class="chips"><b>ОГЭ</b><a href="/perevod-ballov-oge-russkiy-yazyk.html">Русский язык</a><a href="/perevod-ballov-oge-literatura.html">Литература</a><a href="/perevod-ballov-oge-matematika.html">Математика</a><a href="/perevod-ballov-oge-biologiya.html">Биология</a><a href="/perevod-ballov-oge-geografiya.html">География</a><a href="/perevod-ballov-oge-fizika.html">Физика</a><a href="/perevod-ballov-oge-himiya.html">Химия</a><a href="/perevod-ballov-oge-informatika.html">Информатика</a></div></section>
-  <section class="blk card embedcard"><div><h2 style="margin:0">Калькулятор на свой сайт</h2><p class="src" style="margin:4px 0 0">Бесплатно, готовый код.</p></div><a class="pill dark" href="/vstroit-kalkulyator.html">Получить код</a></section>
-  <footer class="ft">© ЕГЭ_Map · <a href="/">Для учителей</a> · <a href="/parents.html">Родителям</a> · <a href="/app.html?legal=privacy">Политика обработки данных</a> · Расчёт в вашем браузере, данные не сохраняются</footer>
+  <footer class="ft"><div class="fl"><b>ЕГЭ</b><a href="/perevod-ballov-ege-russkiy-yazyk.html">Русский язык</a><a href="/perevod-ballov-ege-literatura.html">Литература</a><a href="/perevod-ballov-ege-matematika.html">Математика</a><a href="/perevod-ballov-ege-biologiya.html">Биология</a><a href="/perevod-ballov-ege-geografiya.html">География</a><a href="/perevod-ballov-ege-fizika.html">Физика</a><a href="/perevod-ballov-ege-himiya.html">Химия</a><a href="/perevod-ballov-ege-informatika.html">Информатика</a></div><div class="fl"><b>ОГЭ</b><a href="/perevod-ballov-oge-russkiy-yazyk.html">Русский язык</a><a href="/perevod-ballov-oge-literatura.html">Литература</a><a href="/perevod-ballov-oge-matematika.html">Математика</a><a href="/perevod-ballov-oge-biologiya.html">Биология</a><a href="/perevod-ballov-oge-geografiya.html">География</a><a href="/perevod-ballov-oge-fizika.html">Физика</a><a href="/perevod-ballov-oge-himiya.html">Химия</a><a href="/perevod-ballov-oge-informatika.html">Информатика</a></div><div class="fl" style="margin-top:12px">© ЕГЭ_Map · <a href="/">Для учителей</a> · <a href="/parents.html">Родителям</a> · <a href="/vstroit-kalkulyator.html">На свой сайт</a> · <a href="/app.html?legal=privacy">Политика обработки данных</a> · Расчёт в вашем браузере, данные не сохраняются</div></footer>
 </main>
 <div class="sbar" id="sbar"><span>Учитель? Результаты класса — в ЕГЭ_Map</span><a class="pill lime" href="/app.html?demo=1">Демо →</a><button type="button" id="sbarX" aria-label="Закрыть">×</button></div>
 <script>window.EGE_CALC={exam:"ege",subj:"rus",dynTable:true};</script>
@@ -157,25 +158,30 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
   function prof(){return P[S.exam][S.subj]}
   function pl(n,a,b,c){n=Math.abs(n);return n%10===1&&n%100!==11?a:(n%10>=2&&n%10<=4&&!(n%100>=12&&n%100<=14))?b:c}
   function markOf(p,v){for(var i=0;i<p.m.length;i++){if(v>=p.m[i][1]&&v<=p.m[i][2])return p.m[i]}return p.m[0]}
+  function unitLabel(p){return p.k==="test"?"Вторичный (тестовый) балл":(S.exam==="ege"?"Отметка":"Оценка (отметка)")}
+  function warnText(p,m){
+    if(S.exam==="oge"&&S.subj==="rus"&&m[3])return "⚠ Нужно набрать не менее "+m[3]+" "+pl(m[3],"балла","баллов","баллов")+" за критерии ГК1–ГК4 (грамотность)";
+    if(p.geom&&m[0]>=3)return "⚠ Нужно набрать не менее 2 баллов за геометрию (задания 15–19, 23–25)";
+    return "";
+  }
   function render(){
     var p=prof(), has=S.val!=="", v=has?+S.val:0, res=$("cwRes");
-    $("cwCtx").textContent=EXN[S.exam]+" · "+p.n; $("cwMax").textContent="макс "+p.max;
-    $("cwIn").textContent=has?v:"—";
-    var out,unit,sub="",warn="";
-    if(!has){out="0";unit="введите первичные баллы";}
+    $("cwCtx").textContent=EXN[S.exam]+" · "+p.n; $("cwOf").textContent="/ "+p.max;
+    $("cwIn").textContent=has?v:"—"; $("cwUnit").textContent=unitLabel(p);
+    var out,sub="",warn="";
+    if(!has){out="0";sub="наберите первичный балл";}
     else if(p.k==="test"){
-      out=p.s[v]; unit="тестовых баллов";
+      out=p.s[v];
       sub=v<p.max?"+1 первичный → "+p.s[v+1]+" (+"+(p.s[v+1]-p.s[v])+")":"максимум";
     }else{
-      var m=markOf(p,v); out=m[0]; unit="отметка";
+      var m=markOf(p,v); out=m[0];
       var nx=null; for(var i=0;i<p.m.length;i++){if(p.m[i][1]>v){nx=p.m[i];break}}
-      sub=nx?"до «"+nx[0]+"»: ещё "+(nx[1]-v):"максимум";
-      if(S.exam==="oge"&&S.subj==="rus"&&m[3])warn="⚠ нужна грамотность ≥ "+m[3];
-      if(p.geom&&m[0]>=3)warn="⚠ нужно ≥ 2 б. по геометрии";
+      sub=nx?"до «"+nx[0]+"»: ещё "+(nx[1]-v)+" "+pl(nx[1]-v,"балл","балла","баллов"):"максимум";
+      warn=warnText(p,m);
     }
     res.className="cw-res"+(has?"":" dim"); res.textContent=out;
     if(has){res.classList.remove("pop");void res.offsetWidth;res.classList.add("pop")}
-    $("cwUnit").textContent=unit; $("cwSub").textContent=sub; $("cwWarn").textContent=warn;
+    $("cwSub").textContent=sub; $("cwWarn").textContent=warn;
     document.querySelectorAll("[data-exam]").forEach(function(b){b.classList.toggle("on",b.dataset.exam===S.exam);b.setAttribute("aria-pressed",b.dataset.exam===S.exam)});
     document.querySelectorAll("[data-subj]").forEach(function(b){b.classList.toggle("on",b.dataset.subj===S.subj);b.setAttribute("aria-pressed",b.dataset.subj===S.subj)});
     var t=$("tbl"); if(t&&C.dynTable) table(p,has?v:-1);
@@ -185,7 +191,7 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
     if(p.k==="test"){p.s.forEach(function(x,i){h+='<button type="button" data-p="'+i+'"'+(i===v?' class="cur"':'')+' aria-label="'+i+' первичных — '+x+' тестовых"><span>'+i+'</span><b>'+x+'</b></button>'});t.className="tbl";t.innerHTML=h}
     else{h='<table class="marks"><thead><tr><th>Отметка</th><th>Первичные</th><th></th></tr></thead><tbody>';
       var cur=v>=0?markOf(p,v)[0]:0;
-      p.m.forEach(function(m){var w="";if(S.exam==="oge"&&S.subj==="rus"&&m[3])w="грамотность ≥ "+m[3];if(p.geom&&m[0]>=3)w="≥ 2 балла по геометрии";
+      p.m.forEach(function(m){var w="";if(S.exam==="oge"&&S.subj==="rus"&&m[3])w="не менее "+m[3]+" б. за ГК1–ГК4";if(p.geom&&m[0]>=3)w="не менее 2 б. за геометрию";
         h+='<tr'+(m[0]===cur?' class="cur"':'')+'><td><b>'+m[0]+'</b></td><td class="mono">'+m[1]+'–'+m[2]+'</td><td class="w">'+w+'</td></tr>'});
       t.className="";t.innerHTML=h+'</tbody></table>'}
     var tt=$("tblTitle"); if(tt)tt.textContent=EXN[S.exam]+" · "+p.n+": "+(p.k==="test"?"первичные → тестовые":"первичные → отметка");

@@ -88,14 +88,19 @@ CSS_CALC="""
 .cw-seg button.on{background:var(--lime);color:var(--ink)}
 .cw-lcd{position:relative;border-radius:16px;padding:12px 14px 12px;color:var(--ink);overflow:hidden;
   background:linear-gradient(180deg,#D4FBFC 0%,#E8FEFE 100%);box-shadow:inset 0 3px 8px rgba(0,60,62,.28),inset 0 0 0 2px rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.12)}
-.cw-lcd .r1{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.2 'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:rgba(12,12,10,.62)}
-.cw-lcd .r2{margin-top:6px;font:600 13px/1.2 'IBM Plex Mono',monospace;color:rgba(12,12,10,.7);display:flex;justify-content:space-between}
-.cw-lcd .r2 b{font-weight:700;color:var(--ink)}
-.cw-res{margin-top:2px;text-align:right;font:800 66px/1.05 'IBM Plex Mono',monospace;letter-spacing:-.04em;min-height:70px}
+.cw-lcd .r1{font:600 11px/1.2 'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:rgba(12,12,10,.6)}
+.cw-lab{font:700 11px/1.2 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:rgba(12,12,10,.82)}
+.cw-inrow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:8px}
+.cw-inrow b{font:800 28px/1 'IBM Plex Mono',monospace;letter-spacing:-.02em}
+.cw-inrow i{font:500 13px 'IBM Plex Mono',monospace;font-style:normal;color:rgba(12,12,10,.55);margin-left:4px}
+.cw-arrow{display:flex;align-items:center;gap:8px;margin:4px 0 4px;color:rgba(12,12,10,.5);font:700 13px/1 'IBM Plex Mono',monospace}
+.cw-arrow::before,.cw-arrow::after{content:"";flex:1;height:1px;background:rgba(12,12,10,.22)}
+.cw-res{margin-top:0;text-align:right;font:800 56px/1.05 'IBM Plex Mono',monospace;letter-spacing:-.04em;min-height:60px}
 .cw-res.dim{color:rgba(12,12,10,.25)}
 .cw-res.pop{animation:cwpop .22s ease}
-.cw-unit{display:flex;justify-content:space-between;gap:8px;font:600 11.5px/1.3 'IBM Plex Mono',monospace;color:rgba(12,12,10,.66);min-height:15px}
-.cw-warn{margin-top:6px;font:600 11px/1.3 'IBM Plex Mono',monospace;color:#7A4A00;min-height:14px}
+.cw-sub{text-align:right;font:600 11.5px/1.3 'IBM Plex Mono',monospace;color:rgba(12,12,10,.66);min-height:15px}
+.cw-warn{margin-top:6px;padding-top:6px;border-top:1px dashed rgba(12,12,10,.25);font:600 11.5px/1.35 'IBM Plex Mono',monospace;color:#7A4A00;min-height:40px}
+.cw-warn:empty{border-top-color:transparent}
 @keyframes cwpop{from{transform:translateY(6px);opacity:.3}to{transform:none;opacity:1}}
 .cw-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
 .cw-k{height:54px;border:0;border-radius:14px;font:700 22px/1 'IBM Plex Mono',monospace;cursor:pointer;color:var(--ink);background:#F2F4F3;
@@ -116,7 +121,7 @@ CSS_CALC="""
   box-shadow:0 8px 18px -6px rgba(0,0,0,.5),0 0 0 3px #fff;transition:transform .2s}
 .cw-sticker:hover{transform:rotate(-2deg) scale(1.05)}
 .cw-sticker small{display:block;margin-top:3px;font:600 9.5px/1.1 'IBM Plex Mono',monospace;letter-spacing:.04em;text-transform:uppercase;opacity:.7}
-@media (max-width:380px){.cw{padding:14px 12px 16px}.cw-k{height:50px}.cw-res{font-size:58px}.cw-sticker{right:-4px}}
+@media (max-width:380px){.cw{padding:14px 12px 16px}.cw-k{height:50px}.cw-res{font-size:50px}.cw-sticker{right:-4px}}
 @media (prefers-reduced-motion:reduce){.cw-res.pop{animation:none}.cw *{transition:none!important}}
 """
 CSS_PAGE="""
@@ -146,11 +151,8 @@ h2{font-size:clamp(20px,3vw,26px);letter-spacing:-.03em;line-height:1.1;margin:0
 .cta h2{color:#fff;margin:0}.cta p{margin:4px 0 0;color:rgba(255,255,255,.65);font-size:14.5px}
 .cta .acts{display:flex;gap:10px;flex-wrap:wrap}
 section.blk{margin-top:26px}
-.faq details{border-bottom:1px solid var(--line);padding:12px 0}.faq summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
-.faq summary::after{content:"+";font:500 22px/1 'IBM Plex Mono',monospace;color:var(--mut2)}.faq details[open] summary::after{content:"−"}.faq p{margin:8px 0 0;color:var(--mut)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}.chips b{font:500 11px/36px 'IBM Plex Mono',monospace;color:var(--mut2);letter-spacing:.06em;text-transform:uppercase;width:44px}
-.chips a{padding:8px 15px;border-radius:999px;background:#fff;text-decoration:none;font-weight:600;font-size:14px;box-shadow:inset 0 0 0 1.5px var(--line)}.chips a:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}.chips a.on{background:var(--ink);color:#fff;box-shadow:none}
-.embedcard{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.faq details{border-bottom:1px solid var(--line);padding:12px 0}.faq summary::after{content:"+";font:500 22px/1 'IBM Plex Mono',monospace;color:var(--mut2)}.faq details[open] summary::after{content:"−"}.faq p{margin:8px 0 0;color:var(--mut)}
+.fl{display:flex;flex-wrap:wrap;gap:4px 14px;margin-bottom:6px}.fl b{font:500 11px/1.8 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;width:44px}
 footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);border-top:1px solid var(--line)}footer.ft a{text-decoration:none;border-bottom:1px solid var(--line)}
 .sbar{display:none}
 @media(max-width:860px){
@@ -170,25 +172,30 @@ JS="""
   function prof(){return P[S.exam][S.subj]}
   function pl(n,a,b,c){n=Math.abs(n);return n%10===1&&n%100!==11?a:(n%10>=2&&n%10<=4&&!(n%100>=12&&n%100<=14))?b:c}
   function markOf(p,v){for(var i=0;i<p.m.length;i++){if(v>=p.m[i][1]&&v<=p.m[i][2])return p.m[i]}return p.m[0]}
+  function unitLabel(p){return p.k==="test"?"Вторичный (тестовый) балл":(S.exam==="ege"?"Отметка":"Оценка (отметка)")}
+  function warnText(p,m){
+    if(S.exam==="oge"&&S.subj==="rus"&&m[3])return "⚠ Нужно набрать не менее "+m[3]+" "+pl(m[3],"балла","баллов","баллов")+" за критерии ГК1–ГК4 (грамотность)";
+    if(p.geom&&m[0]>=3)return "⚠ Нужно набрать не менее 2 баллов за геометрию (задания 15–19, 23–25)";
+    return "";
+  }
   function render(){
     var p=prof(), has=S.val!=="", v=has?+S.val:0, res=$("cwRes");
-    $("cwCtx").textContent=EXN[S.exam]+" · "+p.n; $("cwMax").textContent="макс "+p.max;
-    $("cwIn").textContent=has?v:"—";
-    var out,unit,sub="",warn="";
-    if(!has){out="0";unit="введите первичные баллы";}
+    $("cwCtx").textContent=EXN[S.exam]+" · "+p.n; $("cwOf").textContent="/ "+p.max;
+    $("cwIn").textContent=has?v:"—"; $("cwUnit").textContent=unitLabel(p);
+    var out,sub="",warn="";
+    if(!has){out="0";sub="наберите первичный балл";}
     else if(p.k==="test"){
-      out=p.s[v]; unit="тестовых баллов";
+      out=p.s[v];
       sub=v<p.max?"+1 первичный → "+p.s[v+1]+" (+"+(p.s[v+1]-p.s[v])+")":"максимум";
     }else{
-      var m=markOf(p,v); out=m[0]; unit="отметка";
+      var m=markOf(p,v); out=m[0];
       var nx=null; for(var i=0;i<p.m.length;i++){if(p.m[i][1]>v){nx=p.m[i];break}}
-      sub=nx?"до «"+nx[0]+"»: ещё "+(nx[1]-v):"максимум";
-      if(S.exam==="oge"&&S.subj==="rus"&&m[3])warn="⚠ нужна грамотность ≥ "+m[3];
-      if(p.geom&&m[0]>=3)warn="⚠ нужно ≥ 2 б. по геометрии";
+      sub=nx?"до «"+nx[0]+"»: ещё "+(nx[1]-v)+" "+pl(nx[1]-v,"балл","балла","баллов"):"максимум";
+      warn=warnText(p,m);
     }
     res.className="cw-res"+(has?"":" dim"); res.textContent=out;
     if(has){res.classList.remove("pop");void res.offsetWidth;res.classList.add("pop")}
-    $("cwUnit").textContent=unit; $("cwSub").textContent=sub; $("cwWarn").textContent=warn;
+    $("cwSub").textContent=sub; $("cwWarn").textContent=warn;
     document.querySelectorAll("[data-exam]").forEach(function(b){b.classList.toggle("on",b.dataset.exam===S.exam);b.setAttribute("aria-pressed",b.dataset.exam===S.exam)});
     document.querySelectorAll("[data-subj]").forEach(function(b){b.classList.toggle("on",b.dataset.subj===S.subj);b.setAttribute("aria-pressed",b.dataset.subj===S.subj)});
     var t=$("tbl"); if(t&&C.dynTable) table(p,has?v:-1);
@@ -198,7 +205,7 @@ JS="""
     if(p.k==="test"){p.s.forEach(function(x,i){h+='<button type="button" data-p="'+i+'"'+(i===v?' class="cur"':'')+' aria-label="'+i+' первичных — '+x+' тестовых"><span>'+i+'</span><b>'+x+'</b></button>'});t.className="tbl";t.innerHTML=h}
     else{h='<table class="marks"><thead><tr><th>Отметка</th><th>Первичные</th><th></th></tr></thead><tbody>';
       var cur=v>=0?markOf(p,v)[0]:0;
-      p.m.forEach(function(m){var w="";if(S.exam==="oge"&&S.subj==="rus"&&m[3])w="грамотность ≥ "+m[3];if(p.geom&&m[0]>=3)w="≥ 2 балла по геометрии";
+      p.m.forEach(function(m){var w="";if(S.exam==="oge"&&S.subj==="rus"&&m[3])w="не менее "+m[3]+" б. за ГК1–ГК4";if(p.geom&&m[0]>=3)w="не менее 2 б. за геометрию";
         h+='<tr'+(m[0]===cur?' class="cur"':'')+'><td><b>'+m[0]+'</b></td><td class="mono">'+m[1]+'–'+m[2]+'</td><td class="w">'+w+'</td></tr>'});
       t.className="";t.innerHTML=h+'</tbody></table>'}
     var tt=$("tblTitle"); if(tt)tt.textContent=EXN[S.exam]+" · "+p.n+": "+(p.k==="test"?"первичные → тестовые":"первичные → отметка");
@@ -239,10 +246,12 @@ def calc_html(p, embed=False):
   {stk}
   <div class="cw-head">{logo}<div class="cw-seg"><button type="button" data-exam="ege" class="{"on" if exam=="ege" else ""}" aria-pressed="{"true" if exam=="ege" else "false"}">ЕГЭ</button><button type="button" data-exam="oge" class="{"on" if exam=="oge" else ""}" aria-pressed="{"true" if exam=="oge" else "false"}">ОГЭ</button></div></div>
   <div class="cw-lcd" aria-live="polite">
-    <div class="r1"><span id="cwCtx">{EXAMNAME[exam]} · {E(p["name"])}</span><span id="cwMax">макс {p["max"]}</span></div>
-    <div class="r2"><span>первичных</span><b id="cwIn">—</b></div>
+    <div class="r1" id="cwCtx">{EXAMNAME[exam]} · {E(p["name"])}</div>
+    <div class="cw-inrow"><span class="cw-lab">Первичный балл</span><span><b id="cwIn">—</b><i id="cwOf">/ {p["max"]}</i></span></div>
+    <div class="cw-arrow" aria-hidden="true">↓</div>
+    <div class="cw-lab" id="cwUnit">{'Отметка' if (exam=="ege" and p["kind"]=="mark") else ('Оценка (отметка)' if exam=="oge" else 'Вторичный (тестовый) балл')}</div>
     <div class="cw-res dim" id="cwRes">0</div>
-    <div class="cw-unit"><span id="cwUnit">введите первичные баллы</span><span id="cwSub"></span></div>
+    <div class="cw-sub" id="cwSub">наберите первичный балл</div>
     <div class="cw-warn" id="cwWarn"></div>
   </div>
   <div class="cw-keys">{grid}</div>
@@ -253,7 +262,7 @@ def table_html(p):
     if p["kind"]=="mark":
         rows=''
         for m in p["marks"]:
-            w=("грамотность ≥ "+str(m["gr"])) if (p["exam"]=="oge" and p["id"]=="rus" and m["gr"]) else ("≥ 2 балла по геометрии" if p.get("geom") and m["mark"]>=3 else "")
+            w=("не менее "+str(m["gr"])+" б. за ГК1–ГК4") if (p["exam"]=="oge" and p["id"]=="rus" and m["gr"]) else ("не менее 2 б. за геометрию" if p.get("geom") and m["mark"]>=3 else "")
             rows+=f'<tr><td><b>{m["mark"]}</b></td><td class="mono">{m["frm"]}–{m["to"]}</td><td class="w">{w}</td></tr>'
         return f'<table class="marks"><thead><tr><th>Отметка</th><th>Первичные</th><th></th></tr></thead><tbody>{rows}</tbody></table>'
     return ''.join(f'<button type="button" data-p="{i}" aria-label="{i} первичных — {v} тестовых"><span>{i}</span><b>{v}</b></button>' for i,v in enumerate(p["scale"]))
@@ -303,19 +312,16 @@ def title_for(p,hub):
 def page(p,hub=False):
     ex=p["exam"]; title,desc,h1,lead=title_for(p,hub)
     url=HUBS[ex] if hub else p["url"]; canon=SITE+url
-    faqs=faq_for(p)
     ld=[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
           {"@type":"ListItem","position":1,"name":"ЕГЭ_Map","item":SITE+"/"},
           {"@type":"ListItem","position":2,"name":"Калькулятор баллов "+EXAMNAME[ex],"item":SITE+HUBS[ex]}]+([] if hub else [{"@type":"ListItem","position":3,"name":p["name"],"item":canon}])},
         {"@context":"https://schema.org","@type":"WebApplication","name":"Калькулятор баллов "+EXAMNAME[ex],"url":canon,"applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"ru",
-         "offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ЕГЭ_Map","url":SITE+"/"}},
-        {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in faqs]}]
-    chips=''
+         "offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ЕГЭ_Map","url":SITE+"/"}}]
+    foot_links=''
     for e in ("ege","oge"):
-        chips+=f'<div class="chips"><b>{EXAMNAME[e]}</b>'+''.join(f'<a href="{PROFILES[e][s[0]]["url"]}"{" class=on" if (not hub and e==ex and s[0]==p["id"]) else ""}>{E(s[2])}</a>' for s in SUBJ)+'</div>'
+        foot_links+=f'<div class="fl"><b>{EXAMNAME[e]}</b>'+''.join(f'<a href="{PROFILES[e][x[0]]["url"]}">{E(x[2])}</a>' for x in SUBJ)+'</div>'
     tbl_title=f'{EXAMNAME[ex]} · {p["name"]}: '+("первичные → тестовые" if p["kind"]=="test" else "первичные → отметка")
     src=f'Шкала {YEAR[ex]}, по данным ФИПИ и Рособрнадзора. Обновлено {UPDATED_RU} Расчёт ориентировочный.'
-    faq_html=''.join(f'<details><summary>{E(q)}</summary><p>{E(a)}</p></details>' for q,a in faqs)
     init=f'{{exam:"{ex}",subj:"{p["id"]}",dynTable:true}}'
     return url,f"""<!DOCTYPE html>
 <html lang="ru">
@@ -363,10 +369,7 @@ def page(p,hub=False):
     <section class="cta"><div><h2>Класс на пробниках?</h2><p>ЕГЭ_Map считает это за вас. 3 ученика бесплатно.</p></div>
       <div class="acts"><a class="pill lime" href="/app.html">Попробовать</a><a class="pill ghost" style="background:transparent;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)" href="/app.html?demo=1">Демо-класс</a></div></section>
   </div>
-  <section class="blk card faq"><h2>Вопросы</h2>{faq_html}</section>
-  <section class="blk">{chips}</section>
-  <section class="blk card embedcard"><div><h2 style="margin:0">Калькулятор на свой сайт</h2><p class="src" style="margin:4px 0 0">Бесплатно, готовый код.</p></div><a class="pill dark" href="{EMBED_URL}">Получить код</a></section>
-  <footer class="ft">© ЕГЭ_Map · <a href="/">Для учителей</a> · <a href="/parents.html">Родителям</a> · <a href="/app.html?legal=privacy">Политика обработки данных</a> · Расчёт в вашем браузере, данные не сохраняются</footer>
+  <footer class="ft">{foot_links}<div class="fl" style="margin-top:12px">© ЕГЭ_Map · <a href="/">Для учителей</a> · <a href="/parents.html">Родителям</a> · <a href="{EMBED_URL}">На свой сайт</a> · <a href="/app.html?legal=privacy">Политика обработки данных</a> · Расчёт в вашем браузере, данные не сохраняются</div></footer>
 </main>
 <div class="sbar" id="sbar"><span>Учитель? Результаты класса — в ЕГЭ_Map</span><a class="pill lime" href="/app.html?demo=1">Демо →</a><button type="button" id="sbarX" aria-label="Закрыть">×</button></div>
 <script>window.EGE_CALC={init};</script>
@@ -424,7 +427,7 @@ def embed_page():
 .eg select{{height:46px;border-radius:14px;border:1.5px solid var(--line);background:#fff;padding:0 14px;font:600 15px 'Onest',sans-serif;width:100%}}
 .eg label{{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut2);margin:14px 0 6px}}
 .eg textarea{{width:100%;height:150px;border-radius:14px;border:1.5px solid var(--line);background:#fff;padding:12px;font:500 12.5px/1.5 'IBM Plex Mono',monospace;resize:vertical}}
-.eg iframe{{width:100%;height:680px;border:0;border-radius:30px;background:var(--cy)}}
+.eg iframe{{width:100%;height:745px;border:0;border-radius:30px;background:var(--cy)}}
 @media(max-width:860px){{.eg{{grid-template-columns:1fr}}}}
 </style>
 <meta name="robots" content="index,follow">
@@ -450,7 +453,7 @@ def embed_page():
  var ex=document.getElementById("ex"),sj=document.getElementById("sj"),code=document.getElementById("code"),pv=document.getElementById("pv");
  function url(){{return "https://ege-map.ru/widget.html?exam="+ex.value+"&subj="+sj.value}}
  function upd(){{var u=url();pv.src=u.replace("https://ege-map.ru","");
-  code.value='<iframe src="'+u+'" width="380" height="680" style="border:0;border-radius:30px;max-width:100%" loading="lazy" title="Калькулятор баллов '+(ex.value==="oge"?"ОГЭ":"ЕГЭ")+'"></iframe>\\n<p style="font:13px sans-serif"><a href="https://ege-map.ru/kalkulyator-ballov-'+ex.value+'.html" target="_blank" rel="noopener">Калькулятор баллов '+(ex.value==="oge"?"ОГЭ":"ЕГЭ")+' от ЕГЭ_Map</a></p>';}}
+  code.value='<iframe src="'+u+'" width="380" height="745" style="border:0;border-radius:30px;max-width:100%" loading="lazy" title="Калькулятор баллов '+(ex.value==="oge"?"ОГЭ":"ЕГЭ")+'"></iframe>\\n<p style="font:13px sans-serif"><a href="https://ege-map.ru/kalkulyator-ballov-'+ex.value+'.html" target="_blank" rel="noopener">Калькулятор баллов '+(ex.value==="oge"?"ОГЭ":"ЕГЭ")+' от ЕГЭ_Map</a></p>';}}
  ex.onchange=sj.onchange=upd;upd();
  document.getElementById("copy").onclick=function(){{var m=document.getElementById("msg");code.select();
   (navigator.clipboard?navigator.clipboard.writeText(code.value):Promise.reject()).then(function(){{m.textContent="Скопировано"}},function(){{document.execCommand("copy");m.textContent="Скопировано"}});}};

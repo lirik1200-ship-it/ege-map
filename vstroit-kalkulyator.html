@@ -46,11 +46,8 @@ h2{font-size:clamp(20px,3vw,26px);letter-spacing:-.03em;line-height:1.1;margin:0
 .cta h2{color:#fff;margin:0}.cta p{margin:4px 0 0;color:rgba(255,255,255,.65);font-size:14.5px}
 .cta .acts{display:flex;gap:10px;flex-wrap:wrap}
 section.blk{margin-top:26px}
-.faq details{border-bottom:1px solid var(--line);padding:12px 0}.faq summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
-.faq summary::after{content:"+";font:500 22px/1 'IBM Plex Mono',monospace;color:var(--mut2)}.faq details[open] summary::after{content:"−"}.faq p{margin:8px 0 0;color:var(--mut)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}.chips b{font:500 11px/36px 'IBM Plex Mono',monospace;color:var(--mut2);letter-spacing:.06em;text-transform:uppercase;width:44px}
-.chips a{padding:8px 15px;border-radius:999px;background:#fff;text-decoration:none;font-weight:600;font-size:14px;box-shadow:inset 0 0 0 1.5px var(--line)}.chips a:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}.chips a.on{background:var(--ink);color:#fff;box-shadow:none}
-.embedcard{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.faq details{border-bottom:1px solid var(--line);padding:12px 0}.faq summary::after{content:"+";font:500 22px/1 'IBM Plex Mono',monospace;color:var(--mut2)}.faq details[open] summary::after{content:"−"}.faq p{margin:8px 0 0;color:var(--mut)}
+.fl{display:flex;flex-wrap:wrap;gap:4px 14px;margin-bottom:6px}.fl b{font:500 11px/1.8 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;width:44px}
 footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);border-top:1px solid var(--line)}footer.ft a{text-decoration:none;border-bottom:1px solid var(--line)}
 .sbar{display:none}
 @media(max-width:860px){
@@ -66,7 +63,7 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
 .eg select{height:46px;border-radius:14px;border:1.5px solid var(--line);background:#fff;padding:0 14px;font:600 15px 'Onest',sans-serif;width:100%}
 .eg label{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut2);margin:14px 0 6px}
 .eg textarea{width:100%;height:150px;border-radius:14px;border:1.5px solid var(--line);background:#fff;padding:12px;font:500 12.5px/1.5 'IBM Plex Mono',monospace;resize:vertical}
-.eg iframe{width:100%;height:680px;border:0;border-radius:30px;background:var(--cy)}
+.eg iframe{width:100%;height:745px;border:0;border-radius:30px;background:var(--cy)}
 @media(max-width:860px){.eg{grid-template-columns:1fr}}
 </style>
 <meta name="robots" content="index,follow">
@@ -92,7 +89,7 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
  var ex=document.getElementById("ex"),sj=document.getElementById("sj"),code=document.getElementById("code"),pv=document.getElementById("pv");
  function url(){return "https://ege-map.ru/widget.html?exam="+ex.value+"&subj="+sj.value}
  function upd(){var u=url();pv.src=u.replace("https://ege-map.ru","");
-  code.value='<iframe src="'+u+'" width="380" height="680" style="border:0;border-radius:30px;max-width:100%" loading="lazy" title="Калькулятор баллов '+(ex.value==="oge"?"ОГЭ":"ЕГЭ")+'"></iframe>\n<p style="font:13px sans-serif"><a href="https://ege-map.ru/kalkulyator-ballov-'+ex.value+'.html" target="_blank" rel="noopener">Калькулятор баллов '+(ex.value==="oge"?"ОГЭ":"ЕГЭ")+' от ЕГЭ_Map</a></p>';}
+  code.value='<iframe src="'+u+'" width="380" height="745" style="border:0;border-radius:30px;max-width:100%" loading="lazy" title="Калькулятор баллов '+(ex.value==="oge"?"ОГЭ":"ЕГЭ")+'"></iframe>\n<p style="font:13px sans-serif"><a href="https://ege-map.ru/kalkulyator-ballov-'+ex.value+'.html" target="_blank" rel="noopener">Калькулятор баллов '+(ex.value==="oge"?"ОГЭ":"ЕГЭ")+' от ЕГЭ_Map</a></p>';}
  ex.onchange=sj.onchange=upd;upd();
  document.getElementById("copy").onclick=function(){var m=document.getElementById("msg");code.select();
   (navigator.clipboard?navigator.clipboard.writeText(code.value):Promise.reject()).then(function(){m.textContent="Скопировано"},function(){document.execCommand("copy");m.textContent="Скопировано"});};
