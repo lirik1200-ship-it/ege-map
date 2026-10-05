@@ -110,6 +110,8 @@
   .auth-ticker:hover .auth-ticker-track{animation-play-state:paused}
   .auth-ticker-track span{flex:none;padding:6px 0;font:500 11px/1.4 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.04em;color:#4F5A59;white-space:nowrap}
   .auth-ticker-track span::after{content:"";display:inline-block;width:5px;height:5px;margin:0 22px;border-radius:50%;background:#D7F205;vertical-align:middle;box-shadow:0 0 0 1px rgba(12,12,10,.15)}
+  .auth-only{display:none}
+  body.on-auth .auth-only{display:inline-flex}
   @keyframes authTicker{to{transform:translateX(-50%)}}
   @keyframes authRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   @keyframes authDraw{to{stroke-dashoffset:0}}
@@ -156,9 +158,17 @@
 
 <div id="global-tooltip" role="tooltip" aria-hidden="true"></div>
 
+<div id="calc-modal" class="hidden fixed inset-0 z-[70] items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-label="Калькулятор баллов ЕГЭ и ОГЭ">
+  <div data-calc-close class="absolute inset-0 bg-ink-900/60 backdrop-blur-sm"></div>
+  <div class="auth-rise relative w-full max-w-[420px] rounded-[34px] bg-route-500 p-2 shadow-lift">
+    <button type="button" id="calc-close" data-calc-close aria-label="Закрыть" class="absolute -top-3 -right-3 z-10 w-10 h-10 grid place-items-center rounded-full bg-white text-ink-900 text-xl font-bold shadow-lift hover:bg-accent-500 transition">×</button>
+    <iframe id="calc-frame" title="Калькулятор баллов ЕГЭ и ОГЭ" class="block w-full border-0 rounded-[30px]" style="height:min(640px,calc(100vh - 56px))"></iframe>
+  </div>
+</div>
+
 <div class="min-h-screen flex flex-col">
   <header class="sticky top-0 z-30 bg-white/85 backdrop-blur border-b-2 border-route-500">
-    <div class="auth-ticker" aria-hidden="true"><div class="auth-ticker-track"><span>Аналитика пробных экзаменов в одном месте</span><span>ЕГЭ и ОГЭ, 8 предметов</span><span>Баллы за пробник — за пару минут</span><span>Прогноз результата и зоны роста</span><span>Отчёт для родителей в PDF</span><span>Ученики анонимны: только коды</span><span>Результаты приходят во ВКонтакте</span><span>3 ученика — бесплатно</span><span>Аналитика пробных экзаменов в одном месте</span><span>ЕГЭ и ОГЭ, 8 предметов</span><span>Баллы за пробник — за пару минут</span><span>Прогноз результата и зоны роста</span><span>Отчёт для родителей в PDF</span><span>Ученики анонимны: только коды</span><span>Результаты приходят во ВКонтакте</span><span>3 ученика — бесплатно</span></div></div>
+    <div class="auth-ticker" aria-hidden="true"><div class="auth-ticker-track"><span>Аналитика пробных экзаменов в одном месте</span><span>ЕГЭ и ОГЭ, 8 предметов</span><span>Баллы за пробник — за пару минут</span><span>Прогноз результата и зоны роста</span><span>Отчёт для родителей в PDF</span><span>Ученики анонимны: только коды</span><span>Результаты приходят во ВКонтакте</span><span>Калькулятор баллов ЕГЭ и ОГЭ — бесплатно</span><span>3 ученика — бесплатно</span><span>Аналитика пробных экзаменов в одном месте</span><span>ЕГЭ и ОГЭ, 8 предметов</span><span>Баллы за пробник — за пару минут</span><span>Прогноз результата и зоны роста</span><span>Отчёт для родителей в PDF</span><span>Ученики анонимны: только коды</span><span>Результаты приходят во ВКонтакте</span><span>Калькулятор баллов ЕГЭ и ОГЭ — бесплатно</span><span>3 ученика — бесплатно</span></div></div>
     <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
       <button id="logo-btn" class="flex items-center text-left" aria-label="ЕГЭ_Map — на главную" title="ЕГЭ_Map">
         <img src="./logo-lockup.svg" alt="ЕГЭ_Map" class="logo-full">
@@ -168,6 +178,10 @@
       <nav id="main-nav" class="hidden md:flex items-center gap-1 text-sm"></nav>
       <div class="flex items-center gap-3">
         <div id="exam-switch" class="hidden items-center gap-0.5 p-0.5 rounded-xl bg-paper border border-gray-200"></div>
+        <button type="button" id="calc-btn" data-open-calc class="auth-only items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-gray-200 hover:border-ink-900 text-ink-900 text-xs font-semibold transition" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"></rect><path d="M8.5 7.5h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"></path></svg>
+          <span class="hidden sm:inline">Калькулятор баллов</span><span class="sm:hidden">Баллы</span>
+        </button>
         <button type="button" id="support-btn" data-open-support data-support-chrome aria-label="Поддержка" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-xs font-bold transition"><svg viewBox="0 0 24 24" width="16" height="16" class="shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span class="hidden sm:inline">Поддержка</span></button>
         <button id="signout-btn" class="hidden text-xs font-semibold text-ink-500 hover:text-ink-900 transition">Выйти</button>
       </div>
@@ -3406,6 +3420,26 @@ function renderLegal(){
 /* =========================================================================
    12. ВХОД С СОГЛАСИЯМИ
    ========================================================================= */
+// Калькулятор баллов во всплывающем окне (iframe widget.html, режим app: без внешних ссылок)
+let calcReturnFocus=null;
+function openCalc(){
+  const m=$("#calc-modal"), f=$("#calc-frame");
+  calcReturnFocus=document.activeElement;
+  const subj=SUBJECTS[state.subject]?state.subject:"rus";
+  f.src="./widget.html?mode=app&exam="+(authStage==="oge"?"oge":"ege")+"&subj="+encodeURIComponent(subj);
+  m.classList.remove("hidden"); m.classList.add("flex");
+  setTimeout(()=>$("#calc-close").focus(),50);
+}
+function closeCalc(){
+  const m=$("#calc-modal"); if(m.classList.contains("hidden")) return;
+  m.classList.add("hidden"); m.classList.remove("flex"); $("#calc-frame").removeAttribute("src");
+  if(calcReturnFocus&&calcReturnFocus.focus) calcReturnFocus.focus();
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest("[data-open-calc]")){ e.preventDefault(); openCalc(); }
+  else if(e.target.closest("[data-calc-close]")) closeCalc();
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeCalc(); });
 let authMode="login";
 let authStage=null;
 let authEmail="";
@@ -3539,7 +3573,10 @@ function renderAuth(){
                 </div>
               </div>`).join("")}
           </div>
-          <a href="?demo=1" class="relative inline-flex items-center gap-2 mt-7 h-12 px-6 rounded-full bg-ink-900 text-white text-sm font-bold hover:bg-black transition">Посмотреть демо-класс <span aria-hidden="true">→</span></a>
+          <div class="relative flex flex-wrap gap-2.5 mt-7">
+            <a href="?demo=1" class="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-ink-900 text-white text-sm font-bold hover:bg-black transition">Посмотреть демо-класс <span aria-hidden="true">→</span></a>
+            <button type="button" data-open-calc class="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-white text-ink-900 text-sm font-bold hover:bg-ink-900 hover:text-white transition" aria-haspopup="dialog">Калькулятор баллов</button>
+          </div>
         </div>
 
         <div class="auth-rise bg-white rounded-[34px] shadow-lift p-7 sm:p-10" style="animation-delay:.08s">

@@ -391,6 +391,9 @@ def widget_page():
 <body>
 {calc_html(p,embed=True)}
 <script>(function(){{var q=new URLSearchParams(location.search),e=q.get("exam"),s=q.get("subj");window.EGE_CALC={{exam:(e==="oge"?"oge":"ege"),subj:/^(rus|lit|math|bio|geo|phys|chem|inf)$/.test(s)?s:"rus"}};}})();</script>
+<script>(function(){{var m=new URLSearchParams(location.search).get("mode"),st=document.querySelector(".cw-sticker"),lg=document.querySelector(".cw-logo");
+ if(m==="landing"){{st.href="/app.html";st.target="_top";st.removeAttribute("rel");st.innerHTML="3 ученика<br>бесплатно<small>для учителей ↗</small>";st.setAttribute("aria-label","ЕГЭ_Map: 3 ученика бесплатно");lg.href="/";lg.target="_top";lg.removeAttribute("rel")}}
+ else if(m==="plain"||m==="app"){{st.remove();document.body.style.padding="12px 10px";if(m==="app"){{lg.removeAttribute("href");lg.removeAttribute("target");lg.removeAttribute("rel")}}else{{lg.href="/";lg.target="_top";lg.removeAttribute("rel")}}}}}})();</script>
 <script>{JS.replace('%%PROFILES%%',js_profiles())}</script>
 </body>
 </html>
