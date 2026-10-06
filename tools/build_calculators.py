@@ -38,6 +38,7 @@ SRC={"ege":{"rus":("t","EGE_SCALE"),"lit":("t","LIT_SCALE"),"math":("m","MATH_EG
 PROFILES={"ege":{},"oge":{}}
 for ex in ("ege","oge"):
     for sid,slug,name,by,key in SUBJ:
+        if ex=="ege" and sid=="math": continue   # профильной математики нет, базовую не показываем
         kind,const=SRC[ex][sid]
         p=dict(id=sid,exam=ex,slug=slug,name=name,by=by,key=key,kind="test" if kind=="t" else "mark",
                url=f"/perevod-ballov-{ex}-{slug}.html")
@@ -47,8 +48,6 @@ for ex in ("ege","oge"):
         else:
             ms=marks(const); assert [m["mark"] for m in ms]==[2,3,4,5] and ms[0]["frm"]==0,const
             p["marks"]=ms; p["max"]=ms[-1]["to"]
-            if ex=="ege" and sid=="math":
-                p["name"]="Математика (базовый)"; p["by"]="по математике (базовый уровень)"
         if ex=="oge" and sid=="math": p["geom"]=True
         PROFILES[ex][sid]=p
 HUBS={"ege":"/kalkulyator-ballov-ege.html","oge":"/kalkulyator-ballov-oge.html"}
@@ -119,6 +118,8 @@ CSS_CALC="""
 .cw-sticker{position:absolute;right:-8px;top:-14px;transform:rotate(6deg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   width:96px;padding:9px 6px;border-radius:14px;background:var(--lime);color:var(--ink);text-decoration:none;font:800 12.5px/1.15 'Onest',sans-serif;
   box-shadow:0 8px 18px -6px rgba(0,0,0,.5),0 0 0 3px #fff;transition:transform .2s}
+.cw-note{margin:16px 10px 6px;font-size:12.5px;line-height:1.4;color:rgba(12,12,10,.7);text-align:center}
+.cw-s.soon{opacity:.5}
 .cw-sticker:hover{transform:rotate(-2deg) scale(1.05)}
 .cw-sticker small{display:block;margin-top:3px;font:600 9.5px/1.1 'IBM Plex Mono',monospace;letter-spacing:.04em;text-transform:uppercase;opacity:.7}
 @media (max-width:380px){.cw{padding:14px 12px 16px}.cw-k{height:50px}.cw-res{font-size:50px}.cw-sticker{right:-4px}}
@@ -167,7 +168,7 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
 
 JS="""
 (function(){
-  var P=%%PROFILES%%, C=window.EGE_CALC||{}, S={exam:C.exam||"ege",subj:C.subj||"rus",val:""};
+  var P=%%PROFILES%%, C=window.EGE_CALC||{}, S={exam:C.exam||"ege",subj:C.subj||"rus",val:"",hint:""}; if(S.exam==="ege"&&S.subj==="math"){S.exam="oge"}
   var $=function(i){return document.getElementById(i)}, EXN={ege:"ЕГЭ",oge:"ОГЭ"};
   function prof(){return P[S.exam][S.subj]}
   function pl(n,a,b,c){n=Math.abs(n);return n%10===1&&n%100!==11?a:(n%10>=2&&n%10<=4&&!(n%100>=12&&n%100<=14))?b:c}
@@ -195,7 +196,8 @@ JS="""
     }
     res.className="cw-res"+(has?"":" dim"); res.textContent=out;
     if(has){res.classList.remove("pop");void res.offsetWidth;res.classList.add("pop")}
-    $("cwSub").textContent=sub; $("cwWarn").textContent=warn;
+    $("cwSub").textContent=sub; $("cwWarn").textContent=S.hint||warn;
+    document.querySelectorAll('[data-subj="math"]').forEach(function(b){b.classList.toggle("soon",S.exam==="ege")});
     document.querySelectorAll("[data-exam]").forEach(function(b){b.classList.toggle("on",b.dataset.exam===S.exam);b.setAttribute("aria-pressed",b.dataset.exam===S.exam)});
     document.querySelectorAll("[data-subj]").forEach(function(b){b.classList.toggle("on",b.dataset.subj===S.subj);b.setAttribute("aria-pressed",b.dataset.subj===S.subj)});
     var t=$("tbl"); if(t&&C.dynTable) table(p,has?v:-1);
@@ -214,12 +216,20 @@ JS="""
   function digit(d){var p=prof(),n=S.val===""?String(d):S.val+String(d);if(n.length>1&&n[0]==="0")n=String(+n);if(+n>p.max)n=String(d);S.val=n;render()}
   function step(k){var p=prof(),v=S.val===""?(k>0?-1:p.max+1):+S.val;v=Math.max(0,Math.min(p.max,v+k));S.val=String(v);render()}
   function act(a){
+    S.hint="";
     if(a==="C")S.val="";else if(a==="B")S.val=S.val.slice(0,-1);else if(a==="+")step(1);else if(a==="-")step(-1);else digit(a);
     if(a==="C"||a==="B")render();
   }
   document.querySelectorAll("[data-k]").forEach(function(b){b.addEventListener("click",function(){press(b);act(b.dataset.k)})});
-  document.querySelectorAll("[data-exam]").forEach(function(b){b.addEventListener("click",function(){S.exam=b.dataset.exam;press(b);var p=prof();if(S.val!==""&&+S.val>p.max)S.val=String(p.max);render()})});
-  document.querySelectorAll("[data-subj]").forEach(function(b){b.addEventListener("click",function(){S.subj=b.dataset.subj;press(b);var p=prof();if(S.val!==""&&+S.val>p.max)S.val=String(p.max);render()})});
+  var MSG1="ℹ ЕГЭ по математике пока без шкалы — показан ОГЭ", MSG2="ℹ ЕГЭ по математике пока без шкалы — выбран русский язык";
+  document.querySelectorAll("[data-exam]").forEach(function(b){b.addEventListener("click",function(){
+    var e=b.dataset.exam; S.hint="";
+    if(e==="ege"&&S.subj==="math"){S.subj="rus";S.hint=MSG2}
+    S.exam=e;press(b);var p=prof();if(S.val!==""&&+S.val>p.max)S.val=String(p.max);render()})});
+  document.querySelectorAll("[data-subj]").forEach(function(b){b.addEventListener("click",function(){
+    var sj=b.dataset.subj; S.hint="";
+    if(sj==="math"&&S.exam==="ege"){S.exam="oge";S.hint=MSG1}
+    S.subj=sj;press(b);var p=prof();if(S.val!==""&&+S.val>p.max)S.val=String(p.max);render()})});
   document.addEventListener("keydown",function(e){
     if(e.ctrlKey||e.metaKey||e.altKey)return; var t=e.target&&e.target.tagName; if(t==="INPUT"||t==="SELECT"||t==="TEXTAREA")return;
     var k=e.key,map={Backspace:"B",Delete:"C",Escape:"C",ArrowUp:"+",ArrowDown:"-","+":"+","-":"-"},a=null;
@@ -319,7 +329,7 @@ def page(p,hub=False):
          "offers":{"@type":"Offer","price":"0","priceCurrency":"RUB"},"publisher":{"@type":"Organization","name":"ЕГЭ_Map","url":SITE+"/"}}]
     foot_links=''
     for e in ("ege","oge"):
-        foot_links+=f'<div class="fl"><b>{EXAMNAME[e]}</b>'+''.join(f'<a href="{PROFILES[e][x[0]]["url"]}">{E(x[2])}</a>' for x in SUBJ)+'</div>'
+        foot_links+=f'<div class="fl"><b>{EXAMNAME[e]}</b>'+''.join(f'<a href="{PROFILES[e][x[0]]["url"]}">{E(x[2])}</a>' for x in SUBJ if x[0] in PROFILES[e])+'</div>'
     tbl_title=f'{EXAMNAME[ex]} · {p["name"]}: '+("первичные → тестовые" if p["kind"]=="test" else "первичные → отметка")
     src=f'Шкала {YEAR[ex]}, по данным ФИПИ и Рособрнадзора. Обновлено {UPDATED_RU} Расчёт ориентировочный.'
     init=f'{{exam:"{ex}",subj:"{p["id"]}",dynTable:true}}'
@@ -362,7 +372,7 @@ def page(p,hub=False):
   <nav class="crumbs" aria-label="Навигация"><a href="/">ЕГЭ_Map</a> / {'Калькулятор баллов '+EXAMNAME[ex] if hub else '<a href="'+HUBS[ex]+'">Калькулятор баллов '+EXAMNAME[ex]+'</a> / '+E(p["name"])}</nav>
   <div class="stage">
     <section class="hero"><span class="tag">Шкала {YEAR[ex]}</span><h1>{E(h1)}</h1><p class="lead">{E(lead)}</p></section>
-    <div class="col-calc">{calc_html(p)}</div>
+    <div class="col-calc">{calc_html(p)}<p class="cw-note">Профильной математики и других предметов пока нет: шкалы на 2027 год утверждают весной, добавим сразу после публикации.</p></div>
     <section class="card" id="tblcard"><h2 id="tblTitle">{E(tbl_title)}</h2>
       <div id="tbl" class="{'tbl' if p['kind']=='test' else ''}">{table_html(p)}</div>
       <p class="src">{E(src)}</p></section>
@@ -467,11 +477,12 @@ def save(url,content):
     open(os.path.join(ROOT,url.lstrip('/')),'w',encoding='utf-8').write(content); written.append(url)
 for ex in ("ege","oge"):
     save(*page(PROFILES[ex]["rus"],hub=True))
-    for sid,*_ in SUBJ: save(*page(PROFILES[ex][sid]))
+    for sid,*_ in SUBJ:
+        if sid in PROFILES[ex]: save(*page(PROFILES[ex][sid]))
 save(*widget_page()); save(*embed_page())
 
 urls=[("/","1.0","weekly"),("/parents.html","0.7","monthly"),(HUBS["ege"],"0.9","monthly"),(HUBS["oge"],"0.9","monthly"),(EMBED_URL,"0.4","yearly")]
-urls+=[(PROFILES[e][s[0]]["url"],"0.8","monthly") for e in ("ege","oge") for s in SUBJ]
+urls+=[(PROFILES[e][s[0]]["url"],"0.8","monthly") for e in ("ege","oge") for s in SUBJ if s[0] in PROFILES[e]]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url>\n    <loc>{SITE}{u}</loc>\n    <lastmod>{UPDATED_ISO}</lastmod>\n    <changefreq>{c}</changefreq>\n    <priority>{pr}</priority>\n  </url>\n' for u,pr,c in urls)+'</urlset>\n'
 open(os.path.join(ROOT,'sitemap.xml'),'w',encoding='utf-8').write(sm)
 print(len(written),"pages")
