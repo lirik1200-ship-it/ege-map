@@ -235,7 +235,7 @@ window.YM_ID = 0;
     </a>
     <div data-m="navlinks" style="display: flex; align-items: center; gap: 26px; font-size: 14.5px; font-weight: 500; color: #45514F">
       <a href="#vozmozhnosti" style="color: inherit">Возможности</a>
-      <a href="#kalkulyator" style="color: inherit">Калькулятор</a>
+      <a href="./kalkulyator-ballov-ege.html" data-calc-open style="color: inherit">Калькулятор</a>
       <a href="#bot" style="color: inherit">Бот ВКонтакте</a>
       <a href="#tarify" style="color: inherit">Тарифы</a>
       <a href="#faq" style="color: inherit">Вопросы</a>
@@ -950,38 +950,6 @@ window.YM_ID = 0;
     </div>
   </div>
 
-  <!-- КАЛЬКУЛЯТОР БАЛЛОВ -->
-  <div id="kalkulyator" style="padding: 82px 40px 0">
-    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 36px 64px; padding: 52px 48px; border-radius: 34px; background: #00FDFF">
-      <div style="flex: 1 1 340px; max-width: 460px; min-width: 0">
-        <div style="display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.6); font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase">Бесплатный инструмент</div>
-        <h2 style="margin: 16px 0 0; font-size: 40px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; text-wrap: balance">Калькулятор баллов ЕГЭ и ОГЭ</h2>
-        <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 28px">
-          <div style="display: flex; gap: 12px; align-items: flex-start">
-            <span style="flex: 0 0 auto; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #0C0C0A; color: #D7F205; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700">1</span>
-            <div style="min-width: 0"><div style="font-size: 15px; font-weight: 700; line-height: 1.3">Выберите экзамен и предмет</div><div style="margin-top: 2px; font-size: 13.5px; line-height: 1.45; color: rgba(12,12,10,.66)">ЕГЭ или ОГЭ — вверху, предмет — клавишей внизу.</div></div>
-          </div>
-          <div style="display: flex; gap: 12px; align-items: flex-start">
-            <span style="flex: 0 0 auto; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #0C0C0A; color: #D7F205; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700">2</span>
-            <div style="min-width: 0"><div style="font-size: 15px; font-weight: 700; line-height: 1.3">Наберите первичный балл</div><div style="margin-top: 2px; font-size: 13.5px; line-height: 1.45; color: rgba(12,12,10,.66)">Сумма баллов за все задания работы.</div></div>
-          </div>
-          <div style="display: flex; gap: 12px; align-items: flex-start">
-            <span style="flex: 0 0 auto; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #0C0C0A; color: #D7F205; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700">3</span>
-            <div style="min-width: 0"><div style="font-size: 15px; font-weight: 700; line-height: 1.3">Читайте результат на табло</div><div style="margin-top: 2px; font-size: 13.5px; line-height: 1.45; color: rgba(12,12,10,.66)">ЕГЭ: вторичный (тестовый) балл до 100. ОГЭ: оценка от 2 до 5.</div></div>
-          </div>
-        </div>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px">
-          <a href="./kalkulyator-ballov-ege.html" style="display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 999px; font-size: 14px; font-weight: 600; background: #0C0C0A; color: #FFFFFF" style-hover="background: #2C2C24; color: #FFFFFF">На отдельной странице</a>
-          <a href="./vstroit-kalkulyator.html" style="display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 999px; font-size: 14px; font-weight: 600; background: rgba(255,255,255,.65)" style-hover="background: #FFFFFF">На свой сайт</a>
-        </div>
-        <p style="margin: 18px 0 0; max-width: 400px; font-size: 12.5px; line-height: 1.45; color: rgba(12,12,10,.62)">Профильной математики и других предметов пока нет: шкалы на 2027 год утверждают весной, добавим сразу после публикации.</p>
-      </div>
-      <div style="flex: 0 1 400px; min-width: 0; width: 100%">
-        <iframe src="./widget.html?exam=ege&amp;subj=rus&amp;mode=landing" title="Калькулятор баллов ЕГЭ и ОГЭ" loading="lazy" style="display: block; width: 100%; height: 745px; border: 0; border-radius: 30px"></iframe>
-      </div>
-    </div>
-  </div>
-
   <!-- TELEGRAM-БОТ -->
   <div id="bot" style="padding: 84px 40px 0">
     <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: center; border-radius: 34px; background: #E4FDFE; padding: 46px">
@@ -1532,6 +1500,50 @@ window.YM_ID = 0;
 </sc-if>
 
 </x-dc>
+
+<!-- КАЛЬКУЛЯТОР БАЛЛОВ: плавающий виджет справа (открывается по кнопке) -->
+<style>
+  #calcdock{position:fixed;right:20px;bottom:20px;z-index:60;font-family:'Onest',system-ui,sans-serif}
+  #calcfab{display:inline-flex;align-items:center;gap:9px;height:48px;padding:0 18px 0 14px;border:0;border-radius:999px;background:#0C0C0A;color:#fff;font:600 14px/1 'Onest',system-ui,sans-serif;cursor:pointer;box-shadow:0 12px 30px -8px rgba(0,40,42,.5);transition:transform .15s,background .15s}
+  #calcfab:hover{background:#2C2C24;transform:translateY(-2px)}
+  #calcfab .dot{width:8px;height:8px;border-radius:50%;background:#D7F205;box-shadow:0 0 0 0 rgba(215,242,5,.7);animation:calcpulse 2.4s ease-out infinite}
+  #calcdock.seen #calcfab .dot{display:none}
+  @keyframes calcpulse{0%{box-shadow:0 0 0 0 rgba(215,242,5,.7)}70%,100%{box-shadow:0 0 0 9px rgba(215,242,5,0)}}
+  #calcpop{position:absolute;right:0;bottom:60px;width:min(400px,calc(100vw - 24px));padding:8px;border-radius:34px;background:#00FDFF;box-shadow:0 30px 70px -20px rgba(0,40,42,.55);transform-origin:bottom right;animation:calcin .22s ease}
+  #calcpop[hidden]{display:none}
+  #calcpop iframe{display:block;width:100%;height:min(745px,calc(100vh - 120px));border:0;border-radius:30px}
+  #calcx{position:absolute;top:-10px;right:-6px;z-index:2;width:36px;height:36px;border:0;border-radius:50%;background:#fff;color:#0C0C0A;font-size:22px;line-height:1;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+  #calcx:hover{background:#D7F205}
+  @keyframes calcin{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+  @media (max-width:980px){#calcdock{bottom:88px;right:14px}#calcpop iframe{height:min(745px,calc(100vh - 185px))}}
+  @media (max-width:640px){#calcfab span.t{display:none}#calcfab{width:52px;height:52px;padding:0;justify-content:center}#calcpop{position:fixed;right:8px;left:8px;bottom:150px;width:auto}#calcpop iframe{height:min(745px,calc(100vh - 190px))}}
+  @media (prefers-reduced-motion:reduce){#calcfab .dot,#calcpop{animation:none}}
+</style>
+<div id="calcdock">
+  <div id="calcpop" role="dialog" aria-label="Калькулятор баллов ЕГЭ и ОГЭ" hidden>
+    <button id="calcx" type="button" aria-label="Закрыть калькулятор">×</button>
+    <iframe id="calcfr" title="Калькулятор баллов ЕГЭ и ОГЭ"></iframe>
+  </div>
+  <button id="calcfab" type="button" aria-expanded="false" aria-controls="calcpop">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"></rect><path d="M8.5 7.5h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"></path></svg>
+    <span class="t">Калькулятор баллов</span><span class="dot" aria-hidden="true"></span>
+  </button>
+</div>
+<script>
+(function(){
+  var dock=document.getElementById("calcdock"),pop=document.getElementById("calcpop"),fab=document.getElementById("calcfab"),fr=document.getElementById("calcfr");
+  function open(){ if(!fr.getAttribute("src")) fr.src="./widget.html?exam=ege&subj=rus&mode=app"; pop.hidden=false; fab.setAttribute("aria-expanded","true"); dock.classList.add("seen"); }
+  function close(){ pop.hidden=true; fab.setAttribute("aria-expanded","false"); }
+  fab.addEventListener("click",function(){ pop.hidden?open():close(); });
+  document.getElementById("calcx").addEventListener("click",close);
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape"&&!pop.hidden) close(); });
+  document.addEventListener("click",function(e){
+    var a=e.target.closest&&e.target.closest("[data-calc-open]");
+    if(a&&!e.metaKey&&!e.ctrlKey&&!e.shiftKey){ e.preventDefault(); open(); return; }
+    if(!pop.hidden&&!dock.contains(e.target)) close();
+  });
+})();
+</script>
 <script type="text/x-dc" data-dc-script data-props="{&quot;appUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;app.html&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ссылки&quot;},&quot;examDate&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;2027-06-05&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Данные&quot;},&quot;heroAutoplay&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Главный экран&quot;},&quot;heroInterval&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:4,&quot;min&quot;:2,&quot;max&quot;:10,&quot;step&quot;:1,&quot;unit&quot;:&quot;с&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Главный экран&quot;},&quot;typeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:12,&quot;min&quot;:4,&quot;max&quot;:40,&quot;step&quot;:2,&quot;unit&quot;:&quot;мс&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Карточка ученика&quot;}}">
 const EGE_SCALE = [0,3,5,8,10,12,15,17,20,22,24,27,29,32,34,36,37,39,40,42,43,45,46,48,49,51,52,54,55,57,58,60,61,63,64,66,67,69,70,72,73,75,78,81,83,86,89,91,94,97,100];
 

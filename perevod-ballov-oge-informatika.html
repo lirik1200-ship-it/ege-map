@@ -72,7 +72,7 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
 
 .cw{position:relative;width:100%;max-width:380px;margin:0 auto;padding:16px 16px 18px;border-radius:30px;color:#fff;
   background:linear-gradient(180deg,#232C2C 0%,#141A1A 100%);box-shadow:0 30px 60px -24px rgba(12,12,10,.55),0 2px 0 rgba(255,255,255,.08) inset,0 -4px 0 rgba(0,0,0,.35) inset;user-select:none;-webkit-user-select:none;touch-action:manipulation}
-.cw-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-right:96px}
+.cw-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-right:112px}
 .cw-logo img{display:block;height:24px;width:auto}
 .cw-seg{display:inline-flex;padding:3px;border-radius:999px;background:#0C1010;box-shadow:inset 0 1px 3px rgba(0,0,0,.6)}
 .cw-seg button{border:0;background:transparent;color:#9FB0AF;font:700 12px/1 'IBM Plex Mono',monospace;letter-spacing:.04em;padding:8px 12px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s}
@@ -108,7 +108,7 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
 .cw-s:active{transform:translateY(2px);box-shadow:0 1px 0 #0A0E0E}
 .cw-s.on{background:var(--cy);color:var(--ink);box-shadow:0 3px 0 #00A9B0,0 0 18px rgba(0,253,255,.45)}
 .cw-sticker{position:absolute;right:-8px;top:-14px;transform:rotate(6deg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-  width:96px;padding:9px 6px;border-radius:14px;background:var(--lime);color:var(--ink);text-decoration:none;font:800 12.5px/1.15 'Onest',sans-serif;
+  width:118px;padding:9px 8px;border-radius:14px;background:var(--lime);color:var(--ink);text-decoration:none;font:800 12.5px/1.15 'Onest',sans-serif;
   box-shadow:0 8px 18px -6px rgba(0,0,0,.5),0 0 0 3px #fff;transition:transform .2s}
 .cw-note{margin:16px 10px 6px;font-size:12.5px;line-height:1.4;color:rgba(12,12,10,.7);text-align:center}
 .cw-sticker:hover{transform:rotate(-2deg) scale(1.05)}
@@ -121,14 +121,14 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
 <body>
 <header class="top"><div class="wrap">
   <a href="/" aria-label="ЕГЭ_Map — на главную"><img src="/logo-lockup.svg" alt="ЕГЭ_Map"></a>
-  <a class="pill lime" href="/app.html?demo=1">Для учителей: демо-класс</a>
+  <a class="pill lime" href="/">Для учителей</a>
 </div></header>
 <main class="wrap">
   <nav class="crumbs" aria-label="Навигация"><a href="/">ЕГЭ_Map</a> / <a href="/kalkulyator-ballov-oge.html">Калькулятор баллов ОГЭ</a> / Информатика</nav>
   <div class="stage">
     <section class="hero"><span class="tag">Шкала 2026–2027</span><h1>Баллы ОГЭ по информатике</h1><p class="lead">Первичные → отметка</p></section>
     <div class="col-calc"><div class="cw" id="cw" role="group" aria-label="Калькулятор баллов">
-  <a class="cw-sticker" href="/app.html" aria-label="ЕГЭ_Map: 3 ученика бесплатно">3 ученика<br>бесплатно<small>для учителей ↗</small></a>
+  <a class="cw-sticker" href="/" aria-label="ЕГЭ_Map: учёт пробников для учителей">ЕГЭ_Map<small>учёт пробников для учителей ↗</small></a>
   <div class="cw-head"><a class="cw-logo" href="/" aria-label="ЕГЭ_Map"><img src="/logo-lockup-dark.svg" alt="ЕГЭ_Map"></a><div class="cw-seg"><button type="button" data-exam="ege" class="" aria-pressed="false">ЕГЭ</button><button type="button" data-exam="oge" class="on" aria-pressed="true">ОГЭ</button></div></div>
   <div class="cw-lcd" aria-live="polite">
     <div class="r1" id="cwCtx">ОГЭ · Информатика</div>
@@ -145,12 +145,12 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
     <section class="card" id="tblcard"><h2 id="tblTitle">ОГЭ · Информатика: первичные → отметка</h2>
       <div id="tbl" class=""><table class="marks"><thead><tr><th>Отметка</th><th>Первичные</th><th></th></tr></thead><tbody><tr><td><b>2</b></td><td class="mono">0–4</td><td class="w"></td></tr><tr><td><b>3</b></td><td class="mono">5–10</td><td class="w"></td></tr><tr><td><b>4</b></td><td class="mono">11–16</td><td class="w"></td></tr><tr><td><b>5</b></td><td class="mono">17–21</td><td class="w"></td></tr></tbody></table></div>
       <p class="src">Шкала 2026–2027, по данным ФИПИ и Рособрнадзора. Обновлено 6 октября 2026 г. Расчёт ориентировочный.</p></section>
-    <section class="cta"><div><h2>Класс на пробниках?</h2><p>ЕГЭ_Map считает это за вас. 3 ученика бесплатно.</p></div>
-      <div class="acts"><a class="pill lime" href="/app.html">Попробовать</a><a class="pill ghost" style="background:transparent;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)" href="/app.html?demo=1">Демо-класс</a></div></section>
+    <section class="cta"><div><h2>Для учителей и репетиторов</h2><p>ЕГЭ_Map ведёт результаты пробников по каждому заданию, показывает, какие темы проседают у ученика и у всего класса, и готовит отчёт для родителей.</p></div>
+      <div class="acts"><a class="pill lime" href="/">Узнать о ЕГЭ_Map</a></div></section>
   </div>
   <footer class="ft"><div class="fl"><b>ЕГЭ</b><a href="/perevod-ballov-ege-russkiy-yazyk.html">Русский язык</a><a href="/perevod-ballov-ege-literatura.html">Литература</a><a href="/perevod-ballov-ege-matematika.html">Математика</a><a href="/perevod-ballov-ege-biologiya.html">Биология</a><a href="/perevod-ballov-ege-geografiya.html">География</a><a href="/perevod-ballov-ege-fizika.html">Физика</a><a href="/perevod-ballov-ege-himiya.html">Химия</a><a href="/perevod-ballov-ege-informatika.html">Информатика</a></div><div class="fl"><b>ОГЭ</b><a href="/perevod-ballov-oge-russkiy-yazyk.html">Русский язык</a><a href="/perevod-ballov-oge-literatura.html">Литература</a><a href="/perevod-ballov-oge-matematika.html">Математика</a><a href="/perevod-ballov-oge-biologiya.html">Биология</a><a href="/perevod-ballov-oge-geografiya.html">География</a><a href="/perevod-ballov-oge-fizika.html">Физика</a><a href="/perevod-ballov-oge-himiya.html">Химия</a><a href="/perevod-ballov-oge-informatika.html">Информатика</a></div><div class="fl" style="margin-top:12px">© ЕГЭ_Map · <a href="/">Для учителей</a> · <a href="/parents.html">Родителям</a> · <a href="/vstroit-kalkulyator.html">На свой сайт</a> · <a href="/app.html?legal=privacy">Политика обработки данных</a> · Расчёт в вашем браузере, данные не сохраняются</div></footer>
 </main>
-<div class="sbar" id="sbar"><span>Учитель? Результаты класса — в ЕГЭ_Map</span><a class="pill lime" href="/app.html?demo=1">Демо →</a><button type="button" id="sbarX" aria-label="Закрыть">×</button></div>
+<div class="sbar" id="sbar"><span>ЕГЭ_Map: учёт пробников для учителей</span><a class="pill lime" href="/">Подробнее →</a><button type="button" id="sbarX" aria-label="Закрыть">×</button></div>
 <script>window.EGE_CALC={exam:"oge",subj:"inf",dynTable:true};</script>
 <script>
 (function(){
