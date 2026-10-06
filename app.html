@@ -29,8 +29,8 @@
 <script src="./vendor/chart.umd.min.js"></script>
 <script src="./vendor/supabase.js"></script>
 <script src="./vendor/html2pdf.bundle.min.js"></script>
-<link rel="preload" href="./fonts/Onest-cyrillic-8faa2f.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="./fonts/fonts.css">
+<link rel="preload" href="./fonts/ui-GolosText-cyrillic-721d01.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts/golos.css">
 
 <script>
   tailwind.config = { theme: { extend: {
@@ -50,12 +50,9 @@
 <style>
   html{scroll-behavior:smooth}
   body{background:#F2F4F3}
-  /* Шрифты интерфейса задаются здесь (переменные). Режим сравнения: app.html?fontlab=1 */
-  :root{--f-ui:'Onest';--f-head:'Onest';--f-num:'IBM Plex Mono'}
-  html[data-fl]:not([data-fl="cur"]) .font-mono,html[data-fl]:not([data-fl="cur"]) .tnum,html[data-fl]:not([data-fl="cur"]) .entry-input{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
-  #fontlab{position:fixed;left:12px;bottom:12px;z-index:90;display:flex;gap:4px;padding:5px;border-radius:999px;background:#0C0C0A;box-shadow:0 10px 30px rgba(0,0,0,.35);font:600 12px/1 system-ui,sans-serif}
-  #fontlab button{border:0;border-radius:999px;padding:9px 13px;background:transparent;color:#C9D3D2;cursor:pointer}
-  #fontlab button.on{background:#D7F205;color:#0C0C0A}
+  /* Шрифт интерфейса задаётся переменными (Golos Text); цифры — табличные, чтобы столбцы не «плясали» */
+  :root{--f-ui:'Golos Text';--f-head:'Golos Text';--f-num:'Golos Text'}
+  .font-mono,.tnum,.entry-input{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
   .tnum{font-variant-numeric:tabular-nums}
   #global-tooltip{position:fixed;z-index:999999;top:0;left:0;max-width:320px;padding:12px 14px;border-radius:14px;
     background:#0C0C0A;color:#F9FAFB;box-shadow:0 12px 32px -8px rgba(12,12,10,.45);font-size:13px;line-height:1.5;
@@ -63,7 +60,7 @@
   #global-tooltip.is-visible{opacity:1;visibility:visible;transform:translateY(0)}
   #global-tooltip .tt-title{font-family:var(--f-ui),sans-serif;font-weight:700;font-size:13px;margin-bottom:4px;color:#fff}
   #global-tooltip .tt-rule{color:#C7CBD4}
-  #global-tooltip .tt-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8E93A3;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;display:block}
+  #global-tooltip .tt-num{font-family:var(--f-num),monospace;font-size:11px;color:#8E93A3;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;display:block}
   @keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
   .skeleton{background:linear-gradient(90deg,#EDEFF3 0%,#F6F7F9 40%,#EDEFF3 80%);background-size:600px 100%;animation:shimmer 1.4s linear infinite}
   .matrix-wrap{overflow:auto;max-height:70vh}
@@ -114,7 +111,7 @@
   body.on-auth .auth-ticker{display:block}
   .auth-ticker-track{display:flex;width:max-content;animation:authTicker 90s linear infinite}
   .auth-ticker:hover .auth-ticker-track{animation-play-state:paused}
-  .auth-ticker-track span{flex:none;padding:6px 0;font:500 11px/1.4 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.04em;color:#4F5A59;white-space:nowrap}
+  .auth-ticker-track span{flex:none;padding:6px 0;font:500 11px/1.4 var(--f-ui),system-ui,sans-serif;letter-spacing:.03em;color:#4F5A59;white-space:nowrap}
   .auth-ticker-track span::after{content:"";display:inline-block;width:5px;height:5px;margin:0 22px;border-radius:50%;background:#D7F205;vertical-align:middle;box-shadow:0 0 0 1px rgba(12,12,10,.15)}
   .auth-only{display:none}
   body.on-auth .auth-only{display:inline-flex}
@@ -4789,7 +4786,7 @@ function renderGroup(){
         callbacks:{title:i=>g.dynamics[i[0].dataIndex].fullLabel,
           label:i=>{const d=g.dynamics[i.dataIndex];
             return i.datasetIndex===1?`средний ${d.avg} · писали ${d.count}`:`${i.dataset.label.toLowerCase()} ${i.parsed.y}`;}}}},
-      scales:{y:{min:0,max:SCORE_MAX,ticks:{precision:0,color:"#7B8A8F",font:{family:"IBM Plex Mono",size:11}},grid:{color:"#F1F2F5",drawBorder:false}},
+      scales:{y:{min:0,max:SCORE_MAX,ticks:{precision:0,color:"#7B8A8F",font:{family:"Golos Text",size:11}},grid:{color:"#F1F2F5",drawBorder:false}},
         x:{ticks:{color:"#7B8A8F",font:{size:11}},grid:{display:false,drawBorder:false}}}}
   });
 
@@ -4800,7 +4797,7 @@ function renderGroup(){
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{backgroundColor:"#0C0C0A",padding:12,cornerRadius:12,displayColors:false,
         callbacks:{label:i=>`${i.parsed.y} ${plural(i.parsed.y,"ученик","ученика","учеников")}`}}},
-      scales:{y:{beginAtZero:true,ticks:{stepSize:1,precision:0,color:"#7B8A8F",font:{family:"IBM Plex Mono",size:11}},grid:{color:"#F1F2F5",drawBorder:false}},
+      scales:{y:{beginAtZero:true,ticks:{stepSize:1,precision:0,color:"#7B8A8F",font:{family:"Golos Text",size:11}},grid:{color:"#F1F2F5",drawBorder:false}},
         x:{ticks:{color:"#7B8A8F",font:{size:11}},grid:{display:false,drawBorder:false}}}}
   });
 
@@ -4837,7 +4834,7 @@ function groupReportDocument(g,examLabel,images,groupName){
   return `<!DOCTYPE html>
 <html lang="ru"><head><meta charset="UTF-8"><title>${escHtml(AUTHOR.brand)} · отчёт по классу</title>
 <style>
- body{font-family:"Onest",-apple-system,Segoe UI,Roboto,sans-serif;color:#0C0C0A;box-sizing:border-box;width:860px;max-width:860px;margin:0 auto;padding:28px 34px;line-height:1.6;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ body{font-family:"Golos Text","Onest",-apple-system,Segoe UI,Roboto,sans-serif;color:#0C0C0A;box-sizing:border-box;width:860px;max-width:860px;margin:0 auto;padding:28px 34px;line-height:1.6;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  *,*:before,*:after{box-sizing:inherit}
  .topbar{height:5px;border-radius:3px;margin-bottom:18px;background:linear-gradient(90deg,#D7F205,#00FDFF)}
  .brandbar{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid #0C0C0A;margin-bottom:20px}
@@ -5450,7 +5447,7 @@ function drawStudentChart(exams,fc){
       const meta=chart.getDatasetMeta(1);
       if(!meta) return;
       ctx.save();
-      ctx.font="700 11px 'IBM Plex Mono', monospace";
+      ctx.font="700 11px 'Golos Text', sans-serif";
       ctx.textAlign="center"; ctx.textBaseline="bottom";
       meta.data.forEach((pt,i)=>{
         if(actual[i]==null) return;
@@ -5486,7 +5483,7 @@ function drawStudentChart(exams,fc){
         legend:{display:false},
         tooltip:{
           backgroundColor:"#0C0C0A",padding:12,cornerRadius:12,displayColors:false,
-          titleFont:{family:"Onest",size:12,weight:"700"},bodyFont:{family:"Onest",size:12},
+          titleFont:{family:"Golos Text",size:12,weight:"700"},bodyFont:{family:"Golos Text",size:12},
           filter:item=>item.datasetIndex===1||item.datasetIndex===3,
           callbacks:{
             title:i=>{const idx=i[0].dataIndex;return idx<n?"Пробник "+exams[idx].fullLabel:"Прогноз на экзамен";},
@@ -5506,10 +5503,10 @@ function drawStudentChart(exams,fc){
       },
       scales:{
         y:{min:0,max:CHART_MAX,border:{display:false},
-           ticks:{stepSize:isOge?10:25,padding:8,color:"#9AA6AA",font:{family:"IBM Plex Mono",size:11}},
+           ticks:{stepSize:isOge?10:25,padding:8,color:"#9AA6AA",font:{family:"Golos Text",size:11}},
            grid:{color:"#F3F4F6",drawTicks:false}},
         x:{border:{display:false},grid:{display:false},
-           ticks:{padding:8,font:ctx=>({family:"Onest",size:11,weight:ctx.index===labels.length-1?"600":"400"}),
+           ticks:{padding:8,font:ctx=>({family:"Golos Text",size:11,weight:ctx.index===labels.length-1?"600":"400"}),
                   color:ctx=>ctx.index===labels.length-1?"#0C6E73":"#7B8A8F"}}
       }
     },
@@ -5578,7 +5575,7 @@ function reportDocument(student,s,fc,weakest,essay,images){
   return `<!DOCTYPE html>
 <html lang="ru"><head><meta charset="UTF-8"><title>${escHtml(AUTHOR.brand)} · ${escHtml(student.code)}</title>
 <style>
- body{font-family:"Onest",-apple-system,Segoe UI,Roboto,sans-serif;color:#0C0C0A;box-sizing:border-box;width:860px;max-width:860px;margin:0 auto;padding:28px 34px;line-height:1.6;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ body{font-family:"Golos Text","Onest",-apple-system,Segoe UI,Roboto,sans-serif;color:#0C0C0A;box-sizing:border-box;width:860px;max-width:860px;margin:0 auto;padding:28px 34px;line-height:1.6;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  *,*:before,*:after{box-sizing:inherit}
  .topbar{height:5px;border-radius:3px;margin-bottom:18px;background:linear-gradient(90deg,#D7F205,#00FDFF)}
  .brandbar{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid #0C0C0A;margin-bottom:20px}
@@ -6663,26 +6660,6 @@ installBackNavigation();
 function hideSplash(){ const sp=document.getElementById("ege-splash"); if(!sp) return; sp.style.opacity="0"; sp.style.pointerEvents="none"; setTimeout(()=>sp.remove(),500); }
 setTimeout(hideSplash,8000);
 boot().finally(hideSplash);
-</script>
-<script>
-// Сравнение шрифтов интерфейса: открыть app.html?demo=1&fontlab=1 (выбор запоминается в этой вкладке)
-(function(){
-  var SETS={cur:["Текущий","'Onest'","'Onest'","'IBM Plex Mono'"],inter:["Inter","'Inter'","'Inter'","'Inter'"],golos:["Golos Text","'Golos Text'","'Golos Text'","'Golos Text'"],
-    plex:["Plex Sans","'IBM Plex Sans'","'IBM Plex Sans'","'IBM Plex Sans'"],manrope:["Manrope","'Manrope'","'Manrope'","'Manrope'"]};
-  var q=new URLSearchParams(location.search), on=q.get("fontlab"), saved=null;
-  try{saved=sessionStorage.getItem("egm_font")}catch(e){}
-  if(!on&&!saved) return;
-  var l=document.createElement("link"); l.rel="stylesheet"; l.href="./fonts/ui-fonts.css"; document.head.appendChild(l);
-  function apply(k){ var s=SETS[k]||SETS.cur, r=document.documentElement;
-    r.dataset.fl=k; r.style.setProperty("--f-ui",s[1]); r.style.setProperty("--f-head",s[2]); r.style.setProperty("--f-num",s[3]);
-    try{sessionStorage.setItem("egm_font",k)}catch(e){}
-    document.querySelectorAll("#fontlab button").forEach(function(b){b.classList.toggle("on",b.dataset.f===k)}); }
-  var bar=document.createElement("div"); bar.id="fontlab";
-  bar.innerHTML=Object.keys(SETS).map(function(k){return '<button type="button" data-f="'+k+'">'+SETS[k][0]+'</button>'}).join("");
-  document.body.appendChild(bar);
-  bar.addEventListener("click",function(e){var b=e.target.closest("button");if(b)apply(b.dataset.f)});
-  apply(SETS[saved]?saved:(SETS[on]?on:"cur"));
-})();
 </script>
 </body>
 </html>

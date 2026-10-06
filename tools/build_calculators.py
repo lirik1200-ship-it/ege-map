@@ -38,7 +38,6 @@ SRC={"ege":{"rus":("t","EGE_SCALE"),"lit":("t","LIT_SCALE"),"math":("m","MATH_EG
 PROFILES={"ege":{},"oge":{}}
 for ex in ("ege","oge"):
     for sid,slug,name,by,key in SUBJ:
-        if ex=="ege" and sid=="math": continue   # профильной математики нет, базовую не показываем
         kind,const=SRC[ex][sid]
         p=dict(id=sid,exam=ex,slug=slug,name=name,by=by,key=key,kind="test" if kind=="t" else "mark",
                url=f"/perevod-ballov-{ex}-{slug}.html")
@@ -48,6 +47,8 @@ for ex in ("ege","oge"):
         else:
             ms=marks(const); assert [m["mark"] for m in ms]==[2,3,4,5] and ms[0]["frm"]==0,const
             p["marks"]=ms; p["max"]=ms[-1]["to"]
+            if ex=="ege" and sid=="math":
+                p["name"]="Математика (базовый)"; p["by"]="по математике (базовый уровень)"
         if ex=="oge" and sid=="math": p["geom"]=True
         PROFILES[ex][sid]=p
 HUBS={"ege":"/kalkulyator-ballov-ege.html","oge":"/kalkulyator-ballov-oge.html"}
@@ -119,7 +120,6 @@ CSS_CALC="""
   width:96px;padding:9px 6px;border-radius:14px;background:var(--lime);color:var(--ink);text-decoration:none;font:800 12.5px/1.15 'Onest',sans-serif;
   box-shadow:0 8px 18px -6px rgba(0,0,0,.5),0 0 0 3px #fff;transition:transform .2s}
 .cw-note{margin:16px 10px 6px;font-size:12.5px;line-height:1.4;color:rgba(12,12,10,.7);text-align:center}
-.cw-s.soon{opacity:.5}
 .cw-sticker:hover{transform:rotate(-2deg) scale(1.05)}
 .cw-sticker small{display:block;margin-top:3px;font:600 9.5px/1.1 'IBM Plex Mono',monospace;letter-spacing:.04em;text-transform:uppercase;opacity:.7}
 @media (max-width:380px){.cw{padding:14px 12px 16px}.cw-k{height:50px}.cw-res{font-size:50px}.cw-sticker{right:-4px}}
@@ -168,7 +168,7 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
 
 JS="""
 (function(){
-  var P=%%PROFILES%%, C=window.EGE_CALC||{}, S={exam:C.exam||"ege",subj:C.subj||"rus",val:"",hint:""}; if(S.exam==="ege"&&S.subj==="math"){S.exam="oge"}
+  var P=%%PROFILES%%, C=window.EGE_CALC||{}, S={exam:C.exam||"ege",subj:C.subj||"rus",val:"",hint:""};
   var $=function(i){return document.getElementById(i)}, EXN={ege:"ЕГЭ",oge:"ОГЭ"};
   function prof(){return P[S.exam][S.subj]}
   function pl(n,a,b,c){n=Math.abs(n);return n%10===1&&n%100!==11?a:(n%10>=2&&n%10<=4&&!(n%100>=12&&n%100<=14))?b:c}
@@ -197,7 +197,6 @@ JS="""
     res.className="cw-res"+(has?"":" dim"); res.textContent=out;
     if(has){res.classList.remove("pop");void res.offsetWidth;res.classList.add("pop")}
     $("cwSub").textContent=sub; $("cwWarn").textContent=S.hint||warn;
-    document.querySelectorAll('[data-subj="math"]').forEach(function(b){b.classList.toggle("soon",S.exam==="ege")});
     document.querySelectorAll("[data-exam]").forEach(function(b){b.classList.toggle("on",b.dataset.exam===S.exam);b.setAttribute("aria-pressed",b.dataset.exam===S.exam)});
     document.querySelectorAll("[data-subj]").forEach(function(b){b.classList.toggle("on",b.dataset.subj===S.subj);b.setAttribute("aria-pressed",b.dataset.subj===S.subj)});
     var t=$("tbl"); if(t&&C.dynTable) table(p,has?v:-1);
@@ -221,15 +220,13 @@ JS="""
     if(a==="C"||a==="B")render();
   }
   document.querySelectorAll("[data-k]").forEach(function(b){b.addEventListener("click",function(){press(b);act(b.dataset.k)})});
-  var MSG1="ℹ ЕГЭ по математике пока без шкалы — показан ОГЭ", MSG2="ℹ ЕГЭ по математике пока без шкалы — выбран русский язык";
+  var MSG3="ℹ ЕГЭ: только базовый уровень, профильной математики пока нет";
   document.querySelectorAll("[data-exam]").forEach(function(b){b.addEventListener("click",function(){
-    var e=b.dataset.exam; S.hint="";
-    if(e==="ege"&&S.subj==="math"){S.subj="rus";S.hint=MSG2}
-    S.exam=e;press(b);var p=prof();if(S.val!==""&&+S.val>p.max)S.val=String(p.max);render()})});
+    S.hint=""; S.exam=b.dataset.exam; if(S.subj==="math"&&S.exam==="ege")S.hint=MSG3;
+    press(b);var p=prof();if(S.val!==""&&+S.val>p.max)S.val=String(p.max);render()})});
   document.querySelectorAll("[data-subj]").forEach(function(b){b.addEventListener("click",function(){
-    var sj=b.dataset.subj; S.hint="";
-    if(sj==="math"&&S.exam==="ege"){S.exam="oge";S.hint=MSG1}
-    S.subj=sj;press(b);var p=prof();if(S.val!==""&&+S.val>p.max)S.val=String(p.max);render()})});
+    S.hint=""; S.subj=b.dataset.subj; if(S.subj==="math"&&S.exam==="ege")S.hint=MSG3;
+    press(b);var p=prof();if(S.val!==""&&+S.val>p.max)S.val=String(p.max);render()})});
   document.addEventListener("keydown",function(e){
     if(e.ctrlKey||e.metaKey||e.altKey)return; var t=e.target&&e.target.tagName; if(t==="INPUT"||t==="SELECT"||t==="TEXTAREA")return;
     var k=e.key,map={Backspace:"B",Delete:"C",Escape:"C",ArrowUp:"+",ArrowDown:"-","+":"+","-":"-"},a=null;
