@@ -39,31 +39,40 @@ header.top img{height:34px;display:block}
 .pill.lime{background:var(--lime);color:var(--ink)}.pill.lime:hover{background:#C3E600}
 .pill.dark{background:var(--ink);color:#fff}.pill.ghost{background:#fff;box-shadow:inset 0 0 0 1.5px var(--line)}.pill.ghost:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
 nav.crumbs{font-size:13px;color:var(--mut2);padding:16px 0 0}nav.crumbs a{text-decoration:none}nav.crumbs a:hover{text-decoration:underline}
-.stage{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);grid-template-areas:"calc head" "calc tbl" "calc cta";gap:0 34px;margin-top:16px;align-items:start}
-.hero{grid-area:head;background:var(--cy);border-radius:30px;padding:26px 28px}
-.col-calc{grid-area:calc;position:sticky;top:84px;padding:20px 8px 6px;background:var(--cy);border-radius:34px}
-.tag{display:inline-block;font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.6);padding:8px 12px;border-radius:999px}
-h1{margin:14px 0 8px;font-size:clamp(26px,4.4vw,40px);line-height:1.05;letter-spacing:-.035em;font-weight:800;text-wrap:balance}
-.lead{margin:0;color:rgba(12,12,10,.72);font-size:15.5px}
+.stage{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);grid-template-areas:"calc head" "calc tbl";gap:0 40px;margin-top:20px;align-items:start}
+.hero{grid-area:head;padding:6px 0 0}
+.col-calc{grid-area:calc;position:sticky;top:84px;padding:22px 10px 8px;background:var(--cy-t);border-radius:34px;box-shadow:inset 0 0 0 1px rgba(0,169,176,.18)}
+.tag{display:inline-block;font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);padding:7px 12px;border-radius:999px;box-shadow:inset 0 0 0 1.5px var(--line)}
+h1{margin:14px 0 8px;font-size:clamp(26px,4vw,36px);line-height:1.08;letter-spacing:-.035em;font-weight:800;text-wrap:balance}
+.lead{margin:0;color:var(--mut);font-size:15.5px}
 .card{background:#fff;border-radius:26px;padding:22px;margin-top:16px}
-#tblcard{grid-area:tbl}.cta{grid-area:cta}
+#tblcard{grid-area:tbl;margin-top:22px}
 h2{font-size:clamp(20px,3vw,26px);letter-spacing:-.03em;line-height:1.1;margin:0 0 12px;font-weight:800}
 .tbl{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:6px}
 .tbl button{display:flex;justify-content:space-between;gap:8px;padding:8px 11px;border-radius:11px;border:0;background:var(--paper);font:500 13.5px 'IBM Plex Mono',monospace;cursor:pointer;color:var(--ink);text-align:left;transition:background .15s}
 .tbl button:hover{background:var(--cy-t)}.tbl button b{font-weight:700}.tbl button.cur{background:var(--ink);color:#fff}
 .marks{width:100%;border-collapse:collapse;font-size:15px}.marks th,.marks td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line)}.marks th{font:500 11px 'IBM Plex Mono',monospace;color:var(--mut2);text-transform:uppercase;letter-spacing:.05em}.marks tr.cur td{background:var(--cy-t);font-weight:700}.marks .w{color:#7A4A00;font-size:13px}
 .src{margin:12px 0 0;font-size:12.5px;color:var(--mut2)}
-.cta{background:var(--ink);color:#fff;border-radius:26px;padding:22px;margin-top:16px;display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;justify-content:space-between}
-.cta h2{color:#fff;margin:0}.cta p{margin:4px 0 0;color:rgba(255,255,255,.65);font-size:14.5px}
-.cta .acts{display:flex;gap:10px;flex-wrap:wrap}
+.usp{margin-top:40px;background:var(--ink);color:#fff;border-radius:34px;padding:40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:30px 56px}
+.usp .k{display:inline-block;font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--lime);margin-bottom:14px}
+.usp h2{color:#fff;font-size:clamp(24px,3.4vw,34px);margin:0 0 12px}
+.usp .sub{margin:0;color:rgba(255,255,255,.66);font-size:15.5px;max-width:440px}
+.usp .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.usp .fine{margin:12px 0 0;font-size:12.5px;color:rgba(255,255,255,.5)}
+.usp ul{list-style:none;margin:0;padding:0;display:grid;gap:16px;align-content:center}
+.usp li{display:grid;grid-template-columns:30px 1fr;gap:12px}
+.usp li i{width:30px;height:30px;border-radius:50%;background:rgba(215,242,5,.14);color:var(--lime);display:grid;place-items:center;font:700 12px 'IBM Plex Mono',monospace;font-style:normal}
+.usp li b{display:block;font-size:15.5px;font-weight:700}
+.usp li span{display:block;margin-top:2px;font-size:14px;line-height:1.45;color:rgba(255,255,255,.62)}
 section.blk{margin-top:26px}
 .faq details{border-bottom:1px solid var(--line);padding:12px 0}.faq summary::after{content:"+";font:500 22px/1 'IBM Plex Mono',monospace;color:var(--mut2)}.faq details[open] summary::after{content:"−"}.faq p{margin:8px 0 0;color:var(--mut)}
 .fl{display:flex;flex-wrap:wrap;gap:4px 14px;margin-bottom:6px}.fl b{font:500 11px/1.8 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;width:44px}
 footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);border-top:1px solid var(--line)}footer.ft a{text-decoration:none;border-bottom:1px solid var(--line)}
 .sbar{display:none}
 @media(max-width:860px){
-  .stage{grid-template-columns:1fr;grid-template-areas:"head" "calc" "tbl" "cta";gap:0}
-  .col-calc{position:static;margin-top:14px}.hero{padding:22px 20px}
+  .stage{grid-template-columns:1fr;grid-template-areas:"head" "calc" "tbl";gap:0}
+  .col-calc{position:static;margin-top:14px}.hero{padding:6px 2px 0}
+  .usp{grid-template-columns:1fr;padding:28px 22px;border-radius:26px}
   .sbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;align-items:center;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:var(--ink);color:#fff;box-shadow:0 -10px 30px rgba(0,0,0,.25)}
   .sbar span{flex:1;font-size:13.5px;font-weight:600;line-height:1.25}.sbar .pill{height:40px;padding:0 16px;font-size:13px}
   .sbar button{border:0;background:transparent;color:rgba(255,255,255,.55);font-size:20px;width:32px;height:32px;cursor:pointer}
@@ -145,9 +154,23 @@ footer.ft{margin-top:34px;padding:22px 0 90px;font-size:13px;color:var(--mut2);b
     <section class="card" id="tblcard"><h2 id="tblTitle">ОГЭ · Русский язык: первичные → отметка</h2>
       <div id="tbl" class=""><table class="marks"><thead><tr><th>Отметка</th><th>Первичные</th><th></th></tr></thead><tbody><tr><td><b>2</b></td><td class="mono">0–14</td><td class="w"></td></tr><tr><td><b>3</b></td><td class="mono">15–25</td><td class="w"></td></tr><tr><td><b>4</b></td><td class="mono">26–32</td><td class="w">не менее 6 б. за ГК1–ГК4</td></tr><tr><td><b>5</b></td><td class="mono">33–37</td><td class="w">не менее 9 б. за ГК1–ГК4</td></tr></tbody></table></div>
       <p class="src">Шкала 2026–2027, по данным ФИПИ и Рособрнадзора. Обновлено 6 октября 2026 г. Расчёт ориентировочный.</p></section>
-    <section class="cta"><div><h2>Для учителей и репетиторов</h2><p>ЕГЭ_Map ведёт результаты пробников по каждому заданию, показывает, какие темы проседают у ученика и у всего класса, и готовит отчёт для родителей.</p></div>
-      <div class="acts"><a class="pill lime" href="/">Узнать о ЕГЭ_Map</a></div></section>
   </div>
+  <section class="usp" id="o-prilozhenii">
+    <div>
+      <span class="k">Для учителей и репетиторов</span>
+      <h2>Все пробники класса в одном месте</h2>
+      <p class="sub">Вносите баллы по заданиям, а приложение само покажет, что проседает у каждого ученика и у всего класса, и подскажет, что повторить.</p>
+      <div class="acts"><a class="pill lime" href="/">Узнать о ЕГЭ_Map</a><a class="pill" style="background:transparent;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)" href="/app.html">Попробовать бесплатно</a></div>
+      <p class="fine">Бесплатно для 3 учеников. Без карты и обязательств.</p>
+    </div>
+    <ul>
+      <li><i>1</i><div><b>Ввод баллов за 2 минуты</b><span>Вручную или файлом из таблицы. Перевод по официальной шкале считается сам.</span></div></li>
+      <li><i>2</i><div><b>Зоны роста по заданиям и критериям</b><span>Видно, какие темы проседают у ученика и у класса, и что повторить на следующем занятии.</span></div></li>
+      <li><i>3</i><div><b>Прогноз и динамика</b><span>Тренд по пробникам и ориентир на экзамен, без обещаний результата.</span></div></li>
+      <li><i>4</i><div><b>Отчёт для родителей</b><span>PDF и личная страница ученика по ссылке, результаты приходят во ВКонтакте.</span></div></li>
+      <li><i>5</i><div><b>Ученики анонимны</b><span>Только коды вида 11А-07, фамилии мы не собираем.</span></div></li>
+    </ul>
+  </section>
   <footer class="ft"><div class="fl"><b>ЕГЭ</b><a href="/perevod-ballov-ege-russkiy-yazyk.html">Русский язык</a><a href="/perevod-ballov-ege-literatura.html">Литература</a><a href="/perevod-ballov-ege-matematika.html">Математика</a><a href="/perevod-ballov-ege-biologiya.html">Биология</a><a href="/perevod-ballov-ege-geografiya.html">География</a><a href="/perevod-ballov-ege-fizika.html">Физика</a><a href="/perevod-ballov-ege-himiya.html">Химия</a><a href="/perevod-ballov-ege-informatika.html">Информатика</a></div><div class="fl"><b>ОГЭ</b><a href="/perevod-ballov-oge-russkiy-yazyk.html">Русский язык</a><a href="/perevod-ballov-oge-literatura.html">Литература</a><a href="/perevod-ballov-oge-matematika.html">Математика</a><a href="/perevod-ballov-oge-biologiya.html">Биология</a><a href="/perevod-ballov-oge-geografiya.html">География</a><a href="/perevod-ballov-oge-fizika.html">Физика</a><a href="/perevod-ballov-oge-himiya.html">Химия</a><a href="/perevod-ballov-oge-informatika.html">Информатика</a></div><div class="fl" style="margin-top:12px">© ЕГЭ_Map · <a href="/">Для учителей</a> · <a href="/parents.html">Родителям</a> · <a href="/vstroit-kalkulyator.html">На свой сайт</a> · <a href="/app.html?legal=privacy">Политика обработки данных</a> · Расчёт в вашем браузере, данные не сохраняются</div></footer>
 </main>
 <div class="sbar" id="sbar"><span>ЕГЭ_Map: учёт пробников для учителей</span><a class="pill lime" href="/">Подробнее →</a><button type="button" id="sbarX" aria-label="Закрыть">×</button></div>
