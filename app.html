@@ -3372,10 +3372,10 @@ const HELP_STEPS=[
       <span class="px-3 py-1.5 rounded-xl bg-accent-500 text-ink-900 font-bold">Создать</span>
     </div>`},
   {icon:"2", title:"Добавьте учеников",
-   body:`Чтобы воспользоваться этой функцией, найдите кнопку «Добавить учеников» на экране «Ученики». Быстрее всего — выбрать класс, указать количество и нажать «Добавить»: коды вида 11А-01, 11А-02 составятся сами по номеру. Если вам нужны свои коды (например, по журналу), нажмите на ссылку «Ввести свои коды» под кнопкой: откроется поле для ручного списка. Фамилии в приложение не вносятся, поскольку этого требует закон о персональных данных. Чтобы не путаться, впишите фамилию в поле «подпись для себя» в карточке ученика: её видите только вы, она хранится только на вашем компьютере в используемом браузере.`,
+   body:`Чтобы воспользоваться этой функцией, найдите кнопку «Добавить учеников» на экране «Ученики». Быстрее всего — выбрать класс, указать количество и нажать «Добавить»: коды вида 11А-01, 11А-02 составятся сами по номеру. Если вам нужны свои коды (например, по журналу), нажмите на ссылку «Ввести свои коды» под кнопкой: откроется поле для ручного списка. Фамилии в приложение не вносятся, поскольку этого требует закон о персональных данных. Чтобы не путаться, откройте внизу экрана «Ученики» блок «Расшифровка кодов» и впишите фамилию в поле «подпись для себя» рядом с кодом: её видите только вы, она хранится только на вашем компьютере в используемом браузере.`,
    action:{label:"Открыть «Добавить учеников» →", screen:"screen-list", sel:"#add-students"},
    done:()=>state.students.length>0,
-   visual:`<div class="mt-3 flex flex-wrap gap-1.5 items-center">
+   visual:`<video controls preload="none" playsinline poster="./video/instr-02-dobavte-uchenikov.jpg" class="mt-3 mb-1 w-full rounded-2xl bg-ink-900 aspect-video" aria-label="Видео-инструкция: как добавить учеников"><source src="./video/instr-02-dobavte-uchenikov.mp4" type="video/mp4"></video><div class="mt-3 flex flex-wrap gap-1.5 items-center">
       <span class="px-2.5 py-1 rounded-lg bg-white border border-gray-200 font-mono text-[11px] text-ink-700 shadow-soft">11А-01</span>
       <span class="px-2.5 py-1 rounded-lg bg-white border border-gray-200 font-mono text-[11px] text-ink-700 shadow-soft">11А-02</span>
       <span class="px-2.5 py-1 rounded-lg bg-white border border-gray-200 font-mono text-[11px] text-ink-700 shadow-soft">11А-03</span>
@@ -4498,7 +4498,7 @@ function openAddStudents(){
     <div class="bg-white rounded-2xl shadow-lift max-w-md w-full p-6">
       <h2 class="font-display font-extrabold text-xl mb-1">Добавить учеников</h2>
       <p class="text-sm text-ink-500 mb-5 leading-relaxed">
-        Ученик добавляется по коду вида <span class="font-mono">11А-07</span>. Фамилию можно вписать потом в поле «подпись для себя» в карточке ученика: её увидите только вы.
+        Ученик добавляется по коду вида <span class="font-mono">11А-07</span>. Фамилию можно вписать потом в «Расшифровке кодов» внизу экрана «Ученики»: её увидите только вы.
         Свободно ${free} ${plural(free,"место","места","мест")}.
       </p>
 
