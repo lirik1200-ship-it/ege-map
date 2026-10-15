@@ -6301,12 +6301,12 @@ function renderEntry(preselectId){
    20. ИМПОРТ ИЗ ТАБЛИЦЫ
    Файл разбирается в браузере, результат сохраняется в облако.
    ========================================================================= */
-const IMPORT_TASKS = KNOWN_TASKS.filter(t=>t!==27);
+const importTasks = () => directTasks();
 
 function csvTemplate(){
-  const header=["код","класс","дата",...IMPORT_TASKS.map(String),...CRITERIA_KEYS];
+  const header=["код","класс","дата",...importTasks().map(String),...CRITERIA_KEYS];
   const maxRow=["#максимум по столбцу","","",
-    ...IMPORT_TASKS.map(t=>String(maxScoreFor(t))),
+    ...importTasks().map(t=>String(maxScoreFor(t))),
     ...CRITERIA_KEYS.map(k=>String(ESSAY_CRITERIA[k].max))];
   const lines=[
     header.join(";"),
@@ -6347,83 +6347,7 @@ function zipStore(files,type){
 }
 function xlsxCol(i){let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26);}return s;}
 function xmlEsc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-function xlsxTemplateBlob(){
-  const ex=EXAMS[state.exam];
-  const tasks=IMPORT_TASKS, crit=CRITERIA_KEYS;
-  const nCols=3+tasks.length+crit.length, lastCol=xlsxCol(nCols-1);
-  const DATA_ROWS=60, firstData=4, lastData=firstData+DATA_ROWS-1;
-  const str=(r,c,v,s)=>`<c r="${xlsxCol(c)}${r}" t="inlineStr" s="${s}"><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
-  const num=(r,c,v,s)=>`<c r="${xlsxCol(c)}${r}" s="${s}"><v>${v}</v></c>`;
-  const blank=(r,c,s)=>`<c r="${xlsxCol(c)}${r}" s="${s}"/>`;
-  // строка 1 — разделы, строка 2 — заголовки столбцов, строка 3 — максимумы
-  const r1=[str(1,0,"УЧЕНИК",1),blank(1,1,1),blank(1,2,1)];
-  tasks.forEach((t,i)=>r1.push(i===0?str(1,3,`ЗАДАНИЯ ${tasks[0]}–${tasks[tasks.length-1]}`,2):blank(1,3+i,2)));
-  crit.forEach((k,i)=>r1.push(i===0?str(1,3+tasks.length,`РАЗВЁРНУТЫЕ ОТВЕТЫ · ${crit[0]}–${crit[crit.length-1]}`,3):blank(1,3+tasks.length+i,3)));
-  const r2=[str(2,0,"код",4),str(2,1,"класс",4),str(2,2,"дата",4)];
-  tasks.forEach((t,i)=>r2.push(str(2,3+i,String(t),4)));
-  crit.forEach((k,i)=>r2.push(str(2,3+tasks.length+i,k,12)));
-  const r3=[str(3,0,"#максимум",5),blank(3,1,5),blank(3,2,5)];
-  tasks.forEach((t,i)=>r3.push(num(3,3+i,maxScoreFor(t),5)));
-  crit.forEach((k,i)=>r3.push(num(3,3+tasks.length+i,ESSAY_CRITERIA[k].max,5)));
-  const rows=[`<row r="1" ht="26" customHeight="1">${r1.join("")}</row>`,`<row r="2" ht="22" customHeight="1">${r2.join("")}</row>`,`<row r="3">${r3.join("")}</row>`];
-  for(let r=firstData;r<=lastData;r++){
-    const cells=[blank(r,0,7),blank(r,1,7),blank(r,2,7)];
-    for(let c=3;c<nCols;c++) cells.push(blank(r,c,6));
-    rows.push(`<row r="${r}">${cells.join("")}</row>`);
-  }
-  const merges=[`A1:C1`];
-  if(tasks.length) merges.push(`D1:${xlsxCol(2+tasks.length)}1`);
-  if(crit.length) merges.push(`${xlsxCol(3+tasks.length)}1:${lastCol}1`);
-  const cols=[`<col min="1" max="1" width="12" customWidth="1"/>`,`<col min="2" max="2" width="10" customWidth="1"/>`,`<col min="3" max="3" width="13" customWidth="1"/>`];
-  if(nCols>3) cols.push(`<col min="4" max="${nCols}" width="6.5" customWidth="1"/>`);
-  // проверка ввода: целое число от 0 до максимума задания
-  const dv=[];
-  tasks.forEach((t,i)=>dv.push([xlsxCol(3+i),maxScoreFor(t),`задание ${t}`]));
-  crit.forEach((k,i)=>dv.push([xlsxCol(3+tasks.length+i),ESSAY_CRITERIA[k].max,`критерий ${k}`]));
-  const dvXml=dv.length?`<dataValidations count="${dv.length}">${dv.map(([c,m,l])=>`<dataValidation type="whole" operator="between" allowBlank="1" showErrorMessage="1" errorTitle="Неверный балл" error="${xmlEsc(`За ${l} можно поставить от 0 до ${m}`)}" sqref="${c}${firstData}:${c}${lastData}"><formula1>0</formula1><formula2>${m}</formula2></dataValidation>`).join("")}</dataValidations>`:"";
-  const sheetScores=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-<sheetPr><tabColor rgb="FF00FDFF"/></sheetPr>
-<sheetViews><sheetView workbookViewId="0"><pane xSplit="3" ySplit="3" topLeftCell="D4" activePane="bottomRight" state="frozen"/><selection pane="bottomRight" activeCell="A4" sqref="A4"/></sheetView></sheetViews>
-<sheetFormatPr defaultRowHeight="18"/>
-<cols>${cols.join("")}</cols>
-<sheetData>${rows.join("")}</sheetData>
-<mergeCells count="${merges.length}">${merges.map(m=>`<mergeCell ref="${m}"/>`).join("")}</mergeCells>
-${dvXml}
-</worksheet>`;
-  // вкладка «Инструкция»
-  const I=[];
-  const line=(text,s,h)=>I.push({text,s,h});
-  line("Как заполнить шаблон ЕГЭ_Map",8,30);
-  line(`Экзамен: ${ex.subject} · ${ex.label.replace(" · литература","")}. Шаблон собран под этот экзамен: для другого предмета скачайте шаблон заново.`,11);
-  line("",10);
-  line("1. КУДА ВНОСИТЬ",9,22);
-  line("Откройте вкладку «Баллы». Одна строка — один пробник одного ученика. Несколько пробников одного ученика вносите отдельными строками.",10);
-  line("",10);
-  line("2. СТОЛБЦЫ",9,22);
-  line("код — код ученика как в приложении, например 11А-01. Фамилии не пишите: ученики в ЕГЭ_Map только кодами.",10);
-  line("класс — необязательно. Если оставить пустым, ученик попадёт в «Без класса».",10);
-  line("дата — дата пробника: 20.09.2026 или 2026-09-20.",10);
-  if(tasks.length) line(`${tasks[0]}–${tasks[tasks.length-1]} — баллы за задания с кратким ответом. Максимум за каждое задание указан в серой строке «#максимум».`,10);
-  if(crit.length) line(`${crit[0]}–${crit[crit.length-1]} — баллы по критериям развёрнутого ответа. Обнуляющие критерии приложение проверит само.`,10);
-  line("",10);
-  line("3. ПРАВИЛА",9,22);
-  line("Пустая ячейка — задание не проверялось. 0 — ученик получил ноль баллов.",10);
-  line("Таблица не даст ввести балл больше максимума: появится подсказка.",10);
-  line("Не меняйте заголовки столбцов и строку «#максимум» — по ним приложение узнаёт задания.",10);
-  line("",10);
-  line("4. КАК ЗАГРУЗИТЬ",9,22);
-  line("В приложении: «Ввести пробник» → «Импорт из таблицы» → перетащите этот файл. Сохранять в CSV не нужно.",10);
-  line("Перед сохранением приложение покажет, какие строки приняты и где ошибки.",10);
-  const sheetHelp=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-<sheetPr><tabColor rgb="FFD7F205"/></sheetPr>
-<sheetViews><sheetView workbookViewId="0" showGridLines="0" tabSelected="1"/></sheetViews>
-<sheetFormatPr defaultRowHeight="18"/>
-<cols><col min="1" max="1" width="3" customWidth="1"/><col min="2" max="2" width="110" customWidth="1"/></cols>
-<sheetData>${I.map((l,i)=>`<row r="${i+1}"${l.h?` ht="${l.h}" customHeight="1"`:""}>${l.text?str(i+1,1,l.text,l.s):""}</row>`).join("")}</sheetData>
-</worksheet>`;
-  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+const XLSX_STYLES=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
 <fonts count="6">
 <font><sz val="11"/><name val="Calibri"/></font>
@@ -6465,16 +6389,108 @@ ${dvXml}
 </cellXfs>
 <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
 </styleSheet>`;
-  const files=[
-    {name:"[Content_Types].xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`},
+// Спецификация импорта для любого экзамена — без переключения текущего
+function examImportSpec(id){
+  const p=EXAMS[id];
+  const tasks=Object.keys(p.tasks).map(Number).sort((a,b)=>a-b).filter(t=>!p.tasks[t].derived);
+  return {id,p,tasks,crit:Object.keys(p.criteria),maxT:t=>p.tasks[t].max,maxC:k=>p.criteria[k].max};
+}
+const XLSX_SHEET_NAME=id=>EXAMS[id].subject.replace(/[\[\]\*\?\/\\:]/g," ").slice(0,31);
+function familyExamIds(fam){
+  return Object.keys(EXAM_FAMILY).filter(id=>EXAM_FAMILY[id]===fam&&EXAMS[id]).sort((a,b)=>EXAMS[a].subject.localeCompare(EXAMS[b].subject,"ru"));
+}
+function xlsxScoresSheet(spec,famLabel){
+  const {tasks,crit,maxT,maxC}=spec;
+  const nCols=3+tasks.length+crit.length, lastCol=xlsxCol(nCols-1);
+  const DATA_ROWS=60, firstData=4, lastData=firstData+DATA_ROWS-1;
+  const str=(r,c,v,s)=>`<c r="${xlsxCol(c)}${r}" t="inlineStr" s="${s}"><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
+  const num=(r,c,v,s)=>`<c r="${xlsxCol(c)}${r}" s="${s}"><v>${v}</v></c>`;
+  const blank=(r,c,s)=>`<c r="${xlsxCol(c)}${r}" s="${s}"/>`;
+  const r1=[str(1,0,"УЧЕНИК",1),blank(1,1,1),blank(1,2,1)];
+  tasks.forEach((t,i)=>r1.push(i===0?str(1,3,tasks.length>1?`ЗАДАНИЯ ${tasks[0]}–${tasks[tasks.length-1]}`:`ЗАДАНИЕ ${tasks[0]}`,2):blank(1,3+i,2)));
+  crit.forEach((k,i)=>r1.push(i===0?str(1,3+tasks.length,`РАЗВЁРНУТЫЕ ОТВЕТЫ · ${crit[0]}–${crit[crit.length-1]}`,3):blank(1,3+tasks.length+i,3)));
+  const r2=[str(2,0,"код",4),str(2,1,"класс",4),str(2,2,"дата",4)];
+  tasks.forEach((t,i)=>r2.push(str(2,3+i,String(t),4)));
+  crit.forEach((k,i)=>r2.push(str(2,3+tasks.length+i,k,12)));
+  const r3=[str(3,0,"#максимум",5),str(3,1,famLabel,5),str(3,2,spec.p.subject,5)];
+  tasks.forEach((t,i)=>r3.push(num(3,3+i,maxT(t),5)));
+  crit.forEach((k,i)=>r3.push(num(3,3+tasks.length+i,maxC(k),5)));
+  const rows=[`<row r="1" ht="26" customHeight="1">${r1.join("")}</row>`,`<row r="2" ht="22" customHeight="1">${r2.join("")}</row>`,`<row r="3">${r3.join("")}</row>`];
+  for(let r=firstData;r<=lastData;r++){
+    const cells=[blank(r,0,7),blank(r,1,7),blank(r,2,7)];
+    for(let c=3;c<nCols;c++) cells.push(blank(r,c,6));
+    rows.push(`<row r="${r}">${cells.join("")}</row>`);
+  }
+  const merges=[`A1:C1`];
+  if(tasks.length>1) merges.push(`D1:${xlsxCol(2+tasks.length)}1`);
+  if(crit.length>1) merges.push(`${xlsxCol(3+tasks.length)}1:${lastCol}1`);
+  const cols=[`<col min="1" max="1" width="12" customWidth="1"/>`,`<col min="2" max="2" width="10" customWidth="1"/>`,`<col min="3" max="3" width="14" customWidth="1"/>`];
+  if(nCols>3) cols.push(`<col min="4" max="${nCols}" width="6.5" customWidth="1"/>`);
+  const dv=[];
+  tasks.forEach((t,i)=>dv.push([xlsxCol(3+i),maxT(t),`задание ${t}`]));
+  crit.forEach((k,i)=>dv.push([xlsxCol(3+tasks.length+i),maxC(k),`критерий ${k}`]));
+  const dvXml=dv.length?`<dataValidations count="${dv.length}">${dv.map(([c,m,l])=>`<dataValidation type="whole" operator="between" allowBlank="1" showErrorMessage="1" errorTitle="Неверный балл" error="${xmlEsc(`За ${l} можно поставить от 0 до ${m}`)}" sqref="${c}${firstData}:${c}${lastData}"><formula1>0</formula1><formula2>${m}</formula2></dataValidation>`).join("")}</dataValidations>`:"";
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheetPr><tabColor rgb="FF00FDFF"/></sheetPr>
+<sheetViews><sheetView workbookViewId="0"><pane xSplit="3" ySplit="3" topLeftCell="D4" activePane="bottomRight" state="frozen"/><selection pane="bottomRight" activeCell="A4" sqref="A4"/></sheetView></sheetViews>
+<sheetFormatPr defaultRowHeight="18"/>
+<cols>${cols.join("")}</cols>
+<sheetData>${rows.join("")}</sheetData>
+<mergeCells count="${merges.length}">${merges.map(m=>`<mergeCell ref="${m}"/>`).join("")}</mergeCells>
+${dvXml}
+</worksheet>`;
+}
+function xlsxTemplateBlob(fam){
+  fam=fam||EXAM_FAMILY[state.exam]||"ege";
+  const famLabel=EXAM_FAMILY_LABEL[fam];
+  const ids=familyExamIds(fam);
+  const str=(r,c,v,s)=>`<c r="${xlsxCol(c)}${r}" t="inlineStr" s="${s}"><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
+  const I=[]; const line=(text,s,h)=>I.push({text,s,h});
+  line(`Шаблон ЕГЭ_Map · ${famLabel}`,8,30);
+  line(`Внутри по вкладке на каждый предмет ${famLabel}: ${ids.map(id=>EXAMS[id].subject).join(", ")}. В каждой вкладке ровно те задания и критерии, что в спецификации и в приложении.`,11);
+  line("",10);
+  line("1. ЛИШНИЕ ПРЕДМЕТЫ",9,22);
+  line("Вкладки предметов, которые вы не ведёте, можно удалить (правый клик по вкладке → «Удалить»). Пустые вкладки при загрузке и так пропускаются.",10);
+  line("",10);
+  line("2. КУДА ВНОСИТЬ",9,22);
+  line("Откройте вкладку своего предмета. Одна строка — один пробник одного ученика. Несколько пробников одного ученика — отдельными строками.",10);
+  line("код — код ученика как в приложении, например 11А-01. Фамилии не пишите: ученики в ЕГЭ_Map только кодами.",10);
+  line("класс — необязательно. Если оставить пустым, ученик попадёт в «Без класса».",10);
+  line("дата — дата пробника: 20.09.2026 или 2026-09-20.",10);
+  line("Номера столбцов — номера заданий. Максимум за каждое задание — в серой строке «#максимум». Столбцы с буквой К — критерии развёрнутых ответов.",10);
+  line("",10);
+  line("3. ПРАВИЛА",9,22);
+  line("Пустая ячейка — задание не проверялось. 0 — ученик получил ноль баллов.",10);
+  line("Таблица не даст ввести балл больше максимума: появится подсказка.",10);
+  line("Обнуляющие критерии приложение проверит при загрузке и покажет, где поправить.",10);
+  line("Не меняйте названия вкладок, заголовки столбцов и строку «#максимум» — по ним приложение узнаёт предмет и задания.",10);
+  line("",10);
+  line("4. КАК ЗАГРУЗИТЬ",9,22);
+  line("В приложении: «Ввести пробник» → «Импорт из таблицы» → перетащите этот файл. Сохранять в CSV не нужно.",10);
+  line("Приложение покажет, по каким предметам есть данные, и откроет предпросмотр: баллы каждой строки и ошибки. Сохраняется только то, что вы подтвердите.",10);
+  const sheetHelp=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheetPr><tabColor rgb="FFD7F205"/></sheetPr>
+<sheetViews><sheetView workbookViewId="0" showGridLines="0" tabSelected="1"/></sheetViews>
+<sheetFormatPr defaultRowHeight="18"/>
+<cols><col min="1" max="1" width="3" customWidth="1"/><col min="2" max="2" width="110" customWidth="1"/></cols>
+<sheetData>${I.map((l,i)=>`<row r="${i+1}"${l.h?` ht="${l.h}" customHeight="1"`:""}>${l.text?str(i+1,1,l.text,l.s):""}</row>`).join("")}</sheetData>
+</worksheet>`;
+  const styles=XLSX_STYLES;
+  const sheetFiles=ids.map((id,i)=>({name:`xl/worksheets/sheet${i+2}.xml`,data:xlsxScoresSheet(examImportSpec(id),famLabel)}));
+  const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>${[1,...ids.map((x,i)=>i+2)].map(n=>`<Override PartName="/xl/worksheets/sheet${n}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`;
+  const wb=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView activeTab="0"/></bookViews><sheets><sheet name="Инструкция" sheetId="1" r:id="rId1"/>${ids.map((id,i)=>`<sheet name="${xmlEsc(XLSX_SHEET_NAME(id))}" sheetId="${i+2}" r:id="rId${i+2}"/>`).join("")}</sheets></workbook>`;
+  const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>${ids.map((id,i)=>`<Relationship Id="rId${i+2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+2}.xml"/>`).join("")}<Relationship Id="rId99" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+  return zipStore([
+    {name:"[Content_Types].xml",data:ct},
     {name:"_rels/.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`},
-    {name:"xl/workbook.xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView activeTab="0"/></bookViews><sheets><sheet name="Инструкция" sheetId="1" r:id="rId1"/><sheet name="Баллы" sheetId="2" r:id="rId2"/></sheets></workbook>`},
-    {name:"xl/_rels/workbook.xml.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+    {name:"xl/workbook.xml",data:wb},
+    {name:"xl/_rels/workbook.xml.rels",data:rels},
     {name:"xl/styles.xml",data:styles},
     {name:"xl/worksheets/sheet1.xml",data:sheetHelp},
-    {name:"xl/worksheets/sheet2.xml",data:sheetScores}
-  ];
-  return zipStore(files,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    ...sheetFiles
+  ],"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 }
 // Чтение .xlsx: распаковка ZIP (deflate через DecompressionStream) и перевод листа в текст с «;» для parseImportText
 function unzipEntries(buf){
@@ -6502,16 +6518,20 @@ async function zipText(entry){
   }
   throw new Error("zip method "+entry.method);
 }
-async function xlsxToImportText(buf){
+// Читает книгу Excel: по каждой вкладке-предмету возвращает текст с «;» для parseImportText.
+// Предмет узнаётся по строке «#максимум» (ЕГЭ/ОГЭ + предмет) или по названию вкладки;
+// старый шаблон с одной вкладкой «Баллы» относится к текущему экзамену.
+async function xlsxReadBook(buf){
   const z=unzipEntries(buf), P=s=>new DOMParser().parseFromString(s,"application/xml");
   const wb=P(await zipText(z["xl/workbook.xml"]));
   const rels=P(await zipText(z["xl/_rels/workbook.xml.rels"]));
   const relMap={}; [...rels.getElementsByTagName("Relationship")].forEach(r=>relMap[r.getAttribute("Id")]=r.getAttribute("Target"));
-  const sheets=[...wb.getElementsByTagName("sheet")].map(s=>({name:s.getAttribute("name"),rid:s.getAttribute("r:id")||s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id")}));
+  const sheets=[...wb.getElementsByTagName("sheet")].map(s=>({name:(s.getAttribute("name")||"").trim(),rid:s.getAttribute("r:id")||s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id")}));
   const shared=[]; const ss=z["xl/sharedStrings.xml"];
   if(ss){ [...P(await zipText(ss)).getElementsByTagName("si")].forEach(si=>shared.push([...si.getElementsByTagName("t")].map(t=>t.textContent).join(""))); }
   const readSheet=async sh=>{
     let target=relMap[sh.rid]||""; target=target.replace(/^\//,""); if(!target.startsWith("xl/")) target="xl/"+target;
+    if(!z[target]) return [];
     const doc=P(await zipText(z[target])); const rows=[];
     [...doc.getElementsByTagName("row")].forEach(row=>{
       const cells=[];
@@ -6529,29 +6549,44 @@ async function xlsxToImportText(buf){
     });
     return rows;
   };
-  let chosen=sheets.find(s=>/^баллы$/i.test((s.name||"").trim()));
-  let rows=chosen?await readSheet(chosen):null;
-  if(!rows){ for(const sh of sheets){ const r=await readSheet(sh); if(r.some(x=>x&&/^код$/i.test(String(x[0]||"").trim()))){rows=r;break;} } }
-  if(!rows) rows=sheets.length?await readSheet(sheets[0]):[];
-  const hi=rows.findIndex(r=>r&&r.some(x=>/^(код|code)$/i.test(String(x||"").trim())));
-  if(hi<0) return "";
-  const header=rows[hi].map(x=>String(x==null?"":x).trim());
-  const dateCol=header.findIndex(h=>/^(дата|date)/i.test(h));
   const q=v=>{v=String(v==null?"":v); return /[;"\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v;};
-  const lines=[header.map(q).join(";")];
-  rows.slice(hi+1).forEach(r=>{
-    if(!r||!r.some(x=>String(x==null?"":x).trim()!=="")) return;
-    const cells=[]; for(let i=0;i<Math.max(header.length,r.length);i++) cells.push(r[i]==null?"":String(r[i]).trim());
-    if(/^(#|макс)/i.test(cells[0]||"")) cells[0]="#"+cells[0].replace(/^#/,"");
-    if(dateCol>=0&&/^\d+(\.\d+)?$/.test(cells[dateCol])&&+cells[dateCol]>20000){
-      const d=new Date(Date.UTC(1899,11,30)+Math.round(+cells[dateCol])*86400000);
-      cells[dateCol]=`${String(d.getUTCDate()).padStart(2,"0")}.${String(d.getUTCMonth()+1).padStart(2,"0")}.${d.getUTCFullYear()}`;
+  const items=[];
+  for(const sh of sheets){
+    const rows=await readSheet(sh);
+    const hi=rows.findIndex(r=>r&&r.some(x=>/^(код|code)$/i.test(String(x||"").trim())));
+    if(hi<0) continue;
+    const header=rows[hi].map(x=>String(x==null?"":x).trim());
+    const dateCol=header.findIndex(h=>/^(дата|date)/i.test(h));
+    const maxRow=rows.slice(hi+1).find(r=>r&&/^#?\s*макс/i.test(String(r[0]||"").trim()));
+    const fam=maxRow&&/огэ/i.test(String(maxRow[1]||""))?"oge":maxRow&&/егэ/i.test(String(maxRow[1]||""))?"ege":null;
+    const subj=(maxRow&&String(maxRow[2]||"").trim())||sh.name;
+    let examId=null;
+    if(/^баллы$/i.test(sh.name)&&!fam) examId=state.exam;
+    else{
+      const fams=fam?[fam]:[EXAM_FAMILY[state.exam]||"ege","ege","oge"];
+      for(const f of fams){ examId=familyExamIds(f).find(id=>EXAMS[id].subject.toLowerCase()===subj.toLowerCase()||XLSX_SHEET_NAME(id).toLowerCase()===sh.name.toLowerCase()); if(examId) break; }
     }
-    lines.push(cells.map(q).join(";"));
-  });
-  return lines.join("\n");
+    const lines=[header.map(q).join(";")]; let count=0;
+    rows.slice(hi+1).forEach(r=>{
+      if(!r||!r.some(x=>String(x==null?"":x).trim()!=="")) return;
+      const cells=[]; for(let i=0;i<Math.max(header.length,r.length);i++) cells.push(r[i]==null?"":String(r[i]).trim());
+      if(/^(#|макс)/i.test(cells[0]||"")) cells[0]="#"+cells[0].replace(/^#/,"");
+      else if(cells[0]) count++;
+      if(dateCol>=0&&/^\d+(\.\d+)?$/.test(cells[dateCol])&&+cells[dateCol]>20000){
+        const d=new Date(Date.UTC(1899,11,30)+Math.round(+cells[dateCol])*86400000);
+        cells[dateCol]=`${String(d.getUTCDate()).padStart(2,"0")}.${String(d.getUTCMonth()+1).padStart(2,"0")}.${d.getUTCFullYear()}`;
+      }
+      lines.push(cells.map(q).join(";"));
+    });
+    items.push({sheet:sh.name,examId,subject:examId?EXAMS[examId].subject:subj,famLabel:examId?EXAM_FAMILY_LABEL[EXAM_FAMILY[examId]]:"",text:lines.join("\n"),count});
+  }
+  return items;
 }
-
+async function xlsxToImportText(buf){
+  const items=await xlsxReadBook(buf);
+  const it=items.find(i=>i.examId===state.exam&&i.count)||items.find(i=>i.count)||items[0];
+  return it?it.text:"";
+}
 function splitCsvLine(line,delim){
   const out=[]; let cur="", inQ=false;
   for(let i=0;i<line.length;i++){
@@ -6610,7 +6645,7 @@ function parseImportText(text){
     const num=low.match(/\d+/);
     if(num && /^(\d+|задание|task|з)/.test(low)){
       const n=parseInt(num[0],10);
-      if(n>=1&&n<=26) map.tasks[n]=i;
+      if(EGE_TOPICS[n]&&!EGE_TOPICS[n].derived) map.tasks[n]=i;
     }
   });
 
@@ -6699,7 +6734,7 @@ function renderImport(){
         <h1 class="font-display font-extrabold text-2xl tracking-tight">Импорт из таблицы</h1>
         <p class="text-sm text-ink-500 mt-1">Загрузите файл с результатами, проверьте разбор и сохраните всё сразу в облако</p>
       </div>
-      <div class="flex flex-wrap items-center gap-2"><button id="dl-template" class="px-4 py-2.5 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition whitespace-nowrap">Скачать шаблон Excel</button><button id="dl-template-csv" class="px-3 py-2 text-xs font-semibold text-ink-900 underline underline-offset-2 transition">или CSV</button></div>
+      <div class="flex flex-wrap items-center gap-2">${["ege","oge"].map(f=>`<button data-dl-tpl="${f}" class="px-4 py-2.5 rounded-full ${EXAM_FAMILY[state.exam]===f?"bg-accent-500 hover:bg-accent-600":"bg-white border border-gray-200 hover:border-ink-900"} text-ink-900 text-sm font-bold transition whitespace-nowrap">Шаблон ${EXAM_FAMILY_LABEL[f]} (Excel)</button>`).join("")}<button id="dl-template-csv" class="px-3 py-2 text-xs font-semibold text-ink-900 underline underline-offset-2 transition">или CSV</button></div>
     </div>
 
     ${canEdit?"":`<div class="bg-amber-50 text-amber-800 rounded-2xl p-4 text-sm mb-6">Импорт доступен только после входа.</div>`}
@@ -6712,13 +6747,14 @@ function renderImport(){
           <div class="text-xs text-ink-500">Excel (.xlsx), CSV или TSV — формат, кодировка и разделитель определяются автоматически</div>
           <input id="file-input" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="hidden">
         </div>
+        <div id="import-book"></div>
         <div id="import-result"></div>
       </div>
 
       <div class="bg-white rounded-2xl shadow-soft p-5">
         <h2 class="font-display font-bold text-lg mb-3">Как заполнить</h2>
         <div class="space-y-3 text-[13px] text-ink-700 leading-relaxed">
-          <p class="font-semibold text-ink-900">Скачайте шаблон Excel: на первой вкладке инструкция, на второй («Баллы») — таблица для заполнения.</p>
+          <p class="font-semibold text-ink-900">Скачайте шаблон ЕГЭ или ОГЭ: внутри инструкция и по вкладке на каждый предмет с заданиями по спецификации. Лишние вкладки можно удалить.</p>
           <p>Первый столбец — код ученика, второй — класс, третий — дата пробника. Дальше по одному столбцу на каждое задание${CRITERIA_KEYS.length?` с кратким ответом и на каждый критерий (${escHtml(CRITERIA_KEYS[0])}–${escHtml(CRITERIA_KEYS[CRITERIA_KEYS.length-1])})`:""}.</p>
           <p class="text-ink-500">Шаблон формируется под выбранный экзамен: сейчас это ${escHtml(EXAMS[state.exam].subject)}, ${escHtml(EXAMS[state.exam].label.replace(" · литература",""))}.</p>
           <p>Одна строка — один пробник одного ученика. Несколько дат по одному коду вносите отдельными строками.</p>
@@ -6731,7 +6767,8 @@ function renderImport(){
     </div>`;
 
   $("#import-back").onclick=()=>route("screen-entry");
-  $("#dl-template").onclick=()=>{ const b=xlsxTemplateBlob(); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="ЕГЭ_Map_шаблон_пробника.xlsx"; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500); };
+  $("#screen-import").querySelectorAll("[data-dl-tpl]").forEach(btn=>btn.onclick=()=>{ const f=btn.dataset.dlTpl; const b=xlsxTemplateBlob(f); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=`ЕГЭ_Map_шаблон_${EXAM_FAMILY_LABEL[f]}.xlsx`; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500); });
+  renderImportBook();
   $("#dl-template-csv").onclick=()=>downloadFile("ЕГЭ_Map_шаблон_пробника.csv",csvTemplate(),"text/csv");
 
   if(!canEdit) return;
@@ -6748,6 +6785,39 @@ function renderImport(){
   input.onchange=e=>{ if(e.target.files[0]) readImportFile(e.target.files[0]); };
 }
 
+// Книга Excel с несколькими предметами: переключатель предметов над предпросмотром
+function renderImportBook(){
+  const box=$("#import-book"); if(!box) return;
+  const bk=window.__importBook;
+  if(!bk||!bk.items.length){ box.innerHTML=""; return; }
+  box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-4 sm:p-5 mb-4">
+    <div class="text-xs uppercase tracking-wide text-ink-500 mb-2">В файле «${escHtml(bk.file)}» есть данные по ${bk.items.length} ${plural(bk.items.length,"предмету","предметам","предметам")} — проверьте и сохраните каждый</div>
+    <div class="flex flex-wrap gap-2">${bk.items.map((it,i)=>{
+      const on=it.examId===state.exam;
+      return `<button data-book-item="${i}" ${it.examId?"":"disabled"} class="px-4 py-2 rounded-full text-sm font-semibold transition ${on?"bg-ink-900 text-white":"bg-white border border-gray-200 hover:border-ink-900 text-ink-900"} disabled:opacity-40">${escHtml(it.subject)}${it.famLabel?" · "+escHtml(it.famLabel):""} <span class="font-mono text-xs ${on?"text-accent-500":"text-ink-500"}">${it.count}</span></button>`;}).join("")}</div>
+    ${bk.items.some(i=>!i.examId)?`<p class="text-xs text-ink-500 mt-2">Вкладку «${escHtml(bk.items.find(i=>!i.examId).sheet)}» не удалось сопоставить с предметом — не переименовывайте вкладки шаблона.</p>`:""}
+  </div>`;
+  box.querySelectorAll("[data-book-item]").forEach(b=>b.onclick=()=>openImportItem(bk.items[+b.dataset.bookItem]));
+}
+function openImportItem(it){
+  if(!it||!it.examId) return;
+  if(it.examId!==state.exam){
+    applyExam(it.examId);
+    state.currentClass="all"; state.groupExam="last"; state.demoActive=false; state.demoStudents=[];
+    destroyCharts();
+    if(state.mode==="teacher") applyExamScope();
+    applyDemoScope(); renderChrome(); route("screen-import");
+  } else renderImportBook();
+  const parsed=parseImportText(it.text);
+  const name=`${window.__importBook?window.__importBook.file:""} · ${it.subject} ${it.famLabel}`;
+  if(parsed.error){
+    $("#import-result").innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5">
+      <div class="text-sm text-rose-600 mb-2">${escHtml(it.subject)} ${escHtml(it.famLabel)}: ${escHtml(parsed.error)}</div>
+      ${parsed.headers?`<div class="text-xs text-ink-500">Что приложение увидело в заголовке: <span class="font-mono">${escHtml(parsed.headers)}</span></div>`:""}</div>`;
+    return;
+  }
+  renderImportPreview(parsed,name);
+}
 function readImportFile(file){
   const box=$("#import-result");
   const isXlsx=/\.xlsx$/i.test(file.name);
@@ -6759,8 +6829,15 @@ function readImportFile(file){
   reader.onload=async ()=>{
     let text="";
     if(isXlsx){
-      try{ text=await xlsxToImportText(reader.result); }
+      let items;
+      try{ items=await xlsxReadBook(reader.result); }
       catch(e){ box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5 text-sm text-rose-600">Не получилось прочитать файл Excel. Пересохраните его в Excel как «Книга Excel (.xlsx)» или как CSV и загрузите снова.</div>`; return; }
+      const filled=items.filter(i=>i.count>0);
+      if(!filled.length){ window.__importBook=null; renderImportBook(); box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5 text-sm text-rose-600">В файле нет заполненных строк: внесите баллы под строкой «#максимум» на вкладке своего предмета.</div>`; return; }
+      window.__importBook={file:file.name,items:filled};
+      const cur=filled.find(i=>i.examId===state.exam);
+      openImportItem(cur||filled[0]);
+      return;
     } else {
       try{ text=decodeBytes(reader.result); }catch(e){ text=""; }
     }
@@ -6777,6 +6854,18 @@ function readImportFile(file){
   reader.readAsArrayBuffer(file);
 }
 
+// Разбор баллов строки импорта: задание/критерий, балл из максимума, цвет по доле
+function importScoreChips(r){
+  const chip=(label,v,max)=>{
+    const has=v!==undefined&&v!==null;
+    const cls=!has?"bg-white text-ink-300 border border-dashed border-gray-300":v>=max?"bg-emerald-100 text-emerald-800":v<=0?"bg-rose-100 text-rose-700":"bg-amber-100 text-amber-800";
+    return `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg font-mono text-[11px] ${cls}" title="${escAttr(label)}"><b>${escHtml(label)}</b>${has?`${v}/${max}`:"·"}</span>`;
+  };
+  const t=importTasks().map(n=>chip(String(n),r.results?r.results[n]:undefined,maxScoreFor(n))).join("");
+  const c=CRITERIA_KEYS.map(k=>chip(k,r.essay?r.essay[k]:undefined,ESSAY_CRITERIA[k].max)).join("");
+  return `<div class="flex flex-wrap gap-1.5">${t}</div>${c?`<div class="flex flex-wrap gap-1.5 mt-2">${c}</div>`:""}
+    ${r.issues&&r.issues.length?`<ul class="mt-2 text-xs text-rose-700 list-disc pl-5">${r.issues.map(x=>`<li>${escHtml(x)}</li>`).join("")}</ul>`:""}`;
+}
 function renderImportPreview(parsed,fileName){
   const rows=parsed.rows;
   const bad=rows.filter(r=>r.issues.length);
@@ -6792,7 +6881,7 @@ function renderImportPreview(parsed,fileName){
   const newCodes=newEntries.map(e=>e.code);
   const overwrites=good.filter(r=>r.overwrite).length;
   const free=state.plan.limit-state.students.length;
-  const overLimit=newCodes.length>free;
+  const overLimit=newCodes.length>0&&newCodes.length>Math.max(0,free);
 
   $("#import-result").innerHTML=`
     <div class="bg-white rounded-2xl shadow-soft overflow-hidden">
@@ -6822,10 +6911,11 @@ function renderImportPreview(parsed,fileName){
               <th class="px-3 py-2 text-right text-[11px] font-semibold text-ink-500">Первичный</th>
               <th class="px-3 py-2 text-right text-[11px] font-semibold text-ink-500">${escHtml(SCORE_WORD)}</th>
               <th class="px-4 py-2 text-left text-[11px] font-semibold text-ink-500">Статус</th>
+              <th class="px-3 py-2 text-left text-[11px] font-semibold text-ink-500">Баллы</th>
             </tr>
           </thead>
           <tbody>
-            ${rows.map(r=>{
+            ${rows.map((r,idx)=>{
               const err=r.issues.length>0;
               const status=err?`<span class="text-rose-600">${escHtml(r.issues.join("; "))}</span>`
                 : r.overwrite?`<span class="text-amber-600">перезапишет существующий пробник</span>`
@@ -6840,7 +6930,9 @@ function renderImportPreview(parsed,fileName){
                 <td class="px-3 py-1.5 text-right font-mono text-xs tnum">${err?"—":r.primary}</td>
                 <td class="px-3 py-1.5 text-right font-mono text-xs tnum">${err?"—":escHtml(r.scoreText)}</td>
                 <td class="px-4 py-1.5 text-xs">${status}</td>
-              </tr>`;}).join("")}
+                <td class="px-3 py-1.5"><button type="button" data-row-detail="${idx}" class="text-xs font-semibold text-ink-900 underline underline-offset-2 whitespace-nowrap">${err?"скрыть":"показать"}</button></td>
+              </tr>
+              <tr class="${err?"":"hidden"}" data-detail="${idx}"><td colspan="8" class="px-4 py-3 bg-paper">${importScoreChips(r)}</td></tr>`;}).join("")}
           </tbody>
         </table>
       </div>
@@ -6857,6 +6949,10 @@ function renderImportPreview(parsed,fileName){
       </div>
     </div>`;
 
+  $("#import-result").querySelectorAll("[data-row-detail]").forEach(b=>b.onclick=()=>{
+    const tr=$("#import-result").querySelector(`[data-detail="${b.dataset.rowDetail}"]`);
+    const open=tr.classList.toggle("hidden")===false; b.textContent=open?"скрыть":"показать";
+  });
   $("#cancel-import").onclick=()=>{ $("#import-result").innerHTML=""; $("#file-input").value=""; };
 
   if(good.length && !overLimit) $("#do-import").onclick=async e=>{
