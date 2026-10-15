@@ -134,6 +134,28 @@
     .auth-rise,.auth-swap,.auth-cell{animation:none}
     .auth-draw{animation:none;stroke-dashoffset:0}
   }
+
+/* «Личный кабинет»: кольцо мест, карточки с иконками, появление по очереди */
+.acc-card{animation:accRise .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s)}
+@keyframes accRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.acc-h{display:flex;align-items:center;gap:10px;font-family:var(--f-head),sans-serif;font-weight:800;font-size:18px;letter-spacing:-.01em;margin:0 0 12px}
+.acc-ico{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:#E4FDFE;color:#0C6E73;flex:none}
+.acc-h-danger .acc-ico{background:#FDECEE;color:#C22E40}
+.acc-plan-pill{display:inline-flex;align-items:center;height:40px;padding:0 18px;border-radius:999px;background:#0C0C0A;color:#D7F205;font-weight:800;font-size:14px}
+.acc-plan-pill-w{background:#fff;color:#0C0C0A}
+.acc-ring{position:relative;width:148px;height:148px;flex:none}
+.acc-ring svg{transform:rotate(-90deg);display:block}
+.acc-ring-track{fill:none;stroke:#E4FDFE;stroke-width:14}
+.acc-ring-bar{fill:none;stroke-width:14;stroke-linecap:round;animation:accRing 1.1s cubic-bezier(.2,.8,.2,1) .15s both}
+.acc-ring-cyan .acc-ring-bar{stroke:#00C9CC}
+.acc-ring-lime .acc-ring-bar{stroke:#B8D000}
+@keyframes accRing{from{stroke-dashoffset:var(--ring-c)}}
+.acc-ring-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.acc-ring-num b{font-size:40px;font-weight:700;letter-spacing:-.02em}
+.acc-ring-num span{font-size:13px;color:#4F5A59;margin-top:6px}
+.acc-limit{position:relative;background:#F6FBD9;border-radius:16px;padding:12px 14px 12px 22px;font-size:13px;line-height:1.5;color:#0C0C0A}
+.acc-limit::before{content:"";position:absolute;left:8px;top:10px;bottom:10px;width:5px;border-radius:5px;background:#D7F205}
+@media (prefers-reduced-motion:reduce){.acc-card,.acc-ring-bar{animation:none}}
 </style>
 <!-- Тема внутренних экранов (theme-v2): голубой фон, «витрина» вверху экранов, пилюли, крупные скругления — в стиле страницы входа и лендинга -->
 <style id="theme-v2">
@@ -148,7 +170,7 @@ body.theme-v2 #main-nav button[aria-current=page]:not([data-nav=screen-pricing])
 body.theme-v2 #mobile-nav button[aria-current=page]:not([data-nav=screen-pricing]){background:#0C0C0A;color:#fff}
 body.theme-v2 #main-nav button:not([aria-current]):not([data-nav=screen-pricing]):hover{background:#fff}
 body.theme-v2 #main-nav button.bg-brand-50,body.theme-v2 #mobile-nav button.bg-brand-50{background:#0C0C0A;color:#fff}
-@media (max-width:767px){body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl{border-radius:24px}}
+
 body.theme-v2 #exam-switch,body.theme-v2 #exam-switch-mobile{border-radius:999px;background:#fff}
 body.theme-v2 #exam-switch button,body.theme-v2 #exam-switch-mobile button{border-radius:999px}
 /* карточки */
@@ -164,6 +186,27 @@ body.theme-v2:not(.on-auth) main input.rounded-xl,body.theme-v2:not(.on-auth) ma
 body.theme-v2:not(.on-auth) main h1.font-display{font-size:clamp(30px,3.6vw,46px);line-height:1.02;letter-spacing:-.035em}
 body.theme-v2:not(.on-auth) main h2.font-display{font-weight:800;letter-spacing:-.02em}
 body.theme-v2:not(.on-auth) main .font-mono.font-bold.text-3xl{font-size:40px;letter-spacing:-.02em}
+/* плитки внутри карточек: белые, с полосой бренда, крупные цифры */
+body.theme-v2:not(.on-auth) main .bg-paper.rounded-xl.p-4{position:relative;overflow:hidden;background:#fff;border:1.5px solid #E1EBEB;border-radius:22px;padding:20px 18px 18px;box-shadow:0 16px 30px -26px rgba(12,12,10,.4);transition:transform .2s ease,box-shadow .2s ease}
+body.theme-v2:not(.on-auth) main .bg-paper.rounded-xl.p-4::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#00FDFF,#D7F205)}
+body.theme-v2:not(.on-auth) main .bg-paper.rounded-xl.p-4:hover{transform:translateY(-2px);box-shadow:0 22px 40px -26px rgba(12,12,10,.45)}
+body.theme-v2:not(.on-auth) main .bg-paper.rounded-xl.p-4 .font-mono.font-bold.text-2xl,
+body.theme-v2:not(.on-auth) main .bg-brand-50.rounded-xl.p-4 .font-mono.font-bold.text-2xl{font-size:32px;letter-spacing:-.02em;line-height:1.05}
+body.theme-v2:not(.on-auth) main .bg-brand-50.rounded-xl.p-4{position:relative;overflow:hidden;background:#0C0C0A;border-radius:22px;padding:20px 18px 18px;box-shadow:0 22px 40px -26px rgba(12,12,10,.55)}
+body.theme-v2:not(.on-auth) main .bg-brand-50.rounded-xl.p-4 .text-brand-700{color:rgba(255,255,255,.78)}
+body.theme-v2:not(.on-auth) main .bg-brand-50.rounded-xl.p-4 .font-mono.font-bold{color:#D7F205}
+/* номера заданий в зонах роста */
+body.theme-v2:not(.on-auth) main .w-9.h-9.rounded-xl.bg-brand-50{background:#00FDFF;color:#0C0C0A;border-radius:12px}
+/* заголовки карточек с точкой бренда */
+body.theme-v2:not(.on-auth) main .bg-white.rounded-2xl h2.font-display.text-lg{display:flex;align-items:center;gap:10px}
+body.theme-v2:not(.on-auth) main .bg-white.rounded-2xl h2.font-display.text-lg::before{content:"";width:10px;height:10px;border-radius:50%;background:#00FDFF;box-shadow:0 0 0 4px #E4FDFE;flex:none}
+body.theme-v2:not(.on-auth) main .bg-white.rounded-2xl h2.acc-h::before{content:none}
+/* строки-разделы таблиц: светло-голубые вместо серых */
+body.theme-v2:not(.on-auth) main .matrix-wrap .bg-paper,body.theme-v2:not(.on-auth) main table .bg-paper{background:#E4FDFE}
+body.theme-v2:not(.on-auth) main .matrix-wrap{border-radius:18px;border-color:#E1EBEB}
+/* внутренние подсказки (жёлтые) — светло-лаймовые с тёмным текстом */
+body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-xl{background:#F6FBD9;color:#0C0C0A}
+body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-xl *{color:#0C0C0A}
 /* витрина: верхний блок экрана */
 body.theme-v2 .th-hero{position:relative;overflow:hidden;background:#00FDFF;border-radius:34px;padding:30px 34px;margin-bottom:28px!important;align-items:center!important}
 body.theme-v2 .th-hero::after{content:"";position:absolute;right:-30px;bottom:-40px;width:360px;height:220px;pointer-events:none;opacity:.55;
@@ -175,8 +218,12 @@ body.theme-v2 .th-hero > *{position:relative;z-index:1}
 body.theme-v2 .th-hero p{color:#0C3B3E!important;font-size:15px}
 body.theme-v2 .th-hero h1.bg-accent-500{background:#D7F205;box-shadow:0 0 0 4px #0C0C0A;border-radius:14px;padding:2px 14px}
 /* плашка демо */
-body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl{background:#0C0C0A;color:#fff;border-radius:999px;padding:12px 14px 12px 28px}
-body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl button{background:#D7F205;border-color:#D7F205;color:#0C0C0A}
+/* уведомления (лимит тарифа, демо, черновик): белая пилюля с лаймовой меткой, тёмный текст */
+body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl{position:relative;background:#fff;color:#0C0C0A;border-radius:22px;padding:14px 16px 14px 30px;box-shadow:0 18px 40px -26px rgba(12,12,10,.35);border:2px solid #D7F205}
+body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl::before{content:"";position:absolute;left:12px;top:14px;bottom:14px;width:6px;border-radius:6px;background:#D7F205}
+body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl,body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl *{color:#0C0C0A}
+body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl button{background:#D7F205;border-color:#D7F205;color:#0C0C0A;border-radius:999px;text-decoration:none}
+body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl button:hover{background:#C3E600}
 </style>
 <script>
 document.addEventListener("DOMContentLoaded",function(){
@@ -2947,9 +2994,9 @@ const FAQ=[
   {q:"Лимит тарифа считается по каждому классу или по всем сразу?",
    a:"По всем сразу. На базовом тарифе доступно три ученика во всех классах вместе, а не три в каждом."},
   {q:"Можно ли загрузить результаты таблицей?",
-   a:"Да. На экране «Ввести пробник» нажмите «Импорт из таблицы». Там же можно скачать готовый шаблон: откройте его в Excel, впишите баллы и сохраните как CSV («Файл → Сохранить как → CSV»). Перед сохранением в приложении вы увидите, какие строки приняты, а где есть ошибки."},
+   a:"Да. На экране «Ввести пробник» нажмите «Импорт из таблицы». Там же можно скачать готовый шаблон Excel: внутри есть инструкция, а баллы вписываются на вкладке «Баллы». Заполненный файл загружается как есть. Перед сохранением в приложении вы увидите, какие строки приняты, а где есть ошибки."},
   {q:"Как сохранить файл для импорта, чтобы не было ошибок?",
-   a:"Ничего настраивать не нужно: приложение само разберётся с кодировкой и разделителями. Достаточно скачать наш шаблон, внести данные в Excel и сохранить файл в формате CSV."},
+   a:"Ничего настраивать не нужно: приложение само разберётся с кодировкой и разделителями. Достаточно скачать наш шаблон Excel, внести данные и загрузить файл обратно. CSV тоже подойдёт."},
   {q:"Приложение работает с телефона?",
    a:"Да, интерфейс адаптирован. Но вводить баллы за пробник удобнее с компьютера, там работает переход между полями с клавиатуры."},
   {q:"Сколько времени занимает ввод одного пробника?",
@@ -3104,62 +3151,75 @@ function renderAccount(){
   const usageColor = pct>=100?"bg-rose-500":pct>=80?"bg-amber-500":"bg-emerald-500";
   const expDate=state.plan.expiresAt?new Date(state.plan.expiresAt):null;
 
+  const ringC=2*Math.PI*52, ringOff=ringC*(1-pct/100);
+  const ringTone=pct>=80?"acc-ring-lime":"acc-ring-cyan";
   $("#screen-account").innerHTML=`
-    <div class="max-w-4xl mx-auto space-y-6">
-      <h1 class="font-display font-extrabold text-2xl tracking-tight">Личный кабинет</h1>
-
-      <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
-        <div class="flex flex-wrap items-baseline justify-between gap-3 mb-4">
-          <h2 class="font-display font-bold text-lg">Тариф</h2>
-          <span class="text-sm font-semibold text-ink-900">${escHtml(state.plan.name)}</span>
+    <div class="max-w-5xl mx-auto space-y-5">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 class="font-display font-extrabold text-2xl tracking-tight">Личный кабинет</h1>
+          <p class="text-sm text-ink-500 mt-1">${escHtml(state.email||"")}</p>
         </div>
-        <div class="flex items-center justify-between text-sm mb-2">
-          <span class="text-ink-500">Занято мест</span>
-          <span class="font-mono tnum font-semibold">${used} из ${limit}${state.plan.topup?` <span class="text-ink-400 font-normal">(из них докуплено ${state.plan.topup})</span>`:""}</span>
-        </div>
-        <div class="h-2.5 rounded-full bg-gray-100 overflow-hidden mb-3">
-          <div class="h-full rounded-full ${usageColor}" style="width:${pct}%"></div>
-        </div>
-        <p class="text-xs text-ink-500 leading-relaxed mb-1">
-          Лимит общий для всех предметов и классов сразу: один код ученика в каждом отдельном предмете расходует одно место,
-          поэтому один и тот же ученик в трёх предметах занимает три места.
-        </p>
-        ${expDate?`<p class="text-xs text-ink-500 leading-relaxed">Доступ действует до ${formatDate(expDate,true)}.</p>`:""}
-        ${pct>=80?`<div class="mt-3 bg-amber-50 text-amber-800 rounded-xl p-3 text-xs leading-relaxed">
-          ${pct>=100
-            ? `<b>Лимит исчерпан:</b> все ${limit} ${plural(limit,"место","места","мест")} заняты. Перейдите на другой тариф: <button type="button" data-acc-pricing class="font-semibold underline">смотреть тарифы</button>.`
-            : `<b>Лимит скоро будет исчерпан:</b> свободно ${Math.max(0,limit-used)} из ${limit}. Можно заранее перейти на другой тариф: <button type="button" data-acc-pricing class="font-semibold underline">смотреть тарифы</button>.`}
-        </div>`:""}
-        <div class="flex flex-wrap gap-2 mt-4">
-          <button id="acc-to-pricing" class="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Сравнить тарифы</button>
-          <span class="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-500 px-1">Вопросы по тарифу: ${socialLinks("support"," · ")}</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="acc-plan-pill">${escHtml(state.plan.name)}</span>
+          ${expDate?`<span class="acc-plan-pill acc-plan-pill-w">до ${formatDate(expDate,true)}</span>`:""}
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
-        <h2 class="font-display font-bold text-lg mb-4">История оплат</h2>
-        <div id="acc-payments">
-          <div class="text-sm text-ink-500">Загружаем…</div>
+      <div class="acc-card bg-white rounded-2xl shadow-soft p-5 sm:p-7" style="--d:0s">
+        <div class="flex flex-wrap items-center gap-6 sm:gap-8">
+          <div class="acc-ring ${ringTone}" role="img" aria-label="Занято ${used} из ${limit} мест">
+            <svg viewBox="0 0 120 120" width="148" height="148">
+              <circle cx="60" cy="60" r="52" class="acc-ring-track"/>
+              <circle cx="60" cy="60" r="52" class="acc-ring-bar" style="stroke-dasharray:${ringC.toFixed(1)};stroke-dashoffset:${ringOff.toFixed(1)};--ring-c:${ringC.toFixed(1)}"/>
+            </svg>
+            <div class="acc-ring-num"><b class="font-mono tnum">${used}</b><span>из ${limit}</span></div>
+          </div>
+          <div class="flex-1 min-w-[240px]">
+            <h2 class="acc-h">Тариф · занято мест</h2>
+            <p class="text-sm text-ink-700 mb-2">${used} из ${limit} ${plural(limit,"места","мест","мест")} занято${state.plan.topup?` <span class="text-ink-500">(из них докуплено ${state.plan.topup})</span>`:""}.</p>
+            <p class="text-xs text-ink-500 leading-relaxed mb-3">
+              Лимит общий для всех предметов и классов сразу: один код ученика в каждом отдельном предмете расходует одно место,
+              поэтому один и тот же ученик в трёх предметах занимает три места.
+            </p>
+            ${pct>=80?`<div class="acc-limit">
+              ${pct>=100
+                ? `<b>Лимит исчерпан:</b> все ${limit} ${plural(limit,"место","места","мест")} заняты. Перейдите на другой тариф: <button type="button" data-acc-pricing class="font-semibold underline underline-offset-2">выбрать тариф</button>.`
+                : `<b>Лимит скоро будет исчерпан:</b> свободно ${Math.max(0,limit-used)} из ${limit}. Можно заранее перейти на другой тариф: <button type="button" data-acc-pricing class="font-semibold underline underline-offset-2">выбрать тариф</button>.`}
+            </div>`:""}
+            <div class="flex flex-wrap items-center gap-2 mt-4">
+              <button id="acc-to-pricing" class="px-5 py-2.5 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">Сравнить тарифы</button>
+              <span class="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-500 px-1">Вопросы по тарифу: ${socialLinks("support"," · ")}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
-        <h2 class="font-display font-bold text-lg mb-1">Расшифровка кодов</h2>
-        <p class="text-sm text-ink-500 leading-relaxed mb-4">
-          Подписи вида «11А-07 — Иванов», которые вы добавляете к кодам, хранятся только на этом компьютере (в этом браузере)
-          и никуда не отправляются: так мы соблюдаем закон о персональных данных. Поэтому на другом компьютере или в другом
-          браузере подписей не будет. Нажмите «Сохранить расшифровку», чтобы получить файл, а на новом месте загрузите его кнопкой «Загрузить расшифровку».
-        </p>
-        <div class="flex flex-wrap gap-2 items-center">
-          <button id="codebook-export" class="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Сохранить расшифровку</button>
-          <button id="codebook-import" class="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition">Загрузить расшифровку</button>
-          <input id="codebook-file" type="file" accept=".json" class="hidden">
-          <span id="codebook-msg" class="text-xs"></span>
+      <div class="grid gap-5 lg:grid-cols-2 items-start">
+        <div class="acc-card bg-white rounded-2xl shadow-soft p-5 sm:p-6" style="--d:.08s">
+          <h2 class="acc-h"><span class="acc-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></span>История оплат</h2>
+          <div id="acc-payments">
+            <div class="text-sm text-ink-500">Загружаем…</div>
+          </div>
+        </div>
+
+        <div class="acc-card bg-white rounded-2xl shadow-soft p-5 sm:p-6" style="--d:.16s">
+          <h2 class="acc-h"><span class="acc-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l2 2"/></svg></span>Расшифровка кодов</h2>
+          <p class="text-sm text-ink-500 leading-relaxed mb-4">
+            Подписи вида «11А-07 — Иванов» хранятся только на этом компьютере (в этом браузере) и никуда не отправляются:
+            так мы соблюдаем закон о персональных данных. Чтобы перенести их на другой компьютер, сохраните файл и загрузите его там.
+          </p>
+          <div class="flex flex-wrap gap-2 items-center">
+            <button id="codebook-export" class="px-4 py-2 rounded-full bg-white border border-gray-200 hover:border-ink-900 text-sm font-semibold transition">Сохранить расшифровку</button>
+            <button id="codebook-import" class="px-4 py-2 rounded-full bg-white border border-gray-200 hover:border-ink-900 text-sm font-semibold transition">Загрузить расшифровку</button>
+            <input id="codebook-file" type="file" accept=".json" class="hidden">
+            <span id="codebook-msg" class="text-xs"></span>
+          </div>
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
-        <h2 class="font-display font-bold text-lg mb-4">Безопасность</h2>
+      <div class="acc-card bg-white rounded-2xl shadow-soft p-5 sm:p-6" style="--d:.24s">
+        <h2 class="acc-h"><span class="acc-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>Безопасность</h2>
         <p class="text-xs text-ink-500 mb-4">Аккаунт: ${escHtml(state.email)}</p>
         <div class="grid sm:grid-cols-2 gap-3 mb-3">
           <label class="block">
@@ -3177,8 +3237,8 @@ function renderAccount(){
         <span id="acc-pass-msg" class="text-xs ml-2"></span>
       </div>
 
-      <div id="acc-delete-card" class="bg-white rounded-2xl shadow-soft p-5 sm:p-6">
-        <h2 class="font-display font-bold text-lg mb-1">Удаление аккаунта</h2>
+      <div id="acc-delete-card" class="acc-card bg-white rounded-2xl shadow-soft p-5 sm:p-6" style="--d:.36s">
+        <h2 class="acc-h acc-h-danger"><span class="acc-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></span>Удаление аккаунта</h2>
         <p class="text-sm text-ink-500 leading-relaxed mb-4">
           Будут безвозвратно удалены ваши классы, ученики, пробники, подписки на уведомления и история оплат, доступ к сервису закроется.
           Возврат за неиспользованный период — по условиям оферты (п. 12), напишите в поддержку: ${socialLinks("support"," · ")}.
@@ -3593,7 +3653,7 @@ function renderAuth(){
   if(!authStage) authStage=EXAM_FAMILY[state.exam]||"ege";
 
   const steps=[
-    ["Заведите класс","Создайте класс и добавьте в него учеников"],
+    ["Создайте класс","Добавьте в него учеников по кодам"],
     ["Вносите баллы за пробник","Вручную за минуту или сразу файлом из таблицы"],
     ["Смотрите зоны роста","Приложение покажет, какие задания проседают у каждого ученика и у класса, и что повторить"]
   ];
@@ -3604,7 +3664,7 @@ function renderAuth(){
           <svg viewBox="0 0 400 220" class="absolute -right-10 bottom-0 w-[460px] max-w-none h-auto opacity-30 pointer-events-none" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="auth-draw" style="--len:620" d="M0 190C40 110 70 70 100 78c28 8 22 72 52 76 38 6 72-96 108-90 26 4 6 62 40 70 30 8 62-40 100-110"></path></svg>
 
           <span class="relative inline-flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[.08em] px-3 py-1.5 rounded-full bg-white/60">
-            <span class="w-1.5 h-1.5 rounded-full bg-ink-900"></span>Для учителей всех предметов
+            <span class="w-1.5 h-1.5 rounded-full bg-ink-900"></span>Для учителей и репетиторов
           </span>
           <h1 class="relative mt-5 font-display font-extrabold text-[30px] sm:text-[42px] leading-[1.02] tracking-[-.035em]" style="text-wrap:balance">
             Результаты пробных ЕГЭ и ОГЭ под полным контролем
@@ -4626,7 +4686,6 @@ function renderGroup(){
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
         <h1 class="font-display font-extrabold text-2xl tracking-tight">${escHtml(classKeyTitle(state.currentClass))}</h1>
-        <p class="text-sm text-ink-500 mt-1">${g.entries.length} ${plural(g.entries.length,"работа","работы","работ")} в выборке · что разбирать на ближайшем занятии</p>
       </div>
       <div class="flex flex-wrap items-end gap-2">
         <label class="text-sm">
@@ -4916,14 +4975,46 @@ function groupReportDocument(g,examLabel,images,groupName){
  .note{font-size:11px;color:#6B7280;border-top:1px solid #E5E7EB;padding-top:10px;margin-top:20px}
  tr{page-break-inside:avoid} h2{page-break-after:avoid} .kpi,.charts,.author{page-break-inside:avoid}
  @media print{body{margin:0} .charts img{max-width:330px}}
+ /* обновлённое оформление отчётов: в стиле приложения */
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .hero{background:#00FDFF;border-radius:24px;padding:20px 24px 22px;margin-bottom:22px}
+ .hero .brandbar{border-bottom:0;padding-bottom:0;margin-bottom:14px}
+ .hero .brandsub{color:#0C3B3E}
+ .hero h1{font-size:30px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;font-weight:800}
+ .hero h1 .code{display:inline-block;background:#D7F205;border:3px solid #0C0C0A;border-radius:12px;padding:0 10px;font-family:ui-monospace,Menlo,Consolas,monospace}
+ .hero .meta{color:#0C3B3E;margin:0;font-size:13px}
+ h2{font-size:18px;font-weight:800;color:#0C0C0A;margin:28px 0 10px;letter-spacing:-.01em;padding-left:22px;position:relative}
+ h2:before{content:"";position:absolute;left:2px;top:50%;margin-top:-6px;width:12px;height:12px;border-radius:50%;background:#00FDFF;border:3px solid #E4FDFE;box-sizing:content-box;margin-left:-3px}
+ .kpi{gap:12px}
+ .kpi>div{flex:1 1 150px;position:relative;overflow:hidden;background:#fff;border:1.5px solid #E1EBEB;border-radius:16px;padding:16px 16px 14px}
+ .kpi>div:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#00FDFF,#D7F205)}
+ .kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#4F5A59}
+ .kpi .val{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:4px}
+ .kpi>div.dark{background:#0C0C0A;border-color:#0C0C0A}
+ .kpi>div.dark .lbl{color:rgba(255,255,255,.72)}
+ .kpi>div.dark .val{color:#D7F205}
+ body>img,.charts img{border:1.5px solid #E1EBEB;border-radius:16px;padding:10px;background:#fff}
+ ol.cards{list-style:none;padding:0;margin:0}
+ ol.cards li{position:relative;padding:14px 16px 14px 58px;margin-bottom:10px;background:#fff;border:1.5px solid #E1EBEB;border-radius:16px;font-size:13.5px;line-height:1.55}
+ ol.cards li .n{position:absolute;left:14px;top:13px;width:30px;height:30px;border-radius:50%;background:#D7F205;font-weight:800;text-align:center;line-height:30px;font-size:14px}
+ table.grid{display:table}
+ table thead th,table.grid thead th{background:#0C0C0A;color:#fff;border-bottom:0;padding:8px 7px}
+ table tbody tr:nth-child(even) td:not(.c){background:#F5FAFA}
+ td.green{background:#D9F6E5;color:#17804D} td.amber{background:#FFF0BF;color:#9A6A06}
+ td.red{background:#FCE1E4;color:#D2394A} td.gray{background:#F1F3F3;color:#9AA4A3}
+ td.low,.low{color:#D2394A}
+ .author{background:#0C0C0A;color:#fff;border-left:0;border-radius:18px;padding:18px 20px}
+ .author a{color:#D7F205}
+ .note{border-top:1.5px solid #E1EBEB}
 </style></head><body>
-<div class="topbar"></div>
+<div class="hero">
 <div class="brandbar">
-  <div class="mark"><img alt="ЕГЭ_Map" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yMiAwIDI3MyAyNTEiPjxyZWN0IHg9Ii0yMiIgeT0iMCIgd2lkdGg9IjI3MyIgaGVpZ2h0PSIyNTEiIHJ4PSI1MCIgZmlsbD0iIzBDMEMwQSIvPjxwYXRoIGZpbGw9IiNEN0YyMDUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDk2Ljc5IDIxNy4wNCkgc2NhbGUoLjA5MzYgLS4wOTM2KSIgZD0iTS01IDBMMjc5IDcwOEw0NjMgNzA4TDc0NCAwTDU0OSAwTDUxNCAxMDBMMjI1IDEwMEwxODkgMFpNMjgyIDI2M0w0NTcgMjYzTDM3MSA1MDZaTTgwNiAwTDgwNiA3MDhMMTEwMyA3MDhRMTE4NiA3MDggMTI0OSA2ODQuNVExMzEyIDY2MSAxMzQ4IDYwNi41UTEzODQgNTUyIDEzODQgNDU3UTEzODQgMzcwIDEzNDYgMzEyLjVRMTMwOCAyNTUgMTI0MyAyMjdRMTE3OCAxOTkgMTA5NiAxOTlMOTg3IDE5OUw5ODcgMFpNOTg3IDM2MEwxMDk2IDM2MFExMTQ4IDM2MCAxMTc3IDM4NVExMjA2IDQxMCAxMjA2IDQ1NlExMjA2IDQ5OCAxMTgwLjUgNTE5UTExNTUgNTQwIDEwOTUgNTQwTDk4NyA1NDBaIi8+PHBhdGggZmlsbD0iIzAwRkRGRiIgZD0iTS03LjU1IDIzMS44NEwtMjEuNzUgMjI3LjAxQy0zLjA3IDE3Mi4wMiAxMi45MSAxMzEuNjIgMjUuNzIgMTA2Ljk1QzM4Ljg5IDgxLjU5IDQ5LjA4IDcxLjY2IDU5Ljc2IDczLjc0QzcyLjMgNzYuMTkgNzUuNjIgOTQuMDUgNzkuMTMgMTEyLjk3QzgwLjYxIDEyMC45NyA4My4zIDEzNS40MyA4Ni4yIDEzOS4xM0M4Ny42NiAxMzguMTQgOTEuNTkgMTM0LjUxIDk4LjE4IDEyMS40OUMxMDMuOTEgMTEwLjE1IDEwOS43MiA5NS43MSAxMTUuMzQgODEuNzVDMTMwLjI3IDQ0LjYzIDEzNy4zOSAyOC4zMiAxNDkuMzIgMzAuN0MxNTkuNDUgMzIuNzEgMTYyLjU3IDQ2LjA0IDE2MS42NSA4My41QzE2MS4xNiA4Ny4zOSAxNTcuNzUgOTAuMjggMTUzLjg4IDkwLjEzQzE1MC4wOSA4OS45OSAxNDYuOTUgODYuOTcgMTQ2LjY2IDgzLjE0QzE0Ni45NyA3Ni42NCAxNDYuOSA2OS41OSAxNDYuNTggNjIuMDNDMTQ2LjM2IDU2LjY5IDE0NS45OSA1Mi45IDE0NS41OCA1MC4yMUMxNDAuNzYgNTguNzYgMTM0LjA3IDc1LjM5IDEyOS4yNiA4Ny4zNEMxMTIuNjUgMTI4LjYzIDEwMS40NCAxNTQuNDUgODUuOTggMTU0LjQ1Qzg1LjM2IDE1NC40NSA4NC43MyAxNTQuNDEgODQuMSAxNTQuMzNDNzEuMjMgMTUyLjY0IDY4LjA2IDEzNS41MiA2NC4zOCAxMTUuNzFDNjIuODIgMTA3LjMyIDU5Ljk4IDkyLjAxIDU2Ljg2IDg4LjY3QzU1LjEyIDg5LjU0IDQ4LjcyIDk0LjIxIDM2LjY0IDExOC41OUMyNC41OSAxNDIuODkgOS43MyAxODAuOTkgLTcuNTUgMjMxLjg0WiIvPjwvc3ZnPg=="></div>
+  <div class="mark"><img alt="ЕГЭ_Map" src="${REPORT_MARK_PNG}"></div>
   <div><div class="brandname">${escHtml(AUTHOR.brand)}</div><div class="brandsub">${escHtml(AUTHOR.tagline)}</div></div>
 </div>
 <h1>Отчёт по классу «${escHtml(groupName)}»</h1>
 <p class="meta">Выборка — ${escHtml(examLabel)} · ${g.entries.length} ${plural(g.entries.length,"работа","работы","работ")} · сформирован ${escHtml(formatDate(new Date(),true))}</p>
+</div>
 
 <div class="kpi">
   <div><span class="lbl">Средний балл</span><span class="val">${g.avgSecondary}</span></div>
@@ -5061,13 +5152,13 @@ function openGroupReport(g,examLabel,groupName){
   };
   modal.querySelector("#gr-html").onclick=e=>{
     downloadFile(`${safeName(AUTHOR.brand)}_${safeName(groupName)}_${stamp}.html`,groupReportDocument(g,examLabel,images,groupName),"text/html");
-    e.currentTarget.textContent="Файл скачан";
-    setTimeout(()=>{e.currentTarget.textContent="Скачать HTML";},1600);
+    const _b=e.currentTarget; _b.textContent="Файл скачан";
+    setTimeout(()=>{_b.textContent="Скачать HTML";},1600);
   };
   modal.querySelector("#gr-copy").onclick=async e=>{
     const ok=await copyText(text);
-    e.currentTarget.textContent=ok?"Скопировано":"Не вышло";
-    setTimeout(()=>{e.currentTarget.textContent="Скопировать";},1600);
+    const _b=e.currentTarget; _b.textContent=ok?"Скопировано":"Не вышло";
+    setTimeout(()=>{_b.textContent="Скопировать";},1600);
   };
 }
 
@@ -5101,7 +5192,7 @@ function renderDashboard(student,readOnly,demo){
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
         <h1 class="font-display font-extrabold text-3xl tracking-tight font-mono bg-accent-500 text-ink-900 inline-block px-2.5 py-0.5 rounded-lg align-middle">${escHtml(student.code)}</h1>
-        <p class="text-sm text-ink-500 mt-1">${demo?"Пример ученика · "+escHtml(EXAMS[state.exam].label)+" · вымышленные данные":readOnly?"Твоя страница результатов · "+escHtml(EXAMS[state.exam].label)+" · "+escHtml(AUTHOR.brand):(note?escHtml(note)+" · ":"")+escHtml(group)+" · "+escHtml(EXAMS[state.exam].label)+", разбор по спецификации ФИПИ"}</p>
+        ${readOnly&&!demo?`<p class="text-sm text-ink-500 mt-1">Твоя страница результатов · ${escHtml(EXAMS[state.exam].label)} · ${escHtml(AUTHOR.brand)}</p>`:(!demo&&note?`<p class="text-sm text-ink-500 mt-1">${escHtml(note)}</p>`:"")}
       </div>
       <div class="flex gap-2">
         ${s?`<button id="report-btn" class="px-4 py-2 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition">${(readOnly&&!demo)?"Скачать отчёт":"Отчёт для родителей"}</button>`:""}
@@ -5624,6 +5715,8 @@ function reportCell(value,max){
   return `<td class="c amber">${value}</td>`;
 }
 
+// Знак ЕГЭ_Map для отчётов: PNG, потому что SVG с обрезкой html2canvas рисует не полностью
+const REPORT_MARK_PNG="data:image/png;base64,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";
 function reportDocument(student,s,fc,weakest,essay,images){
   const worst=essay?[...essay.rows].filter(r=>r.lost>0).sort((a,b)=>a.rate-b.rate)[0]:null;
   const exams=student.exams;
@@ -5661,19 +5754,51 @@ function reportDocument(student,s,fc,weakest,essay,images){
  .author a{color:#0C0C0A;font-weight:600;text-decoration:none}
  tr{page-break-inside:avoid} h2{page-break-after:avoid} .kpi,.author{page-break-inside:avoid}
  @media print{body{margin:0}}
+ /* обновлённое оформление отчётов: в стиле приложения */
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .hero{background:#00FDFF;border-radius:24px;padding:20px 24px 22px;margin-bottom:22px}
+ .hero .brandbar{border-bottom:0;padding-bottom:0;margin-bottom:14px}
+ .hero .brandsub{color:#0C3B3E}
+ .hero h1{font-size:30px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;font-weight:800}
+ .hero h1 .code{display:inline-block;background:#D7F205;border:3px solid #0C0C0A;border-radius:12px;padding:0 10px;font-family:ui-monospace,Menlo,Consolas,monospace}
+ .hero .meta{color:#0C3B3E;margin:0;font-size:13px}
+ h2{font-size:18px;font-weight:800;color:#0C0C0A;margin:28px 0 10px;letter-spacing:-.01em;padding-left:22px;position:relative}
+ h2:before{content:"";position:absolute;left:2px;top:50%;margin-top:-6px;width:12px;height:12px;border-radius:50%;background:#00FDFF;border:3px solid #E4FDFE;box-sizing:content-box;margin-left:-3px}
+ .kpi{gap:12px}
+ .kpi>div{flex:1 1 150px;position:relative;overflow:hidden;background:#fff;border:1.5px solid #E1EBEB;border-radius:16px;padding:16px 16px 14px}
+ .kpi>div:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#00FDFF,#D7F205)}
+ .kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#4F5A59}
+ .kpi .val{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:4px}
+ .kpi>div.dark{background:#0C0C0A;border-color:#0C0C0A}
+ .kpi>div.dark .lbl{color:rgba(255,255,255,.72)}
+ .kpi>div.dark .val{color:#D7F205}
+ body>img,.charts img{border:1.5px solid #E1EBEB;border-radius:16px;padding:10px;background:#fff}
+ ol.cards{list-style:none;padding:0;margin:0}
+ ol.cards li{position:relative;padding:14px 16px 14px 58px;margin-bottom:10px;background:#fff;border:1.5px solid #E1EBEB;border-radius:16px;font-size:13.5px;line-height:1.55}
+ ol.cards li .n{position:absolute;left:14px;top:13px;width:30px;height:30px;border-radius:50%;background:#D7F205;font-weight:800;text-align:center;line-height:30px;font-size:14px}
+ table.grid{display:table}
+ table thead th,table.grid thead th{background:#0C0C0A;color:#fff;border-bottom:0;padding:8px 7px}
+ table tbody tr:nth-child(even) td:not(.c){background:#F5FAFA}
+ td.green{background:#D9F6E5;color:#17804D} td.amber{background:#FFF0BF;color:#9A6A06}
+ td.red{background:#FCE1E4;color:#D2394A} td.gray{background:#F1F3F3;color:#9AA4A3}
+ td.low,.low{color:#D2394A}
+ .author{background:#0C0C0A;color:#fff;border-left:0;border-radius:18px;padding:18px 20px}
+ .author a{color:#D7F205}
+ .note{border-top:1.5px solid #E1EBEB}
 </style></head><body>
-<div class="topbar"></div>
+<div class="hero">
 <div class="brandbar">
-  <div class="mark"><img alt="ЕГЭ_Map" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yMiAwIDI3MyAyNTEiPjxyZWN0IHg9Ii0yMiIgeT0iMCIgd2lkdGg9IjI3MyIgaGVpZ2h0PSIyNTEiIHJ4PSI1MCIgZmlsbD0iIzBDMEMwQSIvPjxwYXRoIGZpbGw9IiNEN0YyMDUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDk2Ljc5IDIxNy4wNCkgc2NhbGUoLjA5MzYgLS4wOTM2KSIgZD0iTS01IDBMMjc5IDcwOEw0NjMgNzA4TDc0NCAwTDU0OSAwTDUxNCAxMDBMMjI1IDEwMEwxODkgMFpNMjgyIDI2M0w0NTcgMjYzTDM3MSA1MDZaTTgwNiAwTDgwNiA3MDhMMTEwMyA3MDhRMTE4NiA3MDggMTI0OSA2ODQuNVExMzEyIDY2MSAxMzQ4IDYwNi41UTEzODQgNTUyIDEzODQgNDU3UTEzODQgMzcwIDEzNDYgMzEyLjVRMTMwOCAyNTUgMTI0MyAyMjdRMTE3OCAxOTkgMTA5NiAxOTlMOTg3IDE5OUw5ODcgMFpNOTg3IDM2MEwxMDk2IDM2MFExMTQ4IDM2MCAxMTc3IDM4NVExMjA2IDQxMCAxMjA2IDQ1NlExMjA2IDQ5OCAxMTgwLjUgNTE5UTExNTUgNTQwIDEwOTUgNTQwTDk4NyA1NDBaIi8+PHBhdGggZmlsbD0iIzAwRkRGRiIgZD0iTS03LjU1IDIzMS44NEwtMjEuNzUgMjI3LjAxQy0zLjA3IDE3Mi4wMiAxMi45MSAxMzEuNjIgMjUuNzIgMTA2Ljk1QzM4Ljg5IDgxLjU5IDQ5LjA4IDcxLjY2IDU5Ljc2IDczLjc0QzcyLjMgNzYuMTkgNzUuNjIgOTQuMDUgNzkuMTMgMTEyLjk3QzgwLjYxIDEyMC45NyA4My4zIDEzNS40MyA4Ni4yIDEzOS4xM0M4Ny42NiAxMzguMTQgOTEuNTkgMTM0LjUxIDk4LjE4IDEyMS40OUMxMDMuOTEgMTEwLjE1IDEwOS43MiA5NS43MSAxMTUuMzQgODEuNzVDMTMwLjI3IDQ0LjYzIDEzNy4zOSAyOC4zMiAxNDkuMzIgMzAuN0MxNTkuNDUgMzIuNzEgMTYyLjU3IDQ2LjA0IDE2MS42NSA4My41QzE2MS4xNiA4Ny4zOSAxNTcuNzUgOTAuMjggMTUzLjg4IDkwLjEzQzE1MC4wOSA4OS45OSAxNDYuOTUgODYuOTcgMTQ2LjY2IDgzLjE0QzE0Ni45NyA3Ni42NCAxNDYuOSA2OS41OSAxNDYuNTggNjIuMDNDMTQ2LjM2IDU2LjY5IDE0NS45OSA1Mi45IDE0NS41OCA1MC4yMUMxNDAuNzYgNTguNzYgMTM0LjA3IDc1LjM5IDEyOS4yNiA4Ny4zNEMxMTIuNjUgMTI4LjYzIDEwMS40NCAxNTQuNDUgODUuOTggMTU0LjQ1Qzg1LjM2IDE1NC40NSA4NC43MyAxNTQuNDEgODQuMSAxNTQuMzNDNzEuMjMgMTUyLjY0IDY4LjA2IDEzNS41MiA2NC4zOCAxMTUuNzFDNjIuODIgMTA3LjMyIDU5Ljk4IDkyLjAxIDU2Ljg2IDg4LjY3QzU1LjEyIDg5LjU0IDQ4LjcyIDk0LjIxIDM2LjY0IDExOC41OUMyNC41OSAxNDIuODkgOS43MyAxODAuOTkgLTcuNTUgMjMxLjg0WiIvPjwvc3ZnPg=="></div>
+  <div class="mark"><img alt="ЕГЭ_Map" src="${REPORT_MARK_PNG}"></div>
   <div><div class="brandname">${escHtml(AUTHOR.brand)}</div><div class="brandsub">${escHtml(AUTHOR.tagline)}</div></div>
 </div>
-<h1>Ученик ${escHtml(student.code)}</h1>
+<h1>Ученик <span class="code">${escHtml(student.code)}</span></h1>
 <p class="meta">Подготовка к ${escHtml(EXAMS[state.exam].fullName)} · отчёт от ${escHtml(formatDate(new Date(),true))}</p>
+</div>
 <div class="kpi">
   <div><span class="lbl">${escHtml(SCORE_WORD)}</span><span class="val">${escHtml(s.last.scoreText)}</span></div>
   <div><span class="lbl">Средний</span><span class="val">${s.avgSecondary}</span></div>
   <div><span class="lbl">Прогноз</span><span class="val">${fc.lowSecondary}–${fc.highSecondary}</span></div>
-  <div><span class="lbl">С проработкой тем</span><span class="val" style="color:#0C6E73">${fc.potentialSecondary}</span></div>
+  <div class="dark"><span class="lbl">С проработкой тем</span><span class="val">${fc.potentialSecondary}</span></div>
 </div>
 ${images.score?`<img src="${images.score}" alt="Динамика баллов">`:""}
 <h2>Все пробники</h2>
@@ -5701,8 +5826,8 @@ ${exams.some(e=>e.isSet)?`<p class="hint">«Набор заданий» — со
 </table>
 
 <h2>Что повторить</h2>
-<ol>${weakest.map(r=>{const t=EGE_TOPICS[r.task]||{title:"Задание "+r.task,review:""};
-  return `<li><b>Задание ${r.task} — ${escHtml(t.title)}</b> (успешность ${Math.round(r.rate*100)}%).<br>${escHtml(t.review)}</li>`;}).join("")}</ol>
+<ol class="cards">${weakest.map((r,ri)=>{const t=EGE_TOPICS[r.task]||{title:"Задание "+r.task,review:""};
+  return `<li><span class="n">${ri+1}</span><b>Задание ${r.task} — ${escHtml(t.title)}</b> (успешность ${Math.round(r.rate*100)}%).<br>${escHtml(t.review)}</li>`;}).join("")}</ol>
 
 <h2>Баллы за каждое задание</h2>
 <p class="hint">Зелёная ячейка — максимум за задание, жёлтая — часть баллов, красная — ноль, точка — задание не проверялось.</p>
@@ -5784,6 +5909,14 @@ ${worst?`<p style="font-size:14px"><b>${worst.key} — ${escHtml(worst.meta.titl
 </body></html>`;
 }
 
+function scopeReportCss(css){
+  css=css.replace(/\/\*[\s\S]*?\*\//g,"").replace(/@media[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g,"");
+  return css.replace(/([^{}]+)\{/g,(m,sel)=>sel.split(",").map(x=>{
+    x=x.trim(); if(!x) return x;
+    if(x==="body") return ".rep-root";
+    return ".rep-root "+x;
+  }).join(",")+"{");
+}
 async function renderHtmlStringToPdf(full,filename){
   if(!window.html2pdf) throw new Error("Библиотека для PDF не загрузилась — проверьте подключение к интернету и обновите страницу");
   const styleMatch=full.match(/<style>([\s\S]*?)<\/style>/);
@@ -5797,7 +5930,10 @@ async function renderHtmlStringToPdf(full,filename){
   overlay.style.cssText="position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#fff;overflow:auto;";
   const container=document.createElement("div");
   container.style.cssText="width:860px;min-width:860px;max-width:860px;background:#fff;margin:0;padding:0;";
-  container.innerHTML=`<style>${styleMatch?styleMatch[1]:""}</style>${bodyMatch?bodyMatch[1]:""}`;
+  // Стили отчёта ограничиваем контейнером .rep-root: иначе правило body{…} из отчёта
+  // меняет саму страницу приложения и кадр PDF съезжает и обрезается справа.
+  container.className="rep-root";
+  container.innerHTML=`<style>${scopeReportCss(styleMatch?styleMatch[1]:"")}</style>${bodyMatch?bodyMatch[1]:""}`;
   overlay.appendChild(container);
   document.body.appendChild(overlay);
   overlay.scrollTop=0; overlay.scrollLeft=0;
@@ -5810,11 +5946,13 @@ async function renderHtmlStringToPdf(full,filename){
     await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
 
     await window.html2pdf().set({
-      margin:[8,6,10,6],
+      // Страница в пикселях с пропорциями A4 и шириной ровно под вёрстку отчёта (860 px + поля),
+      // иначе html2pdf считает ширину A4 ≈ 748 px и обрезает правый край отчёта.
+      margin:[30,24,36,24],
       filename,
       image:{type:"jpeg",quality:0.95},
       html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",width:860,windowWidth:860,x:0,y:0,scrollX:0,scrollY:0},
-      jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
+      jsPDF:{unit:"px",format:[908,Math.round(908*297/210)],orientation:"portrait",hotfixes:["px_scaling"]},
       pagebreak:{mode:["css","legacy"]}
     }).from(container).save();
   } finally {
@@ -5875,13 +6013,13 @@ function openReport(student,s,fc,weakest,essay){
   modal.querySelector("#dl-html").onclick=e=>{
     downloadFile(`${safeName(AUTHOR.brand)}_${safeName(student.code)}_${stamp}.html`,
       reportDocument(student,s,fc,weakest,essay,images),"text/html");
-    e.currentTarget.textContent="Файл скачан";
-    setTimeout(()=>{e.currentTarget.textContent="Скачать HTML";},1600);
+    const _b=e.currentTarget; _b.textContent="Файл скачан";
+    setTimeout(()=>{_b.textContent="Скачать HTML";},1600);
   };
   modal.querySelector("#copy-report").onclick=async e=>{
     const ok=await copyText(text);
-    e.currentTarget.textContent=ok?"Скопировано":"Не вышло";
-    setTimeout(()=>{e.currentTarget.textContent="Скопировать";},1600);
+    const _b=e.currentTarget; _b.textContent=ok?"Скопировано":"Не вышло";
+    setTimeout(()=>{_b.textContent="Скопировать";},1600);
   };
 }
 
@@ -5898,7 +6036,6 @@ function renderEntry(preselectId){
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
         <h1 class="font-display font-extrabold text-2xl tracking-tight">Ввести пробник</h1>
-        <p class="text-sm text-ink-500 mt-1">Цифра переводит курсор на следующее поле, Enter и стрелки тоже. Итог считается на лету</p>
       </div>
       ${canEdit?`<button id="to-import" class="px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition whitespace-nowrap">Импорт из таблицы</button>`:""}
     </div>
@@ -6182,6 +6319,239 @@ function csvTemplate(){
   return "\uFEFF"+lines.join("\r\n")+"\r\n";
 }
 
+// ---- Excel-шаблон импорта (.xlsx) и чтение .xlsx без сторонних библиотек ----
+const XLSX_CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=XLSX_CRC[(c^u8[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+// ZIP без сжатия (метод «store») — его понимают Excel, Numbers, LibreOffice и Google Таблицы
+function zipStore(files,type){
+  const enc=new TextEncoder(), parts=[], central=[]; let offset=0;
+  files.forEach(f=>{
+    const name=enc.encode(f.name), data=enc.encode(f.data), crc=crc32(data);
+    const lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true); lh.setUint16(4,20,true); lh.setUint16(6,0x0800,true);
+    lh.setUint16(12,0x21,true); lh.setUint32(14,crc,true); lh.setUint32(18,data.length,true); lh.setUint32(22,data.length,true);
+    lh.setUint16(26,name.length,true);
+    parts.push(new Uint8Array(lh.buffer),name,data);
+    const ch=new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true); ch.setUint16(4,20,true); ch.setUint16(6,20,true); ch.setUint16(8,0x0800,true);
+    ch.setUint16(14,0x21,true); ch.setUint32(16,crc,true); ch.setUint32(20,data.length,true); ch.setUint32(24,data.length,true);
+    ch.setUint16(28,name.length,true); ch.setUint32(42,offset,true);
+    central.push(new Uint8Array(ch.buffer),name);
+    offset+=30+name.length+data.length;
+  });
+  const csize=central.reduce((a,b)=>a+b.length,0);
+  const end=new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true); end.setUint16(8,files.length,true); end.setUint16(10,files.length,true);
+  end.setUint32(12,csize,true); end.setUint32(16,offset,true);
+  return new Blob([...parts,...central,new Uint8Array(end.buffer)],{type});
+}
+function xlsxCol(i){let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26);}return s;}
+function xmlEsc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function xlsxTemplateBlob(){
+  const ex=EXAMS[state.exam];
+  const tasks=IMPORT_TASKS, crit=CRITERIA_KEYS;
+  const nCols=3+tasks.length+crit.length, lastCol=xlsxCol(nCols-1);
+  const DATA_ROWS=60, firstData=4, lastData=firstData+DATA_ROWS-1;
+  const str=(r,c,v,s)=>`<c r="${xlsxCol(c)}${r}" t="inlineStr" s="${s}"><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
+  const num=(r,c,v,s)=>`<c r="${xlsxCol(c)}${r}" s="${s}"><v>${v}</v></c>`;
+  const blank=(r,c,s)=>`<c r="${xlsxCol(c)}${r}" s="${s}"/>`;
+  // строка 1 — разделы, строка 2 — заголовки столбцов, строка 3 — максимумы
+  const r1=[str(1,0,"УЧЕНИК",1),blank(1,1,1),blank(1,2,1)];
+  tasks.forEach((t,i)=>r1.push(i===0?str(1,3,`ЗАДАНИЯ ${tasks[0]}–${tasks[tasks.length-1]}`,2):blank(1,3+i,2)));
+  crit.forEach((k,i)=>r1.push(i===0?str(1,3+tasks.length,`РАЗВЁРНУТЫЕ ОТВЕТЫ · ${crit[0]}–${crit[crit.length-1]}`,3):blank(1,3+tasks.length+i,3)));
+  const r2=[str(2,0,"код",4),str(2,1,"класс",4),str(2,2,"дата",4)];
+  tasks.forEach((t,i)=>r2.push(str(2,3+i,String(t),4)));
+  crit.forEach((k,i)=>r2.push(str(2,3+tasks.length+i,k,12)));
+  const r3=[str(3,0,"#максимум",5),blank(3,1,5),blank(3,2,5)];
+  tasks.forEach((t,i)=>r3.push(num(3,3+i,maxScoreFor(t),5)));
+  crit.forEach((k,i)=>r3.push(num(3,3+tasks.length+i,ESSAY_CRITERIA[k].max,5)));
+  const rows=[`<row r="1" ht="26" customHeight="1">${r1.join("")}</row>`,`<row r="2" ht="22" customHeight="1">${r2.join("")}</row>`,`<row r="3">${r3.join("")}</row>`];
+  for(let r=firstData;r<=lastData;r++){
+    const cells=[blank(r,0,7),blank(r,1,7),blank(r,2,7)];
+    for(let c=3;c<nCols;c++) cells.push(blank(r,c,6));
+    rows.push(`<row r="${r}">${cells.join("")}</row>`);
+  }
+  const merges=[`A1:C1`];
+  if(tasks.length) merges.push(`D1:${xlsxCol(2+tasks.length)}1`);
+  if(crit.length) merges.push(`${xlsxCol(3+tasks.length)}1:${lastCol}1`);
+  const cols=[`<col min="1" max="1" width="12" customWidth="1"/>`,`<col min="2" max="2" width="10" customWidth="1"/>`,`<col min="3" max="3" width="13" customWidth="1"/>`];
+  if(nCols>3) cols.push(`<col min="4" max="${nCols}" width="6.5" customWidth="1"/>`);
+  // проверка ввода: целое число от 0 до максимума задания
+  const dv=[];
+  tasks.forEach((t,i)=>dv.push([xlsxCol(3+i),maxScoreFor(t),`задание ${t}`]));
+  crit.forEach((k,i)=>dv.push([xlsxCol(3+tasks.length+i),ESSAY_CRITERIA[k].max,`критерий ${k}`]));
+  const dvXml=dv.length?`<dataValidations count="${dv.length}">${dv.map(([c,m,l])=>`<dataValidation type="whole" operator="between" allowBlank="1" showErrorMessage="1" errorTitle="Неверный балл" error="${xmlEsc(`За ${l} можно поставить от 0 до ${m}`)}" sqref="${c}${firstData}:${c}${lastData}"><formula1>0</formula1><formula2>${m}</formula2></dataValidation>`).join("")}</dataValidations>`:"";
+  const sheetScores=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheetPr><tabColor rgb="FF00FDFF"/></sheetPr>
+<sheetViews><sheetView workbookViewId="0"><pane xSplit="3" ySplit="3" topLeftCell="D4" activePane="bottomRight" state="frozen"/><selection pane="bottomRight" activeCell="A4" sqref="A4"/></sheetView></sheetViews>
+<sheetFormatPr defaultRowHeight="18"/>
+<cols>${cols.join("")}</cols>
+<sheetData>${rows.join("")}</sheetData>
+<mergeCells count="${merges.length}">${merges.map(m=>`<mergeCell ref="${m}"/>`).join("")}</mergeCells>
+${dvXml}
+</worksheet>`;
+  // вкладка «Инструкция»
+  const I=[];
+  const line=(text,s,h)=>I.push({text,s,h});
+  line("Как заполнить шаблон ЕГЭ_Map",8,30);
+  line(`Экзамен: ${ex.subject} · ${ex.label.replace(" · литература","")}. Шаблон собран под этот экзамен: для другого предмета скачайте шаблон заново.`,11);
+  line("",10);
+  line("1. КУДА ВНОСИТЬ",9,22);
+  line("Откройте вкладку «Баллы». Одна строка — один пробник одного ученика. Несколько пробников одного ученика вносите отдельными строками.",10);
+  line("",10);
+  line("2. СТОЛБЦЫ",9,22);
+  line("код — код ученика как в приложении, например 11А-01. Фамилии не пишите: ученики в ЕГЭ_Map только кодами.",10);
+  line("класс — необязательно. Если оставить пустым, ученик попадёт в «Без класса».",10);
+  line("дата — дата пробника: 20.09.2026 или 2026-09-20.",10);
+  if(tasks.length) line(`${tasks[0]}–${tasks[tasks.length-1]} — баллы за задания с кратким ответом. Максимум за каждое задание указан в серой строке «#максимум».`,10);
+  if(crit.length) line(`${crit[0]}–${crit[crit.length-1]} — баллы по критериям развёрнутого ответа. Обнуляющие критерии приложение проверит само.`,10);
+  line("",10);
+  line("3. ПРАВИЛА",9,22);
+  line("Пустая ячейка — задание не проверялось. 0 — ученик получил ноль баллов.",10);
+  line("Таблица не даст ввести балл больше максимума: появится подсказка.",10);
+  line("Не меняйте заголовки столбцов и строку «#максимум» — по ним приложение узнаёт задания.",10);
+  line("",10);
+  line("4. КАК ЗАГРУЗИТЬ",9,22);
+  line("В приложении: «Ввести пробник» → «Импорт из таблицы» → перетащите этот файл. Сохранять в CSV не нужно.",10);
+  line("Перед сохранением приложение покажет, какие строки приняты и где ошибки.",10);
+  const sheetHelp=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheetPr><tabColor rgb="FFD7F205"/></sheetPr>
+<sheetViews><sheetView workbookViewId="0" showGridLines="0" tabSelected="1"/></sheetViews>
+<sheetFormatPr defaultRowHeight="18"/>
+<cols><col min="1" max="1" width="3" customWidth="1"/><col min="2" max="2" width="110" customWidth="1"/></cols>
+<sheetData>${I.map((l,i)=>`<row r="${i+1}"${l.h?` ht="${l.h}" customHeight="1"`:""}>${l.text?str(i+1,1,l.text,l.s):""}</row>`).join("")}</sheetData>
+</worksheet>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<fonts count="6">
+<font><sz val="11"/><name val="Calibri"/></font>
+<font><b/><sz val="11"/><name val="Calibri"/></font>
+<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>
+<font><i/><sz val="10"/><color rgb="FF6F7B7A"/><name val="Calibri"/></font>
+<font><b/><sz val="18"/><name val="Calibri"/></font>
+<font><sz val="11"/><color rgb="FF4F5A59"/><name val="Calibri"/></font>
+</fonts>
+<fills count="7">
+<fill><patternFill patternType="none"/></fill>
+<fill><patternFill patternType="gray125"/></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FF00FDFF"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFD7F205"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFE4FDFE"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF2F4F3"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FF0C0C0A"/></patternFill></fill>
+</fills>
+<borders count="3">
+<border><left/><right/><top/><bottom/><diagonal/></border>
+<border><left style="thin"><color rgb="FFC9D3D3"/></left><right style="thin"><color rgb="FFC9D3D3"/></right><top style="thin"><color rgb="FFC9D3D3"/></top><bottom style="thin"><color rgb="FFC9D3D3"/></bottom><diagonal/></border>
+<border><left style="medium"><color rgb="FF0C0C0A"/></left><right style="medium"><color rgb="FF0C0C0A"/></right><top style="medium"><color rgb="FF0C0C0A"/></top><bottom style="medium"><color rgb="FF0C0C0A"/></bottom><diagonal/></border>
+</borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="13">
+<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+<xf numFmtId="0" fontId="1" fillId="2" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+<xf numFmtId="0" fontId="1" fillId="3" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+<xf numFmtId="0" fontId="2" fillId="6" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+<xf numFmtId="0" fontId="1" fillId="4" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+<xf numFmtId="0" fontId="3" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+<xf numFmtId="49" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="left" vertical="center"/></xf>
+<xf numFmtId="0" fontId="4" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="center"/></xf>
+<xf numFmtId="0" fontId="1" fillId="3" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>
+<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="5" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="2" fillId="6" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+</cellXfs>
+<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+</styleSheet>`;
+  const files=[
+    {name:"[Content_Types].xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`},
+    {name:"_rels/.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`},
+    {name:"xl/workbook.xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView activeTab="0"/></bookViews><sheets><sheet name="Инструкция" sheetId="1" r:id="rId1"/><sheet name="Баллы" sheetId="2" r:id="rId2"/></sheets></workbook>`},
+    {name:"xl/_rels/workbook.xml.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+    {name:"xl/styles.xml",data:styles},
+    {name:"xl/worksheets/sheet1.xml",data:sheetHelp},
+    {name:"xl/worksheets/sheet2.xml",data:sheetScores}
+  ];
+  return zipStore(files,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+}
+// Чтение .xlsx: распаковка ZIP (deflate через DecompressionStream) и перевод листа в текст с «;» для parseImportText
+function unzipEntries(buf){
+  const u8=new Uint8Array(buf), dv=new DataView(buf), out={};
+  let e=u8.length-22; while(e>=0&&dv.getUint32(e,true)!==0x06054b50) e--;
+  if(e<0) throw new Error("not zip");
+  const count=dv.getUint16(e+10,true); let p=dv.getUint32(e+16,true);
+  for(let i=0;i<count;i++){
+    if(dv.getUint32(p,true)!==0x02014b50) break;
+    const method=dv.getUint16(p+10,true), csize=dv.getUint32(p+20,true), nlen=dv.getUint16(p+28,true), xlen=dv.getUint16(p+30,true), clen=dv.getUint16(p+32,true), lho=dv.getUint32(p+42,true);
+    const name=new TextDecoder().decode(u8.subarray(p+46,p+46+nlen));
+    const start=lho+30+dv.getUint16(lho+26,true)+dv.getUint16(lho+28,true);
+    out[name]={method,data:u8.subarray(start,start+csize)};
+    p+=46+nlen+xlen+clen;
+  }
+  return out;
+}
+async function zipText(entry){
+  if(!entry) return null;
+  if(entry.method===0) return new TextDecoder().decode(entry.data);
+  if(entry.method===8){
+    if(typeof DecompressionStream==="undefined") throw new Error("no inflate");
+    const stream=new Blob([entry.data]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return await new Response(stream).text();
+  }
+  throw new Error("zip method "+entry.method);
+}
+async function xlsxToImportText(buf){
+  const z=unzipEntries(buf), P=s=>new DOMParser().parseFromString(s,"application/xml");
+  const wb=P(await zipText(z["xl/workbook.xml"]));
+  const rels=P(await zipText(z["xl/_rels/workbook.xml.rels"]));
+  const relMap={}; [...rels.getElementsByTagName("Relationship")].forEach(r=>relMap[r.getAttribute("Id")]=r.getAttribute("Target"));
+  const sheets=[...wb.getElementsByTagName("sheet")].map(s=>({name:s.getAttribute("name"),rid:s.getAttribute("r:id")||s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id")}));
+  const shared=[]; const ss=z["xl/sharedStrings.xml"];
+  if(ss){ [...P(await zipText(ss)).getElementsByTagName("si")].forEach(si=>shared.push([...si.getElementsByTagName("t")].map(t=>t.textContent).join(""))); }
+  const readSheet=async sh=>{
+    let target=relMap[sh.rid]||""; target=target.replace(/^\//,""); if(!target.startsWith("xl/")) target="xl/"+target;
+    const doc=P(await zipText(z[target])); const rows=[];
+    [...doc.getElementsByTagName("row")].forEach(row=>{
+      const cells=[];
+      [...row.getElementsByTagName("c")].forEach(c=>{
+        const ref=c.getAttribute("r")||""; const letters=(ref.match(/^[A-Z]+/)||[""])[0];
+        let col=0; for(const ch of letters) col=col*26+(ch.charCodeAt(0)-64); col--;
+        const t=c.getAttribute("t"); const v=c.getElementsByTagName("v")[0];
+        let val="";
+        if(t==="s") val=shared[+(v?v.textContent:0)]||"";
+        else if(t==="inlineStr") val=[...c.getElementsByTagName("t")].map(x=>x.textContent).join("");
+        else val=v?v.textContent:"";
+        if(col>=0) cells[col]=val;
+      });
+      rows.push(cells);
+    });
+    return rows;
+  };
+  let chosen=sheets.find(s=>/^баллы$/i.test((s.name||"").trim()));
+  let rows=chosen?await readSheet(chosen):null;
+  if(!rows){ for(const sh of sheets){ const r=await readSheet(sh); if(r.some(x=>x&&/^код$/i.test(String(x[0]||"").trim()))){rows=r;break;} } }
+  if(!rows) rows=sheets.length?await readSheet(sheets[0]):[];
+  const hi=rows.findIndex(r=>r&&r.some(x=>/^(код|code)$/i.test(String(x||"").trim())));
+  if(hi<0) return "";
+  const header=rows[hi].map(x=>String(x==null?"":x).trim());
+  const dateCol=header.findIndex(h=>/^(дата|date)/i.test(h));
+  const q=v=>{v=String(v==null?"":v); return /[;"\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v;};
+  const lines=[header.map(q).join(";")];
+  rows.slice(hi+1).forEach(r=>{
+    if(!r||!r.some(x=>String(x==null?"":x).trim()!=="")) return;
+    const cells=[]; for(let i=0;i<Math.max(header.length,r.length);i++) cells.push(r[i]==null?"":String(r[i]).trim());
+    if(/^(#|макс)/i.test(cells[0]||"")) cells[0]="#"+cells[0].replace(/^#/,"");
+    if(dateCol>=0&&/^\d+(\.\d+)?$/.test(cells[dateCol])&&+cells[dateCol]>20000){
+      const d=new Date(Date.UTC(1899,11,30)+Math.round(+cells[dateCol])*86400000);
+      cells[dateCol]=`${String(d.getUTCDate()).padStart(2,"0")}.${String(d.getUTCMonth()+1).padStart(2,"0")}.${d.getUTCFullYear()}`;
+    }
+    lines.push(cells.map(q).join(";"));
+  });
+  return lines.join("\n");
+}
+
 function splitCsvLine(line,delim){
   const out=[]; let cur="", inQ=false;
   for(let i=0;i<line.length;i++){
@@ -6229,6 +6599,8 @@ function parseImportText(text){
     if(map.code<0 && /^(код|code|ученик|id)/.test(low)){ map.code=i; return; }
     if(map.date<0 && /^(дата|date)/.test(low)){ map.date=i; return; }
     if(map.group<0 && /^(класс|группа|group|class)/.test(low)){ map.group=i; return; }
+    const critKey=h.replace(/\s+/g,"").replace(/[Kkк]/g,"К");
+    if(ESSAY_CRITERIA[critKey]){ map.criteria[critKey]=i; return; }
     const crit=h.match(/^[КKкk]\s*(\d{1,2})$/);
     if(crit){
       const key="К"+parseInt(crit[1],10);
@@ -6327,7 +6699,7 @@ function renderImport(){
         <h1 class="font-display font-extrabold text-2xl tracking-tight">Импорт из таблицы</h1>
         <p class="text-sm text-ink-500 mt-1">Загрузите файл с результатами, проверьте разбор и сохраните всё сразу в облако</p>
       </div>
-      <button id="dl-template" class="px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:border-brand-500 text-sm font-semibold transition whitespace-nowrap">Скачать шаблон</button>
+      <div class="flex flex-wrap items-center gap-2"><button id="dl-template" class="px-4 py-2.5 rounded-full bg-accent-500 hover:bg-accent-600 text-ink-900 text-sm font-bold transition whitespace-nowrap">Скачать шаблон Excel</button><button id="dl-template-csv" class="px-3 py-2 text-xs font-semibold text-ink-900 underline underline-offset-2 transition">или CSV</button></div>
     </div>
 
     ${canEdit?"":`<div class="bg-amber-50 text-amber-800 rounded-2xl p-4 text-sm mb-6">Импорт доступен только после входа.</div>`}
@@ -6337,8 +6709,8 @@ function renderImport(){
         <div id="drop-zone" class="bg-white rounded-2xl shadow-soft border-2 border-dashed border-gray-200 hover:border-brand-500 transition p-8 text-center cursor-pointer mb-4">
           <div class="text-3xl text-ink-300 mb-2 leading-none">+</div>
           <div class="font-display font-bold text-[15px] mb-1">Перетащите файл сюда или нажмите</div>
-          <div class="text-xs text-ink-500">Форматы CSV и TSV, кодировка и разделитель определяются автоматически</div>
-          <input id="file-input" type="file" accept=".csv,.tsv,.txt,text/csv" class="hidden">
+          <div class="text-xs text-ink-500">Excel (.xlsx), CSV или TSV — формат, кодировка и разделитель определяются автоматически</div>
+          <input id="file-input" type="file" accept=".xlsx,.csv,.tsv,.txt,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="hidden">
         </div>
         <div id="import-result"></div>
       </div>
@@ -6346,19 +6718,21 @@ function renderImport(){
       <div class="bg-white rounded-2xl shadow-soft p-5">
         <h2 class="font-display font-bold text-lg mb-3">Как заполнить</h2>
         <div class="space-y-3 text-[13px] text-ink-700 leading-relaxed">
-          <p class="font-semibold text-ink-900">Скачайте шаблон выше, прочитайте инструкцию и заполните данные.</p>
+          <p class="font-semibold text-ink-900">Скачайте шаблон Excel: на первой вкладке инструкция, на второй («Баллы») — таблица для заполнения.</p>
           <p>Первый столбец — код ученика, второй — класс, третий — дата пробника. Дальше по одному столбцу на каждое задание${CRITERIA_KEYS.length?` с кратким ответом и на каждый критерий (${escHtml(CRITERIA_KEYS[0])}–${escHtml(CRITERIA_KEYS[CRITERIA_KEYS.length-1])})`:""}.</p>
           <p class="text-ink-500">Шаблон формируется под выбранный экзамен: сейчас это ${escHtml(EXAMS[state.exam].subject)}, ${escHtml(EXAMS[state.exam].label.replace(" · литература",""))}.</p>
           <p>Одна строка — один пробник одного ученика. Несколько дат по одному коду вносите отдельными строками.</p>
           <p>Пустая ячейка означает, что задание не проверялось. Ноль означает, что ученик получил ноль баллов.</p>
           <p>Дата принимается в виде 20.09.2025 или 2025-09-20.</p>
-          <p class="text-ink-500">Строки, начинающиеся со знака решётки, при загрузке пропускаются — в шаблоне так помечены подсказки.</p>
+          <p>Заполненный файл загрузите сюда как есть — сохранять в CSV не нужно.</p>
+          <p class="text-ink-500">Строки, начинающиеся со знака решётки (например «#максимум»), при загрузке пропускаются.</p>
         </div>
       </div>
     </div>`;
 
   $("#import-back").onclick=()=>route("screen-entry");
-  $("#dl-template").onclick=()=>downloadFile("ЕГЭ_Map_шаблон_пробника.csv",csvTemplate(),"text/csv");
+  $("#dl-template").onclick=()=>{ const b=xlsxTemplateBlob(); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="ЕГЭ_Map_шаблон_пробника.xlsx"; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500); };
+  $("#dl-template-csv").onclick=()=>downloadFile("ЕГЭ_Map_шаблон_пробника.csv",csvTemplate(),"text/csv");
 
   if(!canEdit) return;
 
@@ -6376,14 +6750,20 @@ function renderImport(){
 
 function readImportFile(file){
   const box=$("#import-result");
-  const okExt=/\.(csv|tsv|txt)$/i.test(file.name);
-  if(!okExt){ box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5 text-sm text-rose-600">Это не похоже на CSV/TSV-файл (расширение «${escHtml(file.name.split(".").pop()||"")}»). Экспортируйте таблицу как .csv и попробуйте снова.</div>`; return; }
+  const isXlsx=/\.xlsx$/i.test(file.name);
+  const okExt=isXlsx||/\.(csv|tsv|txt)$/i.test(file.name);
+  if(!okExt){ box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5 text-sm text-rose-600">Такой формат не подходит (расширение «${escHtml(file.name.split(".").pop()||"")}»). Загрузите файл Excel (.xlsx) или CSV.</div>`; return; }
   if(file.size>5*1024*1024){ box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5 text-sm text-rose-600">Файл слишком большой (${(file.size/1024/1024).toFixed(1)} МБ, максимум 5 МБ). Похоже, это не таблица с баллами — проверьте файл.</div>`; return; }
   const reader=new FileReader();
   reader.onerror=()=>{ box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5 text-sm text-rose-600">Файл не прочитался. Попробуйте пересохранить его как CSV.</div>`; };
-  reader.onload=()=>{
+  reader.onload=async ()=>{
     let text="";
-    try{ text=decodeBytes(reader.result); }catch(e){ text=""; }
+    if(isXlsx){
+      try{ text=await xlsxToImportText(reader.result); }
+      catch(e){ box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5 text-sm text-rose-600">Не получилось прочитать файл Excel. Пересохраните его в Excel как «Книга Excel (.xlsx)» или как CSV и загрузите снова.</div>`; return; }
+    } else {
+      try{ text=decodeBytes(reader.result); }catch(e){ text=""; }
+    }
     const parsed=parseImportText(text);
     if(parsed.error){
       box.innerHTML=`<div class="bg-white rounded-2xl shadow-soft p-5">
