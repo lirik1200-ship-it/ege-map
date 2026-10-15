@@ -81,11 +81,11 @@ async def main():
             u = r.request.url
             if u.startswith('file://') or u == 'http://app.test/':
                 return await r.fulfill(body=HTML, content_type='text/html')
-            if 'tailwindcss' in u: return await r.fulfill(body='window.tailwind={};', content_type='application/javascript')
-            if 'chart.js' in u: return await r.fulfill(body=CHART_STUB, content_type='application/javascript')
-            if 'supabase-js' in u: return await r.fulfill(body=FAKE_SUPABASE, content_type='application/javascript')
+            if 'tailwindcss' in u or u.endswith('/vendor/tailwind.js'): return await r.fulfill(body='window.tailwind={};', content_type='application/javascript')
+            if 'chart.js' in u or 'chart.umd' in u: return await r.fulfill(body=CHART_STUB, content_type='application/javascript')
+            if 'supabase-js' in u or u.endswith('/vendor/supabase.js'): return await r.fulfill(body=FAKE_SUPABASE, content_type='application/javascript')
             if 'html2pdf' in u: return await r.fulfill(body='window.html2pdf=function(){return {set(){return this},from(){return this},save(){return Promise.resolve()},outputPdf(){return Promise.resolve(new Blob())}}};', content_type='application/javascript')
-            if 'fonts.g' in u: return await r.fulfill(body='', content_type='text/css')
+            if 'fonts.g' in u or '/fonts/' in u: return await r.fulfill(body='', content_type='text/css')
             return await r.abort()
         await page.route('**/*', route)
         await page.goto('http://app.test/')

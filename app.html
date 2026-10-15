@@ -135,6 +135,62 @@
     .auth-draw{animation:none;stroke-dashoffset:0}
   }
 </style>
+<!-- Тема внутренних экранов (theme-v2): голубой фон, «витрина» вверху экранов, пилюли, крупные скругления — в стиле страницы входа и лендинга -->
+<style id="theme-v2">
+body.theme-v2{background:#E4FDFE}
+body.theme-v2:not(.on-auth)::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(900px 620px at -5% 105%,rgba(0,253,255,.38),transparent 62%),
+             radial-gradient(760px 520px at 105% -5%,rgba(215,242,5,.20),transparent 62%)}
+body.theme-v2 header{background:rgba(255,255,255,.82)}
+/* меню: пилюли, активный пункт чёрный */
+body.theme-v2 #main-nav button,body.theme-v2 #mobile-nav button{border-radius:999px}
+body.theme-v2 #main-nav button[aria-current=page]:not([data-nav=screen-pricing]),
+body.theme-v2 #mobile-nav button[aria-current=page]:not([data-nav=screen-pricing]){background:#0C0C0A;color:#fff}
+body.theme-v2 #main-nav button:not([aria-current]):not([data-nav=screen-pricing]):hover{background:#fff}
+body.theme-v2 #main-nav button.bg-brand-50,body.theme-v2 #mobile-nav button.bg-brand-50{background:#0C0C0A;color:#fff}
+@media (max-width:767px){body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl{border-radius:24px}}
+body.theme-v2 #exam-switch,body.theme-v2 #exam-switch-mobile{border-radius:999px;background:#fff}
+body.theme-v2 #exam-switch button,body.theme-v2 #exam-switch-mobile button{border-radius:999px}
+/* карточки */
+body.theme-v2:not(.on-auth) main .rounded-2xl{border-radius:28px}
+body.theme-v2:not(.on-auth) main .bg-white.rounded-2xl{box-shadow:0 1px 2px rgba(12,12,10,.04),0 26px 50px -30px rgba(12,12,10,.28)}
+body.theme-v2:not(.on-auth) main .bg-white.rounded-2xl.shadow-soft:hover{box-shadow:0 2px 4px rgba(12,12,10,.05),0 30px 60px -28px rgba(12,12,10,.34)}
+/* кнопки-пилюли (кроме плиток выбора) */
+body.theme-v2:not(.on-auth) main button.rounded-xl:not(.entry-mode):not([role=radio]),
+body.theme-v2:not(.on-auth) main a.rounded-xl,
+body.theme-v2 .fixed button.rounded-xl:not(.entry-mode){border-radius:999px}
+body.theme-v2:not(.on-auth) main input.rounded-xl,body.theme-v2:not(.on-auth) main select.rounded-xl{border-radius:16px}
+/* заголовки */
+body.theme-v2:not(.on-auth) main h1.font-display{font-size:clamp(30px,3.6vw,46px);line-height:1.02;letter-spacing:-.035em}
+body.theme-v2:not(.on-auth) main h2.font-display{font-weight:800;letter-spacing:-.02em}
+body.theme-v2:not(.on-auth) main .font-mono.font-bold.text-3xl{font-size:40px;letter-spacing:-.02em}
+/* витрина: верхний блок экрана */
+body.theme-v2 .th-hero{position:relative;overflow:hidden;background:#00FDFF;border-radius:34px;padding:30px 34px;margin-bottom:28px!important;align-items:center!important}
+body.theme-v2 .th-hero::after{content:"";position:absolute;right:-30px;bottom:-40px;width:360px;height:220px;pointer-events:none;opacity:.55;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 220'%3E%3Cpath d='M10 210C60 90 85 60 100 62s14 64 30 66c22 3 52-110 66-108s4 64 18 68 36-44 58-88 34-60 40-74' fill='none' stroke='%23fff' stroke-width='22' stroke-linecap='round'/%3E%3Cpath d='M10 210C60 90 85 60 100 62s14 64 30 66c22 3 52-110 66-108s4 64 18 68 36-44 58-88 34-60 40-74' fill='none' stroke='%230C0C0A' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right bottom/contain}
+body.theme-v2 .th-hero:has(input,select,button)::after{right:auto;left:44%;width:280px;height:170px;bottom:-50px;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 220'%3E%3Cpath d='M10 210C60 90 85 60 100 62s14 64 30 66c22 3 52-110 66-108s4 64 18 68 36-44 58-88 34-60 40-74' fill='none' stroke='%23fff' stroke-width='20' stroke-linecap='round'/%3E%3C/svg%3E")}
+@media (max-width:767px){body.theme-v2 .th-hero{padding:22px 20px;border-radius:26px}body.theme-v2 .th-hero::after{display:none}}
+body.theme-v2 .th-hero > *{position:relative;z-index:1}
+body.theme-v2 .th-hero p{color:#0C3B3E!important;font-size:15px}
+body.theme-v2 .th-hero h1.bg-accent-500{background:#D7F205;box-shadow:0 0 0 4px #0C0C0A;border-radius:14px;padding:2px 14px}
+/* плашка демо */
+body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl{background:#0C0C0A;color:#fff;border-radius:999px;padding:12px 14px 12px 28px}
+body.theme-v2:not(.on-auth) main .bg-amber-50.rounded-2xl button{background:#D7F205;border-color:#D7F205;color:#0C0C0A}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  document.body.classList.add("theme-v2");
+  var tag=function(){["#screen-list","#screen-group","#screen-student","#screen-entry","#screen-account","#screen-import"].forEach(function(id){
+    var s=document.querySelector(id);if(!s)return;
+    var h=s.querySelector(":scope > .items-end.justify-between, :scope > div > .items-end.justify-between");
+    if(h&&!h.classList.contains("th-hero"))h.classList.add("th-hero");
+    var a=s.querySelector(":scope > div > h1.font-display");
+    if(id==="#screen-account"&&a&&!a.classList.contains("th-hero")){a.classList.add("th-hero");a.style.display="block"}
+  })};
+  new MutationObserver(tag).observe(document.querySelector("main"),{childList:true,subtree:true});tag();
+});
+</script>
 </head>
 
 <body class="font-sans text-ink-900 antialiased">
