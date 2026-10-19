@@ -3396,9 +3396,9 @@ const HELP_STEPS=[
    action:{label:"Открыть вкладку «Класс» →", screen:"screen-group"},
    visual:`<video controls preload="none" playsinline poster="./video/instr-04-smotrite-razbor.jpg" class="mt-3 mb-1 w-full rounded-2xl bg-ink-900 aspect-video" aria-label="Видео-инструкция: как смотреть разбор ученика и класса"><source src="./video/instr-04-smotrite-razbor.mp4" type="video/mp4"></video>`},
   {icon:"5", title:"Скачайте отчёт для родителей",
-   body:`Чтобы скачать отчёт, откройте карточку ученика, затем нажмите на кнопку «Скачать отчёт». Отчёт оформлен как документ (шапка, знак, ваши контакты внизу), с прогнозом и зонами роста — его можно сразу переслать родителям.¶Какой файл выбрать? **PDF** — готовый документ, он одинаково открывается на любом компьютере и телефоне, его удобно печатать и пересылать. Однако учтите, что поля в таком отчёте могут немного съезжать из-за объёма. Мы рекомендуем выбирать **HTML** — та же страница, но она открывается в браузере, как сайт (дважды щёлкните по файлу).¶У класса целиком — такая же пара кнопок на вкладке «Класс», один файл сразу на всех. Отчёт можно и просто скопировать текстом, без скачивания.`,
+   body:`Чтобы скачать отчёт, откройте карточку ученика, затем нажмите на кнопку «Отчёт для родителей». Отчёт оформлен как документ (шапка, знак, ваши контакты внизу), с прогнозом и зонами роста — его можно сразу переслать родителям.¶Какой файл выбрать? **PDF** — готовый документ, он одинаково открывается на любом компьютере и телефоне, его удобно печатать и пересылать. Однако учтите, что поля в таком отчёте могут немного съезжать из-за объёма. Мы рекомендуем выбирать **HTML** — та же страница, но она открывается в браузере, как сайт (дважды щёлкните по файлу).¶У класса целиком — такая же пара кнопок на вкладке «Класс», один файл сразу на всех. Отчёт можно и просто скопировать текстом, без скачивания.`,
    action:{label:"Открыть карточку первого ученика →", screen:"screen-list", sel:".student-card"},
-   visual:`<div class="mt-3 flex items-center gap-2 text-xs">
+   visual:`<video controls preload="none" playsinline poster="./video/instr-05-otchety.jpg" class="mt-3 mb-1 w-full rounded-2xl bg-ink-900 aspect-video" aria-label="Видео-инструкция: отчёты для родителей и класса"><source src="./video/instr-05-otchety.mp4" type="video/mp4"></video><div class="mt-3 flex items-center gap-2 text-xs">
       <span class="px-3 py-1.5 rounded-full bg-accent-500 text-ink-900 font-bold">Скачать PDF</span>
       <span class="px-3 py-1.5 rounded-full bg-route-500 text-ink-900 font-bold">Скачать HTML (страница)</span>
     </div>`},
@@ -3406,14 +3406,14 @@ const HELP_STEPS=[
    body:`Чтобы ученик получил доступ к баллам, внизу карточки ученика нажмите на кнопку «Ссылка ученику», после чего отправьте её ученику. Это персональная ссылка: она не требует входа и пароля и не показывает данные других учеников класса.¶На этой же странице у ученика есть кнопка «Подключить ВКонтакте». Отправлять отдельную ссылку не нужно — всё в одной ссылке. Подписка не включается автоматически: ученик или родитель должен сам нажать кнопку и подтвердить согласие кнопкой «Согласен(на)» в диалоге с сообществом. После этого в личные сообщения будет приходить короткая карточка после каждого нового пробника: балл, изменение к прошлому разу, прогноз и темы, которые стоит повторить. Мы знаем только код ученика, не имя. Отписаться можно в любой момент: напишите сообществу «Стоп».`,
    action:{label:"Показать кнопку у первого ученика →", screen:"screen-list", sel:".share-btn"},
    done:()=>state.students.some(st=>st.shareToken),
-   visual:`<div class="mt-3 inline-flex items-center gap-2 rounded-xl border border-gray-100 bg-paper px-3 py-2 text-xs">
+   visual:`<video controls preload="none" playsinline poster="./video/instr-06-ssylka-ucheniku.jpg" class="mt-3 mb-1 w-full rounded-2xl bg-ink-900 aspect-video" aria-label="Видео-инструкция: как отправить ученику личную ссылку"><source src="./video/instr-06-ssylka-ucheniku.mp4" type="video/mp4"></video><div class="mt-3 inline-flex items-center gap-2 rounded-xl border border-gray-100 bg-paper px-3 py-2 text-xs">
       <span class="text-ink-400 font-mono">ege-map.ru/s/</span><span class="font-mono text-ink-700">a8f2c1…</span>
       <span class="px-2 py-0.5 rounded-md bg-route-tint text-route-700 font-semibold">только этот ученик</span>
     </div>`},
   {icon:"7", title:"Переключайте предмет и класс",
    body:`Если вы хотите вносить разные предметы или экзамены, выберите в выпадающем списке название необходимого предмета рядом с логотипом в шапке. Рядом нажмите на переключатель ЕГЭ/ОГЭ, если у предмета есть обе версии. Данные разных предметов и уровней хранятся отдельно — переключение не путает и не смешивает баллы между ними.`,
    action:{label:"Показать переключатель →", screen:"screen-list", sel:"[data-subject-toggle]"},
-   visual:`<div class="mt-3 flex items-center gap-2 text-xs">
+   visual:`<video controls preload="none" playsinline poster="./video/instr-07-predmet-i-klass.jpg" class="mt-3 mb-1 w-full rounded-2xl bg-ink-900 aspect-video" aria-label="Видео-инструкция: как переключать предмет, экзамен и класс"><source src="./video/instr-07-predmet-i-klass.mp4" type="video/mp4"></video><div class="mt-3 flex items-center gap-2 text-xs">
       <span class="px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 font-semibold text-ink-900 shadow-soft">Русский язык ▾</span>
       <span class="flex rounded-lg bg-paper border border-gray-200 overflow-hidden">
         <span class="px-2.5 py-1.5 bg-white font-semibold text-ink-900">ЕГЭ</span>
